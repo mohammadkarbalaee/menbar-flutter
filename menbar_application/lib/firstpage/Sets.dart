@@ -33,7 +33,7 @@ class Sets extends StatelessWidget {
                 ),
               );
             } else {
-              return ListView.builder(
+              return GridView.builder(
                   itemCount: snapshot.data.length,
                   itemBuilder: (context,index) {
                     return GestureDetector(
@@ -45,16 +45,18 @@ class Sets extends StatelessWidget {
                           elevation: 10,
                           child: Row(
                             children: [
-                              Text(
-                                  snapshot.data[index]['title']
-                              ),
+                              // Text(
+                              //     snapshot.data[index]['title']
+                              // ),
                               Image.network(snapshot.data[index]["image"],height: 100,),
                             ],
                           ),
                         ),
                       ),
                     );
-                  }
+                  }, gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+              ),
               );
             }
           },
