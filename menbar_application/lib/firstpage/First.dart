@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:menbar_application/firstpage/NewSpeeches.dart';
 import 'package:menbar_application/firstpage/Orators.dart';
-import 'package:menbar_application/firstpage/Sets.dart';
+import 'package:menbar_application/collections/collectionsView.dart';
 
 class FirstActivity extends StatelessWidget {
   const FirstActivity({Key? key}) : super(key: key);
