@@ -20,13 +20,24 @@ class FirstActivity extends StatelessWidget {
           appBar: AppBar(
             elevation: 7.0,
             bottomOpacity: 1,
-            leading: Padding(
-              padding: EdgeInsets.all(10),
-              child: Image.asset('images/menbar_logo.png'),
-            ),
+            leading:AboutButton(),
             actions: [
-              AboutButton(),
-              SearchButton(),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: Text(
+                  'منبر',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: Image.asset('images/menbar_logo.png'),
+              ),
+
             ],
             bottom: TabBar(
               tabs: [
@@ -44,8 +55,8 @@ class FirstActivity extends StatelessWidget {
                 )
               ],
             ),
-            title: Text('منبر',textAlign: TextAlign.center,),
-            backgroundColor: Color(0xff76b3af),
+            title: SearchButton(),
+            backgroundColor: Color(0xff607d8d),
           ),
           body: TabBarView(
             children: [
@@ -68,10 +79,11 @@ class AboutButton extends StatelessWidget {
     return Container(
       child: ButtonTheme(
         height: 45,
-        minWidth: 50,
+        minWidth: 40,
         splashColor: Colors.grey,
         child: RaisedButton(
-          color: Color(0xff76b3af),
+          elevation: 0,
+          color: Color(0xff607d8d),
           onPressed: () {},
           child: Icon(Icons.message,color: Colors.white,),
         ),
@@ -91,7 +103,8 @@ class SearchButton extends StatelessWidget {
         minWidth:30,
         splashColor: Colors.grey,
         child: RaisedButton(
-          color: Color(0xff76b3af),
+          elevation: 0,
+          color: Color(0xff607d8d),
           onPressed: () {},
           child: Icon(Icons.search,color: Colors.white,),
         ),
