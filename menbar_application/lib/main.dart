@@ -9,7 +9,7 @@ main() async{
 
   String oratorsApiUrl = 'http://menbar.sobhe.ir/api/sokhanrans/';
   http.Response oratorsResponse = await http.get(Uri.parse(oratorsApiUrl));
-  List orators = json.decode(oratorsResponse.body);
+  List orators = json.decode(utf8.decode(oratorsResponse.bodyBytes));
 
   runApp(
       FirstActivity(orators)
