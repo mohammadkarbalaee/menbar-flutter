@@ -4,8 +4,12 @@ import 'package:menbar_application/firstpage/NewSpeeches.dart';
 import 'package:menbar_application/firstpage/Orators.dart';
 import 'package:menbar_application/collections/collectionsView.dart';
 
+// ignore: must_be_immutable
 class FirstActivity extends StatelessWidget {
-  const FirstActivity({Key? key}) : super(key: key);
+
+  List orators;
+
+  FirstActivity(this.orators);
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +51,7 @@ class FirstActivity extends StatelessWidget {
             children: [
               Orators(),
               NewSpeeches(),
-              Sets(),
+              Collections(this.orators),
             ],
           ),
         ),

@@ -6,9 +6,10 @@ import 'dart:convert';
 
 import 'CollectionInstance.dart';
 
-class Sets extends StatelessWidget {
+class Collections extends StatelessWidget {
 
-  const Sets({Key? key}) : super(key: key);
+  List orators;
+  Collections(this.orators);
 
   Future<List> _getData() async {
     List result = [];
@@ -16,18 +17,7 @@ class Sets extends StatelessWidget {
     String apiUrl = 'http://menbar.sobhe.ir/api/collections/';
     http.Response collectionsResponse = await http.get(Uri.parse(apiUrl));
     List collections = json.decode(collectionsResponse.body);
-    for(var instance in collections){
-      List temp = [];
-      temp.add(instance['title']);
-      temp.add(instance['image']);
-      // http.Response oratorResponse = await http.get(Uri.parse(instance["sokhanran"]));
-      // var oratorJson = json.decode(oratorResponse.body);
-      //
-      // temp.add(oratorJson['title']);
-
-      result.add(temp);
-    }
-    return result;
+    return collections;
   }
   @override
   Widget build(BuildContext context) {
@@ -74,20 +64,20 @@ class Sets extends StatelessWidget {
                           child: Stack(
 
                             children: [
-                              Image.network(snapshot.data[index][1]),
+                              Image.network(snapshot.data[index]['image']),
                               Padding(
                                   padding: EdgeInsets.only(top: 130),
                                   child: Column(
 
                                     children: [
                                       Text(
-                                        snapshot.data[index][0],
+                                        snapshot.data[index]['title'],
                                         style: TextStyle(
                                           backgroundColor: Colors.yellowAccent,
                                         ),
                                       ),// title of the speech
                                       Text(
-                                          'orator name'
+                                          getName(snapshot.data[index]["sokhanran"])
                                       )//orator title
                                     ],
                                   ),
@@ -98,7 +88,7 @@ class Sets extends StatelessWidget {
                       ),
                       onTap: (){
                         Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => CollectionInstance(snapshot.data[index][1])
+                            builder: (context) => CollectionInstance(snapshot.data[index]['image'])
                         )
                         );
                       },
@@ -112,5 +102,27 @@ class Sets extends StatelessWidget {
         )
       ),
     );
+  }
+
+  String getName(String oratorUrl) {
+
+    List splited = oratorUrl.split("/");
+    String  oratorID = splited[splited.length - 2];
+    String oratorName = findNameByID(oratorID);
+
+    return oratorName;
+  }
+
+  String findNameByID(String oratorID) {
+
+    String name = 'failed to find';
+
+    for(var orator in orators){
+      if(orator['id'].toString() == oratorID){
+        name = orator['title'];
+      }
+    }
+
+    return name;
   }
 }
