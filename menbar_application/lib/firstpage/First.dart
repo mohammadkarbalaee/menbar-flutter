@@ -42,16 +42,49 @@ class FirstActivity extends StatelessWidget {
             bottom: TabBar(
               tabs: [
                 Tab(
-                  icon: Icon(Icons.people),
-                  text: 'سخنران ها',
+                  child: Row(
+                    children: [
+                      Text(
+                          'سخنران ها',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      SizedBox(width: 5,),
+                      Icon(Icons.person),
+                    ],
+                  ),
                 ),
                 Tab(
-                  icon: Icon(Icons.new_releases),
-                  text: 'تازه ها',
+                  child: Row(
+                    children: [
+                      Text(
+                        'تازه ها',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      SizedBox(width: 5,),
+                      Icon(Icons.new_releases),
+                    ],
+                  ),
                 ),
                 Tab(
-                  icon: Icon(Icons.apps),
-                  text: 'مجموعه ها',
+                  child: Row(
+                    children: [
+                      Text(
+                        'مجموعه ها',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      SizedBox(width: 5,),
+                      Icon(Icons.apps),
+                    ],
+                  ),
                 )
               ],
             ),
