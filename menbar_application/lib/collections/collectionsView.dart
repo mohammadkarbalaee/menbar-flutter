@@ -62,24 +62,40 @@ class Collections extends StatelessWidget {
                           ),
                           elevation: 10,
                           child: Stack(
-
+                            alignment: AlignmentDirectional.centerEnd,
                             children: [
                               Image.network(snapshot.data[index]['image']),
-                              Padding(
-                                  padding: EdgeInsets.only(top: 130),
-                                  child: Column(
-
-                                    children: [
-                                      Text(
-                                        snapshot.data[index]['title'],
-                                        style: TextStyle(
-                                          backgroundColor: Colors.yellowAccent,
-                                        ),
-                                      ),// title of the speech
-                                      Text(
-                                          getName(snapshot.data[index]["sokhanran"])
-                                      )//orator title
-                                    ],
+                              Positioned(
+                                  top: 140,
+                                  child: PhysicalModel(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Colors.black26,
+                                    elevation: 30,
+                                    child: Padding(
+                                      padding: EdgeInsets.only(top: 11,left: 500),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            snapshot.data[index]['title'],
+                                            style: TextStyle(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                          ),// title of the speech
+                                          Text(
+                                              getName(snapshot.data[index]["sokhanran"]),
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                          )//orator title
+                                        ],
+                                      ),
+                                    ),
                                   ),
                               ),
                             ],
