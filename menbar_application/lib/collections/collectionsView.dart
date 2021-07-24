@@ -35,7 +35,7 @@ class Collections extends StatelessWidget {
             if(snapshot.data == null){
               return Center(
                 child: Text(
-                  '....در حال بارگیری مجموعه ها',
+                  '',
                   style: TextStyle(
                     fontSize: 27,
                     fontWeight: FontWeight.bold,
@@ -58,7 +58,7 @@ class Collections extends StatelessWidget {
                         child: Card(
 
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.zero,
                           ),
                           elevation: 10,
                           child: Stack(
@@ -67,7 +67,7 @@ class Collections extends StatelessWidget {
                               Image.network(snapshot.data[index]['image']),
                               Positioned(
                                   child: PhysicalModel(
-                                    borderRadius: BorderRadius.circular(8),
+                                    borderRadius: BorderRadius.circular(0),
                                     color: Colors.black26,
                                     elevation: 30,
                                     child: Padding(
@@ -79,22 +79,35 @@ class Collections extends StatelessWidget {
                                           crossAxisAlignment: CrossAxisAlignment.end,
                                           mainAxisAlignment: MainAxisAlignment.end,
                                           children: [
-                                            Text(
-                                              snapshot.data[index]['title'],
-                                              style: TextStyle(
-                                                fontSize: 17,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                              ),
-                                            ),// title of the speech
-                                            Text(
-                                              getName(snapshot.data[index]["sokhanran"]),
-                                              style: TextStyle(
-                                                fontSize: 11,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                              ),
-                                            )//orator title
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              children: [
+                                                Text(
+                                                  snapshot.data[index]['title'],
+                                                  style: TextStyle(
+                                                    fontSize: 17,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                  ),
+                                                ), // title of the speech
+                                                SizedBox(width: 15,),
+                                              ],
+                                            ),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              children: [
+                                                Text(
+                                                  getName(snapshot.data[index]["sokhanran"]),
+                                                  style: TextStyle(
+                                                    fontSize: 11,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 15,),
+                                              ],
+                                            ),
+
                                           ],
                                         ),
                                       ),
