@@ -118,7 +118,7 @@ class AboutButton extends StatelessWidget {
           elevation: 0,
           color: Color(0xff607d8d),
           onPressed: () {},
-          child: Icon(Icons.message,color: Colors.white,),
+          child: Icon(Icons.messenger_outline,color: Colors.white,),
         ),
       ),
     );
