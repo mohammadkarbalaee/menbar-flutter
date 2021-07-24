@@ -58,42 +58,45 @@ class Collections extends StatelessWidget {
                         child: Card(
 
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(20),
                           ),
                           elevation: 10,
                           child: Stack(
-                            alignment: AlignmentDirectional.centerEnd,
+                            alignment: AlignmentDirectional.bottomEnd,
                             children: [
                               Image.network(snapshot.data[index]['image']),
                               Positioned(
-                                  top: 140,
                                   child: PhysicalModel(
                                     borderRadius: BorderRadius.circular(8),
                                     color: Colors.black26,
                                     elevation: 30,
                                     child: Padding(
-                                      padding: EdgeInsets.only(top: 11,left: 500),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            snapshot.data[index]['title'],
-                                            style: TextStyle(
-                                              fontSize: 17,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                            ),
-                                          ),// title of the speech
-                                          Text(
+                                      padding: EdgeInsets.all(0),
+                                      child: Container(
+                                        height: 50,
+                                        width: 1000,
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              snapshot.data[index]['title'],
+                                              style: TextStyle(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
+                                            ),// title of the speech
+                                            Text(
                                               getName(snapshot.data[index]["sokhanran"]),
-                                            style: TextStyle(
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                            ),
-                                          )//orator title
-                                        ],
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
+                                            )//orator title
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
