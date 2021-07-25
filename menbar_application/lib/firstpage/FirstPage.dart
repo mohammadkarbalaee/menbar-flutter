@@ -15,6 +15,7 @@ class FirstActivity extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: DefaultTabController(
+        initialIndex: 1,
         length: 3,
         child: Scaffold(
           appBar: AppBar(
@@ -40,6 +41,8 @@ class FirstActivity extends StatelessWidget {
 
             ],
             bottom: TabBar(
+              indicatorColor: Colors.yellow,
+              indicatorWeight: 2.5,
               tabs: [
                 Tab(
                   child: Row(

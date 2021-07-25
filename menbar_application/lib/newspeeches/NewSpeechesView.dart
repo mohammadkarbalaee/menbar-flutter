@@ -5,6 +5,9 @@ import 'package:http/http.dart' as http;
 import 'package:menbar_application/newspeeches/NewSpeechInstance.dart';
 import 'dart:convert';
 
+import  'package:persian_number_utility/persian_number_utility.dart';
+
+
 class NewSpeeches extends StatelessWidget {
 
   List orators;
@@ -55,35 +58,43 @@ class NewSpeeches extends StatelessWidget {
                       child: Container(
 
                         child: Card(
-
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.zero,
                           ),
                           elevation: 10,
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 100,),
+                                  Text(
+                                    getDateTime(snapshot.data[index]["performed_at"]).toPersianDateStr(showDayStr: true),
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ],
+                              ),
                               Flexible(
-                                  child:Container(
-                                    height: 100,
-                                    width: 500,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          snapshot.data[index]['title'],
-                                          textAlign: TextAlign.end,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        snapshot.data[index]['title'],
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                          fontSize: 15,
                                         ),
-                                        Text(
-                                          getName(snapshot.data[index]['sokhanran']),
+                                      ),
+                                      Text(
+                                        getName(snapshot.data[index]['sokhanran']),
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                        SizedBox(height: 10,),
-                                        Text(
-                                          snapshot.data[index]["performed_at"],
-                                          textAlign: TextAlign.right,
-                                        )
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                               ),
                               SizedBox(width: 20),
@@ -155,4 +166,14 @@ class NewSpeeches extends StatelessWidget {
 
     return image;
   }
+
+  DateTime getDateTime(String date) {
+    List splited = date.split('-');
+    var year = int.parse(splited[0]);
+    var month = int.parse(splited[1]);
+    var day = int.parse(splited[2]);
+    DateTime result = DateTime(year,month,day);
+    return result;
+  }
+
 }
