@@ -100,10 +100,7 @@ class NewSpeeches extends StatelessWidget {
                               SizedBox(width: 20),
                               Container(
                                 height: 120,
-                                child: FittedBox(
-                                  fit: BoxFit.contain,
-                                  child: Image.network(getImage(snapshot.data[index]['collection'])),
-                                ),
+                                child: Image.network(getImage(snapshot.data[index]['collection'])),
                               ),
                             ],
                           ),
