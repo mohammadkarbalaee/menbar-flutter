@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:menbar_application/firstpage/NewSpeeches.dart';
-import 'package:menbar_application/firstpage/Orators.dart';
+import 'package:menbar_application/Orators/OratorsView.dart';
 import 'package:menbar_application/collections/collectionsView.dart';
 
 // ignore: must_be_immutable
