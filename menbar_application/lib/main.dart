@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:async/async.dart';
 import 'package:http/http.dart' as http;
-import 'firstpage/First.dart';
+import 'firstpage/FirstPage.dart';
 
 main() async{
 
@@ -11,7 +11,11 @@ main() async{
   http.Response oratorsResponse = await http.get(Uri.parse(oratorsApiUrl));
   List orators = json.decode(utf8.decode(oratorsResponse.bodyBytes));
 
+  String apiUrl = 'http://menbar.sobhe.ir/api/collections/';
+  http.Response collectionsResponse = await http.get(Uri.parse(apiUrl));
+  List collections = json.decode(utf8.decode(collectionsResponse.bodyBytes));
+
   runApp(
-      FirstActivity(orators)
+      FirstActivity(orators,collections)
   );
 }

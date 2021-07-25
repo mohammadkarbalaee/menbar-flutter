@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:menbar_application/firstpage/NewSpeeches.dart';
+import 'package:menbar_application/newspeeches/NewSpeechesView.dart';
 import 'package:menbar_application/Orators/OratorsView.dart';
 import 'package:menbar_application/collections/collectionsView.dart';
 
@@ -8,8 +8,8 @@ import 'package:menbar_application/collections/collectionsView.dart';
 class FirstActivity extends StatelessWidget {
 
   List orators;
-
-  FirstActivity(this.orators);
+  List collections;
+  FirstActivity(this.orators,this.collections);
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +94,7 @@ class FirstActivity extends StatelessWidget {
           body: TabBarView(
             children: [
               Orators(),
-              NewSpeeches(),
+              NewSpeeches(this.orators,this.collections),
               Collections(this.orators),
             ],
           ),

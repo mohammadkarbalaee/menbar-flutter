@@ -12,11 +12,11 @@ class Collections extends StatelessWidget {
   Collections(this.orators);
 
   Future<List> _getData() async {
-    List result = [];
 
     String apiUrl = 'http://menbar.sobhe.ir/api/collections/';
     http.Response collectionsResponse = await http.get(Uri.parse(apiUrl));
     List collections = json.decode(utf8.decode(collectionsResponse.bodyBytes));
+
     return collections;
   }
   @override
