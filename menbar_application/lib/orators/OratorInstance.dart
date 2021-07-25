@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 
-class Sets extends StatelessWidget {
-  const Sets({Key? key}) : super(key: key);
+class OratorInstance extends StatelessWidget {
+
+  var image;
+  OratorInstance(this.image);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text(
-        'sets'
-      ),
+      child: Image.network(image),
     );
   }
 }
