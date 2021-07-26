@@ -21,6 +21,7 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
+  persian_number_utility: ^0.3.4
   http:
   flutter:
     sdk: flutter
