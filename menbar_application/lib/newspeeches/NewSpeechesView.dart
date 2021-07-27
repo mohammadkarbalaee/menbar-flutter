@@ -71,6 +71,9 @@ class NewSpeeches extends StatelessWidget {
                                   SizedBox(height: 100,),
                                   Text(
                                     getDateTime(snapshot.data[index]["performed_at"]).toPersianDateStr(showDayStr: true),
+                                    style: TextStyle(
+                                      fontFamily: 'sans'
+                                    ),
                                     textAlign: TextAlign.left,
                                   ),
                                 ],
@@ -81,17 +84,21 @@ class NewSpeeches extends StatelessWidget {
                                     children: [
                                       Text(
                                         snapshot.data[index]['title'],
+                                        overflow: TextOverflow.ellipsis,
                                         textAlign: TextAlign.end,
                                         style: TextStyle(
                                           fontSize: 15,
+                                          fontFamily: 'sans',
                                         ),
                                       ),
                                       Text(
                                         getName(snapshot.data[index]['sokhanran']),
+                                        overflow: TextOverflow.ellipsis,
                                         textAlign: TextAlign.right,
                                         style: TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.bold,
+                                          fontFamily: 'sans',
                                         ),
                                       ),
                                     ],
