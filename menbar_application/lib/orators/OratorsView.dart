@@ -60,13 +60,19 @@ class Orators extends StatelessWidget {
                           child: Stack(
                             alignment: AlignmentDirectional.bottomEnd,
                             children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width,
-                                height: 240,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    fit: BoxFit.fill,
-                                    image: NetworkImage(snapshot.data[index]['image']),
+                              Padding(
+                                  padding: EdgeInsets.only(top: 4,bottom: 4,left: 1,right: 1),
+                                child: Card(
+                                  elevation: 10,
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 210,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: NetworkImage(snapshot.data[index]['image']),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
