@@ -82,34 +82,39 @@ class Collections extends StatelessWidget {
                                             Row(
                                               mainAxisAlignment: MainAxisAlignment.end,
                                               children: [
-                                                Text(
-                                                  snapshot.data[index]['title'],
-                                                  style: TextStyle(
-                                                    fontSize: 17,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white,
-                                                    fontFamily: 'sans'
-                                                  ),
-                                                ), // title of the speech
+                                                Flexible(
+                                                    child: Text(
+                                                      snapshot.data[index]['title'],
+                                                      overflow: TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          fontSize: 17,
+                                                          fontWeight: FontWeight.bold,
+                                                          color: Colors.white,
+                                                          fontFamily: 'sans'
+                                                      ),
+                                                    ),
+                                                ),
                                                 SizedBox(width: 15,),
                                               ],
                                             ),
                                             Row(
                                               mainAxisAlignment: MainAxisAlignment.end,
                                               children: [
-                                                Text(
-                                                  getName(snapshot.data[index]["sokhanran"]),
-                                                  style: TextStyle(
-                                                    fontSize: 11,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white,
-                                                    fontFamily: 'sans'
-                                                  ),
+                                                Flexible(
+                                                    child: Text(
+                                                      getName(snapshot.data[index]["sokhanran"]),
+                                                      overflow: TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          fontSize: 11,
+                                                          fontWeight: FontWeight.bold,
+                                                          color: Colors.white,
+                                                          fontFamily: 'sans'
+                                                      ),
+                                                    ),
                                                 ),
                                                 SizedBox(width: 15,),
                                               ],
                                             ),
-
                                           ],
                                         ),
                                       ),
