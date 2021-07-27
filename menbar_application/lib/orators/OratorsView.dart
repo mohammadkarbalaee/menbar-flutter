@@ -90,11 +90,12 @@ class Orators extends StatelessWidget {
                                               Text(
                                                 snapshot.data[index]['title'],
                                                 style: TextStyle(
-                                                  fontSize: 17,
+                                                  fontSize: 22,
                                                   fontWeight: FontWeight.bold,
+                                                  fontFamily: 'sans',
                                                   color: Colors.white,
                                                 ),
-                                              ), // title of the speech
+                                              ),
                                               SizedBox(width: 15,),
                                             ],
                                           ),

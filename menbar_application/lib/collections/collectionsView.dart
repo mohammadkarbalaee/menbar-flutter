@@ -87,7 +87,7 @@ class Collections extends StatelessWidget {
                                                       snapshot.data[index]['title'],
                                                       overflow: TextOverflow.ellipsis,
                                                       style: TextStyle(
-                                                          fontSize: 17,
+                                                          fontSize: 20,
                                                           fontWeight: FontWeight.bold,
                                                           color: Colors.white,
                                                           fontFamily: 'sans'
@@ -105,7 +105,7 @@ class Collections extends StatelessWidget {
                                                       getName(snapshot.data[index]["sokhanran"]),
                                                       overflow: TextOverflow.ellipsis,
                                                       style: TextStyle(
-                                                          fontSize: 11,
+                                                          fontSize: 14,
                                                           fontWeight: FontWeight.bold,
                                                           color: Colors.white,
                                                           fontFamily: 'sans'
