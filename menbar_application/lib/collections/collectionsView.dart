@@ -88,6 +88,7 @@ class Collections extends StatelessWidget {
                                                     fontSize: 17,
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.white,
+                                                    fontFamily: 'sans'
                                                   ),
                                                 ), // title of the speech
                                                 SizedBox(width: 15,),
@@ -102,6 +103,7 @@ class Collections extends StatelessWidget {
                                                     fontSize: 11,
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.white,
+                                                    fontFamily: 'sans'
                                                   ),
                                                 ),
                                                 SizedBox(width: 15,),
