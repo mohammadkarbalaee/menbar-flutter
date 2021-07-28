@@ -16,7 +16,9 @@ class Collections extends StatelessWidget {
     String apiUrl = 'http://menbar.sobhe.ir/api/collections/';
     http.Response collectionsResponse = await http.get(Uri.parse(apiUrl));
     List collections = json.decode(utf8.decode(collectionsResponse.bodyBytes));
-
+    for(var e in collections){
+      print(e['title']);
+    }
     return collections;
   }
   @override
@@ -56,22 +58,26 @@ class Collections extends StatelessWidget {
                       child: Container(
 
                         child: Card(
-
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.zero,
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
                           ),
-                          elevation: 10,
+                          elevation: 20,
                           child: Stack(
                             alignment: AlignmentDirectional.bottomEnd,
                             children: [
-                              Image.network(snapshot.data[index]['image']),
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                                ),
+                                child: Image.network(snapshot.data[index]['image'],),
+                              ),
                               Positioned(
                                   child: PhysicalModel(
                                     borderRadius: BorderRadius.circular(0),
                                     color: Colors.black26,
                                     elevation: 30,
                                     child: Padding(
-                                      padding: EdgeInsets.all(0),
+                                      padding: EdgeInsets.only(right: 10),
                                       child: Container(
                                         height: 50,
                                         width: 1000,
@@ -85,6 +91,7 @@ class Collections extends StatelessWidget {
                                                 Flexible(
                                                     child: Text(
                                                       snapshot.data[index]['title'],
+                                                      textDirection: TextDirection.rtl,
                                                       overflow: TextOverflow.ellipsis,
                                                       style: TextStyle(
                                                           fontSize: 20,
@@ -94,7 +101,6 @@ class Collections extends StatelessWidget {
                                                       ),
                                                     ),
                                                 ),
-                                                SizedBox(width: 15,),
                                               ],
                                             ),
                                             Row(
@@ -103,6 +109,7 @@ class Collections extends StatelessWidget {
                                                 Flexible(
                                                     child: Text(
                                                       getName(snapshot.data[index]["sokhanran"]),
+                                                      textDirection: TextDirection.rtl,
                                                       overflow: TextOverflow.ellipsis,
                                                       style: TextStyle(
                                                           fontSize: 14,
@@ -112,7 +119,6 @@ class Collections extends StatelessWidget {
                                                       ),
                                                     ),
                                                 ),
-                                                SizedBox(width: 15,),
                                               ],
                                             ),
                                           ],
