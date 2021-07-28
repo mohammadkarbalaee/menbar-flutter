@@ -16,9 +16,6 @@ class Collections extends StatelessWidget {
     String apiUrl = 'http://menbar.sobhe.ir/api/collections/';
     http.Response collectionsResponse = await http.get(Uri.parse(apiUrl));
     List collections = json.decode(utf8.decode(collectionsResponse.bodyBytes));
-    for(var e in collections){
-      print(e['title']);
-    }
     return collections;
   }
   @override
