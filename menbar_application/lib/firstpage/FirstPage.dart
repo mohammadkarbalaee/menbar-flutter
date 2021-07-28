@@ -24,13 +24,14 @@ class FirstActivity extends StatelessWidget {
             leading:AboutButton(),
             actions: [
               Padding(
-                padding: EdgeInsets.all(10),
+                padding: EdgeInsets.only(top: 18,right: 10),
                 child: Text(
                   'منبر',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 22,
+                    fontFamily: 'sans',
+                    fontSize: 25,
                   ),
                 ),
               ),
@@ -50,8 +51,9 @@ class FirstActivity extends StatelessWidget {
                       Text(
                           'سخنران ها',
                         style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'sans',
                         ),
                       ),
                       SizedBox(width: 5,),
@@ -65,8 +67,9 @@ class FirstActivity extends StatelessWidget {
                       Text(
                         'تازه ها',
                         style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          fontFamily: 'sans',
                         ),
                       ),
                       SizedBox(width: 5,),
@@ -80,8 +83,9 @@ class FirstActivity extends StatelessWidget {
                       Text(
                         'مجموعه ها',
                         style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          fontFamily: 'sans',
                         ),
                       ),
                       SizedBox(width: 5,),
