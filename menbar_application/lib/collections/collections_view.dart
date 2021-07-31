@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:async/async.dart';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -12,10 +13,7 @@ class Collections extends StatelessWidget {
   Collections(this.orators);
 
   Future<List> _getData() async {
-
-    String apiUrl = 'http://menbar.sobhe.ir/api/collections/';
-    http.Response collectionsResponse = await http.get(Uri.parse(apiUrl));
-    List collections = json.decode(utf8.decode(collectionsResponse.bodyBytes));
+    List collections = await Hive.box('collections').get('list');
     return collections;
   }
   @override
