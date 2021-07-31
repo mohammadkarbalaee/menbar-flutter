@@ -4,7 +4,7 @@ import 'package:async/async.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'CollectionInstance.dart';
+import 'collection_instance.dart';
 
 class Collections extends StatelessWidget {
 

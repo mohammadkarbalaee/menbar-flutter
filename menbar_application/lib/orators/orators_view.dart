@@ -4,7 +4,7 @@ import 'package:async/async.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'OratorInstance.dart';
+import 'orator_instance.dart';
 
 class Orators extends StatelessWidget {
 
