@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
-import 'orator_instance.dart';
+import 'orator_instance_widget.dart';
 
 class Orators extends StatelessWidget {
 

@@ -5,7 +5,7 @@ import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'collection_instance.dart';
+import 'collection_speeches_widget.dart';
 
 class Collections extends StatelessWidget {
 
@@ -127,9 +127,10 @@ class Collections extends StatelessWidget {
                         ),
                       ),
                       onTap: (){
-                        Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => CollectionInstance(snapshot.data[index]['image'])
-                        )
+                        Navigator.of(context,rootNavigator: true).push(MaterialPageRoute(
+                            builder: (context) => CollectionInstance(snapshot.data[index]['image'],snapshot.data[index]['title']),
+                            fullscreenDialog: true
+                          )
                         );
                       },
                     );
