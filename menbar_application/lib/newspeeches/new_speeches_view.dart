@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:async/async.dart';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
-import 'package:menbar_application/newspeeches/NewSpeechInstance.dart';
+import 'package:menbar_application/newspeeches/new_speech_instance.dart';
 import 'dart:convert';
 
 import  'package:persian_number_utility/persian_number_utility.dart';
@@ -15,10 +16,7 @@ class NewSpeeches extends StatelessWidget {
   NewSpeeches(this.orators,this.collections);
 
   Future<List> _getData() async {
-
-    String apiUrl = 'http://menbar.sobhe.ir/api/sokhanranis/';
-    http.Response collectionsResponse = await http.get(Uri.parse(apiUrl));
-    List news = json.decode(utf8.decode(collectionsResponse.bodyBytes));
+    List news = await Hive.box('news').get('list');
     return news;
   }
   @override

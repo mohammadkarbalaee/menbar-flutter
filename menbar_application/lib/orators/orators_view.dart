@@ -1,18 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:async/async.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:hive/hive.dart';
 
-import 'OratorInstance.dart';
+import 'orator_instance.dart';
 
 class Orators extends StatelessWidget {
 
   Future<List> _getData() async {
-
-    String oratorsApiUrl = 'http://menbar.sobhe.ir/api/sokhanrans/';
-    http.Response oratorsResponse = await http.get(Uri.parse(oratorsApiUrl));
-    List orators = json.decode(utf8.decode(oratorsResponse.bodyBytes));
+    List orators = await Hive.box('orators').get('list');
     return orators;
   }
   @override

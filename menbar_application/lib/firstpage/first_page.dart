@@ -1,15 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:menbar_application/newspeeches/NewSpeechesView.dart';
-import 'package:menbar_application/Orators/OratorsView.dart';
-import 'package:menbar_application/collections/collectionsView.dart';
+import 'package:hive/hive.dart';
+import 'package:menbar_application/newspeeches/new_speeches_view.dart';
+import 'package:menbar_application/Orators/orators_view.dart';
+import 'package:menbar_application/collections/collections_view.dart';
 
 // ignore: must_be_immutable
 class FirstActivity extends StatelessWidget {
 
-  List orators;
-  List collections;
-  FirstActivity(this.orators,this.collections);
+  List orators = Hive.box('orators').get('list');
+  List collections = Hive.box('collections').get('list');
 
   @override
   Widget build(BuildContext context) {
