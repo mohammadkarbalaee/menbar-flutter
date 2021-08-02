@@ -19,6 +19,7 @@ main() async {
   await Hive.openBox('orators');
   await Hive.openBox('collections');
   await Hive.openBox('news');
+  await Hive.openBox('speeches');
 //getting the made boxes
   final oratorsBox = Hive.box('orators');
   final collectionsBox = Hive.box('collections');
@@ -32,9 +33,12 @@ main() async {
   http.Response collectionsResponse = await http.get(Uri.parse(collectionsApiUrl));
   List collectionsServer = json.decode(utf8.decode(collectionsResponse.bodyBytes));
 
-  String newsApiUrl = 'http://menbar.sobhe.ir/api/sokhanranis/';
+  String newsApiUrl = 'http://menbar.sobhe.ir/api/sokhanranis/?start=0&count=100';
   http.Response newsResponse = await http.get(Uri.parse(newsApiUrl));
   List newsServer = json.decode(utf8.decode(newsResponse.bodyBytes));
+
+  getSpeechesOfCollections();
+
 //saving data in DB
   oratorsBox.put('list',oratorsServer);
   collectionsBox.put('list',collectionsServer);
@@ -42,6 +46,19 @@ main() async {
 //retrieving data from DB
 
   runApp(
-      FirstActivity(),
+      HomePage(),
   );
 }
+
+void getSpeechesOfCollections() async {
+  final speechesBox = Hive.box('speeches');
+  List collections = await Hive.box('collections').get('list');
+
+  for(var i in collections){
+    String url = 'http://menbar.sobhe.ir/api/sokhanranis/?collection=${i['id']}&start=0&count=500';
+    http.Response newsResponse = await http.get(Uri.parse(url));
+    List speeches = json.decode(utf8.decode(newsResponse.bodyBytes));
+    speechesBox.put('${i['id']}',speeches);
+  }
+}
+

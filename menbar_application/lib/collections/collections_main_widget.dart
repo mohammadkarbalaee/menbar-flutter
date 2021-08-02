@@ -31,13 +31,7 @@ class Collections extends StatelessWidget {
 
             if(snapshot.data == null){
               return Center(
-                child: Text(
-                  '',
-                  style: TextStyle(
-                    fontSize: 27,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                child: CircularProgressIndicator()
               );
             }
             else {
@@ -128,7 +122,12 @@ class Collections extends StatelessWidget {
                       ),
                       onTap: (){
                         Navigator.of(context,rootNavigator: true).push(MaterialPageRoute(
-                            builder: (context) => CollectionInstance(snapshot.data[index]['image'],snapshot.data[index]['title']),
+                            builder: (context) => CollectionInstance(
+                                snapshot.data[index]['image'],
+                                snapshot.data[index]['title'],
+                                snapshot.data[index]['id'],
+                                snapshot.data[index]["is_sequence"],
+                            ),
                             fullscreenDialog: true
                           )
                         );

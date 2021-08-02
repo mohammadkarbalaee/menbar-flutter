@@ -6,7 +6,7 @@ import 'package:menbar_application/Orators/orators_view_widget.dart';
 import 'package:menbar_application/collections/collections_main_widget.dart';
 
 // ignore: must_be_immutable
-class FirstActivity extends StatelessWidget {
+class HomePage extends StatelessWidget {
 
   List orators = Hive.box('orators').get('list');
   List collections = Hive.box('collections').get('list');
