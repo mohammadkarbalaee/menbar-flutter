@@ -16,8 +16,7 @@ class CollectionInstance extends StatefulWidget {
 }
 
 class _CollectionInstanceState extends State<CollectionInstance> {
-  var collection;
-
+  var collection = [];
   Future<List> _getData() async {
     List speeches = await Hive.box('speeches').get('${widget.id}');
 
@@ -118,7 +117,6 @@ class _CollectionInstanceState extends State<CollectionInstance> {
                           ),
                         ),
                         leading: DownloadButton(),
-                        onTap: (){},
                       );
                     },
                   );
@@ -155,16 +153,45 @@ class BackButton extends StatelessWidget {
   }
 }
 
-class DownloadButton extends StatelessWidget {
-  var isProgressing = false;
+class DownloadButton extends StatefulWidget {
+  @override
+  _DownloadButtonState createState() => _DownloadButtonState();
+}
+
+class _DownloadButtonState extends State<DownloadButton> {
+  var boool = false;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text(
-        isProgressing.toString(),
-      ),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          boool ? Container(
+            height: 36,
+            width: 36,
+            child: CircularProgressIndicator(
+              strokeWidth: 3,
+              color: Colors.black38,
+            ),
+          )
+              : Text(''),
+          OutlinedButton(
+            child: boool ? Icon(Icons.close, size: 25,) : Icon(Icons.get_app, size: 25,),
+            onPressed: () {
+              setState(() {
+                boool = !boool;
+              });
+            },
+            style: OutlinedButton.styleFrom(
+              primary: Colors.black,
+              backgroundColor: Colors.white,
+              elevation: 0,
+              shape: CircleBorder(),
+            ),
+          ),
+        ],
+      )
     );
   }
 }
-
