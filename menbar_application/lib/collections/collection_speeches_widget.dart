@@ -8,8 +8,9 @@ class CollectionInstance extends StatefulWidget {
   var title;
   var id;
   var isSequenced;
+  var orator;
 
-  CollectionInstance(this.image,this.title,this.id,this.isSequenced);
+  CollectionInstance(this.image,this.title,this.id,this.isSequenced,this.orator);
 
   @override
   _CollectionInstanceState createState() => _CollectionInstanceState();
@@ -33,23 +34,94 @@ class _CollectionInstanceState extends State<CollectionInstance> {
             expandedHeight: 270,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
-              background: Image.network(widget.image,fit:BoxFit.cover,),
-              title: Align(
-                alignment: Alignment.bottomRight,
-                child: Padding(
-                  padding: EdgeInsets.only(right:10),
-                  child: Text(
-                    widget.title,
-                    textDirection: TextDirection.rtl,
-                    style: TextStyle(
-                        fontSize: 23,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontFamily: 'sans'
+              background: Stack(
+                alignment: AlignmentDirectional.bottomEnd,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: NetworkImage(widget.image),
+                      ),
+                    )
+                  ),
+                  Positioned(
+                    child: PhysicalModel(
+                      borderRadius: BorderRadius.circular(0),
+                      color: Colors.black12,
+                      elevation: 10,
+                      child: Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: Container(
+                          height: 60,
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: 6),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Flexible(
+                                      child: Text(
+                                        widget.title,
+                                        textDirection: TextDirection.rtl,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                            fontFamily: 'sans'
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 5,),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Flexible(
+                                      child: Text(
+                                        widget.orator,
+                                        textDirection: TextDirection.rtl,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                            fontFamily: 'sans'
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
+              // title: Align(
+              //   alignment: Alignment.bottomRight,
+              //   child: Padding(
+              //     padding: EdgeInsets.only(right:10),
+              //     child: Text(
+              //       widget.title,
+              //       textDirection: TextDirection.rtl,
+              //       style: TextStyle(
+              //           fontSize: 23,
+              //           fontWeight: FontWeight.bold,
+              //           color: Colors.white,
+              //           fontFamily: 'sans'
+              //       ),
+              //     ),
+              //   ),
+              // ),
               collapseMode: CollapseMode.parallax,
             ),
             leading: BackButton(),
