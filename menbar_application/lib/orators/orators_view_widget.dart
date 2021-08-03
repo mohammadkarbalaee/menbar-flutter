@@ -111,8 +111,11 @@ class Orators extends StatelessWidget {
                         ),
                       ),
                       onTap: (){
-                        Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => OratorInstance(snapshot.data[index]['image'])
+                        Navigator.of(context,rootNavigator: true).push(MaterialPageRoute(
+                            builder: (context) => OratorInstance(
+                                snapshot.data[index]['image'],
+                                snapshot.data[index]['title'],
+                            )
                         )
                         );
                       },

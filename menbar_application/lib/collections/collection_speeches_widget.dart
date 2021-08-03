@@ -37,18 +37,6 @@ class CollectionInstance extends StatelessWidget {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          // SliverPersistentHeader(
-          //     delegate: MyAppBar(200),
-          // ),
-          // SliverGrid(
-          //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          //     crossAxisCount: 2,
-          //   ),
-          //   delegate: SliverChildBuilderDelegate(
-          //         (context, index) => Text('ssss'),
-          //     childCount: 20,
-          //   ),
-          // )
           SliverAppBar(
             primary: true,
             leading: HeaderButton(
