@@ -15,15 +15,15 @@ class CollectionInstance extends StatelessWidget {
   var downloads;
   var collection = [];
 
-  CollectionInstance(
-      this.image,
-      this.title,
-      this.id,
-      this.isSequenced,
-      this.orator,
-      this.url,
-      this.downloads
-      );
+  CollectionInstance(image, title, id, isSequenced, orator, url, downloads){
+    this.image = image;
+    this.title = title;
+    this.id = id;
+    this.isSequenced = isSequenced;
+    this.orator = orator;
+    this.url = url == null ? "" : url;
+    this.downloads = downloads;
+  }
 
   Future<List> _getData() async {
     List speeches = await Hive.box('speeches').get('$id');
@@ -51,6 +51,10 @@ class CollectionInstance extends StatelessWidget {
           // )
           SliverAppBar(
             primary: true,
+            leading: HeaderButton(
+                icon: Icon(Icons.bookmark_border,color: Colors.white,),
+                onPress: () => {},
+            ),
             automaticallyImplyLeading: false,
             backgroundColor: Color(0xff607d8d),
             expandedHeight: 270,
@@ -105,10 +109,10 @@ class CollectionInstance extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     Container(
-                                      width: 150,
+                                      width: 110,
                                       child: InkWell(
                                         child: Text(
-                                          url,
+                                          cutUrl(url),
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             decoration: TextDecoration.underline,
@@ -145,7 +149,10 @@ class CollectionInstance extends StatelessWidget {
               collapseMode: CollapseMode.parallax,
             ),
             actions: [
-              BackButton(),
+              HeaderButton(
+                icon: Icon(Icons.arrow_forward,color: Colors.white,),
+                onPress: () => Navigator.pop(context),
+              ),
             ],
           ),
           SliverToBoxAdapter(
@@ -242,97 +249,12 @@ class CollectionInstance extends StatelessWidget {
   }
 }
 
-// class MyAppBar extends SliverPersistentHeaderDelegate{
-//   var expandedHeight;
-//
-//   MyAppBar(this.expandedHeight);
-//
-//   @override
-//   Widget build(
-//       BuildContext context, double shrinkOffset, bool overlapsContent) {
-//     final size = 60;
-//     final top = expandedHeight - shrinkOffset - size / 2;
-//
-//     return Stack(
-//       fit: StackFit.expand,
-//       overflow: Overflow.visible,
-//       children: [
-//         buildBackground(shrinkOffset),
-//         buildAppBar(shrinkOffset),
-//         Positioned(
-//           top: top,
-//           left: 20,
-//           right: 20,
-//           child: buildFloating(shrinkOffset),
-//         ),
-//       ],
-//     );
-//   }
-//
-//   double appear(double shrinkOffset) => shrinkOffset / expandedHeight;
-//
-//   double disappear(double shrinkOffset) => 1 - shrinkOffset / expandedHeight;
-//
-//
-//   Widget buildAppBar(double shrinkOffset) => Opacity(
-//     opacity: appear(shrinkOffset),
-//     child: AppBar(
-//       title: Text('title'),
-//       centerTitle: true,
-//     ),
-//   );
-//
-//
-//   Widget buildBackground(double shrinkOffset) => Opacity(
-//     opacity: disappear(shrinkOffset),
-//     child: Image.network(
-//       'http://menbar.sobhe.ir/media/images/collection/porsesh-pasokh.jpg',
-//       fit: BoxFit.cover,
-//     ),
-//   );
-//
-//   Widget buildFloating(double shrinkOffset) => Opacity(
-//     opacity: disappear(shrinkOffset),
-//     child: Card(
-//       child: Row(
-//         children: [
-//           Expanded(child: buildButton(text: 'Share', icon: Icons.share)),
-//           Expanded(child: buildButton(text: 'Like', icon: Icons.thumb_up)),
-//         ],
-//       ),
-//     ),
-//   );
-//
-//   Widget buildButton({
-//     required String text,
-//     required IconData icon,
-//   }) =>
-//       TextButton(
-//         child: Row(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             Icon(icon),
-//             const SizedBox(width: 12),
-//             Text(text, style: TextStyle(fontSize: 20)),
-//           ],
-//         ),
-//         onPressed: () {},
-//       );
-//
-//   @override
-//   double get maxExtent => expandedHeight;
-//
-//   @override
-//   double get minExtent => kToolbarHeight + 30;
-//
-//   @override
-//   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;
-//
-// }
 
+class HeaderButton extends StatelessWidget {
+  var icon;
+  var onPress;
 
-class BackButton extends StatelessWidget {
-  const BackButton({Key? key}) : super(key: key);
+  HeaderButton({this.icon,this.onPress});
 
   @override
   Widget build(BuildContext context) {
@@ -344,10 +266,8 @@ class BackButton extends StatelessWidget {
         child: RaisedButton(
           elevation: 0,
           color: Color(0xffffff),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Icon(Icons.arrow_forward,color: Colors.white,),
+          onPressed: onPress,
+          child: icon,
         ),
       ),
     );
@@ -395,4 +315,9 @@ class _DownloadButtonState extends State<DownloadButton> {
       )
     );
   }
+}
+
+String cutUrl(String url){
+  List pieces = url.split('/');
+  return pieces.length != 1? pieces[2] : "";
 }
