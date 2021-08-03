@@ -38,6 +38,7 @@ dev_dependencies:
     sdk: flutter
   hive_generator: ^1.1.0
   build_runner: ^2.0.6
+  url_launcher: ^6.0.9
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
