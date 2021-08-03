@@ -1,28 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class CollectionInstance extends StatefulWidget {
+class CollectionInstance extends StatelessWidget {
 
   var image;
   var title;
   var id;
   var isSequenced;
   var orator;
+  var url;
 
-  CollectionInstance(this.image,this.title,this.id,this.isSequenced,this.orator);
+  CollectionInstance(this.image,this.title,this.id,this.isSequenced,this.orator,this.url);
 
-  @override
-  _CollectionInstanceState createState() => _CollectionInstanceState();
-}
-
-class _CollectionInstanceState extends State<CollectionInstance> {
   var collection = [];
-  Future<List> _getData() async {
-    List speeches = await Hive.box('speeches').get('${widget.id}');
 
-    return widget.isSequenced ? new List.from(speeches.reversed) : speeches;
+  Future<List> _getData() async {
+    List speeches = await Hive.box('speeches').get('$id');
+
+    return isSequenced ? new List.from(speeches.reversed) : speeches;
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -38,12 +37,12 @@ class _CollectionInstanceState extends State<CollectionInstance> {
                 alignment: AlignmentDirectional.bottomEnd,
                 children: [
                   Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(widget.image),
-                      ),
-                    )
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(image),
+                        ),
+                      )
                   ),
                   Positioned(
                     child: PhysicalModel(
@@ -65,7 +64,7 @@ class _CollectionInstanceState extends State<CollectionInstance> {
                                   children: [
                                     Flexible(
                                       child: Text(
-                                        widget.title,
+                                        title,
                                         textDirection: TextDirection.rtl,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
@@ -82,9 +81,23 @@ class _CollectionInstanceState extends State<CollectionInstance> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
+                                    Container(
+                                      width: 150,
+                                      child: InkWell(
+                                        child: Text(
+                                          url,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            decoration: TextDecoration.underline,
+                                            color: Colors.yellow[600],
+                                          ),
+                                        ),
+                                        onTap: () => launch(url),
+                                      ),
+                                    ),
                                     Flexible(
                                       child: Text(
-                                        widget.orator,
+                                        orator,
                                         textDirection: TextDirection.rtl,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
@@ -106,22 +119,6 @@ class _CollectionInstanceState extends State<CollectionInstance> {
                   ),
                 ],
               ),
-              // title: Align(
-              //   alignment: Alignment.bottomRight,
-              //   child: Padding(
-              //     padding: EdgeInsets.only(right:10),
-              //     child: Text(
-              //       widget.title,
-              //       textDirection: TextDirection.rtl,
-              //       style: TextStyle(
-              //           fontSize: 23,
-              //           fontWeight: FontWeight.bold,
-              //           color: Colors.white,
-              //           fontFamily: 'sans'
-              //       ),
-              //     ),
-              //   ),
-              // ),
               collapseMode: CollapseMode.parallax,
             ),
             leading: BackButton(),
@@ -130,7 +127,7 @@ class _CollectionInstanceState extends State<CollectionInstance> {
 
             child: FutureBuilder(
 
-              future: _getData(),
+                future: _getData(),
 
                 builder: (BuildContext context,AsyncSnapshot snapshot){
 
@@ -169,8 +166,8 @@ class _CollectionInstanceState extends State<CollectionInstance> {
                                   '${snapshot.data[index]["file_size"]} مگابایت',
                                   textDirection: TextDirection.rtl,
                                   style: TextStyle(
-                                      fontFamily: 'sans',
-                                      fontSize: 15,
+                                    fontFamily: 'sans',
+                                    fontSize: 15,
                                     color: Colors.black,
                                   ),
                                 ),
