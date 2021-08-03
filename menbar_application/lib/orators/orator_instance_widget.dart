@@ -1,18 +1,31 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:menbar_application/collections/collection_speeches_widget.dart';
 
 class OratorInstance extends StatelessWidget {
 
   var image;
   var name;
-  OratorInstance(this.image,this.name);
+  var id;
+
+  OratorInstance(this.image,this.name,this.id);
+
+  Future<List> getData() async{
+    List speeches = await Hive.box('collectionsOfOrators').get('$id');
+    return speeches;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: CustomScrollView(
+    return Scaffold(
+      body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            leading: HeaderButton(
+              icon: Icon(Icons.arrow_back,color: Colors.white,),
+              onPress: () => Navigator.pop(context),
+            ),
             primary: true,
             automaticallyImplyLeading: false,
             backgroundColor: Color(0xff607d8d),
@@ -82,15 +95,89 @@ class OratorInstance extends StatelessWidget {
               ),
               collapseMode: CollapseMode.parallax,
             ),
-            actions: [
-              HeaderButton(
-                icon: Icon(Icons.arrow_forward,color: Colors.white,),
-                onPress: () => Navigator.pop(context),
-              ),
-            ],
           ),
           SliverToBoxAdapter(
 
+            child: FutureBuilder(
+
+              future: getData(),
+
+              builder: (BuildContext context,AsyncSnapshot snapshot){
+
+                if(snapshot.data == null){
+                  return Center(
+                    child: Text('',),
+                  );
+                }
+                else {
+
+                  return ListView.builder(
+                    primary: false,
+                    shrinkWrap: true,
+                    itemCount: snapshot.data.length,
+
+                    itemBuilder: (context,index) {
+
+                      return GestureDetector(
+
+                        child: Container(
+
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.zero,
+                            ),
+                            elevation: 10,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Flexible(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        snapshot.data[index]['title'],
+                                        overflow: TextOverflow.ellipsis,
+                                        textDirection: TextDirection.rtl,
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'sans',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(width: 10,),
+                                Container(
+                                  height: 120,
+                                  child: Image.network(snapshot.data[index]['image']),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        onTap: (){
+                          Navigator.of(context,rootNavigator: true).push(MaterialPageRoute(
+                              builder: (context) => CollectionInstance(
+                                  snapshot.data[index]['image'],
+                                  snapshot.data[index]['title'],
+                                  snapshot.data[index]['id'],
+                                  snapshot.data[index]["is_sequence"],
+                                  getName(snapshot.data[index]["sokhanran"]),
+                                  snapshot.data[index]["origin_url"],
+                                  snapshot.data[index]['downloads']
+                              ),
+                              fullscreenDialog: true
+                          )
+                          );
+                        },
+                      );
+                    },
+                  );
+                }
+              },
+            ),
           )
         ],
       )
@@ -121,4 +208,28 @@ class HeaderButton extends StatelessWidget {
       ),
     );
   }
+}
+
+
+String getName(String oratorUrl) {
+
+  List splited = oratorUrl.split("/");
+  String  oratorID = splited[splited.length - 2];
+  String oratorName = findNameByID(oratorID);
+
+  return oratorName;
+}
+
+String findNameByID(String oratorID) {
+
+  String name = 'failed to find';
+  List orators = Hive.box('orators').get('list');
+
+  for(var orator in orators){
+    if(orator['id'].toString() == oratorID){
+      name = orator['title'];
+    }
+  }
+
+  return name;
 }

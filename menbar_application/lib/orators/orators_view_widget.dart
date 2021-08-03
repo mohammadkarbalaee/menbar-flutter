@@ -115,6 +115,7 @@ class Orators extends StatelessWidget {
                             builder: (context) => OratorInstance(
                                 snapshot.data[index]['image'],
                                 snapshot.data[index]['title'],
+                                snapshot.data[index]['id'],
                             )
                         )
                         );
