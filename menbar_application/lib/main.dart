@@ -20,6 +20,7 @@ main() async {
   await Hive.openBox('collections');
   await Hive.openBox('news');
   await Hive.openBox('speeches');
+  await Hive.openBox('collectionsOfOrators');
 //getting the made boxes
   final oratorsBox = Hive.box('orators');
   final collectionsBox = Hive.box('collections');
@@ -38,6 +39,7 @@ main() async {
   List newsServer = json.decode(utf8.decode(newsResponse.bodyBytes));
 
   getSpeechesOfCollections();
+  getSpeechesOfOrators();
 
 //saving data in DB
   oratorsBox.put('list',oratorsServer);
@@ -48,6 +50,18 @@ main() async {
   runApp(
       HomePage(),
   );
+}
+
+void getSpeechesOfOrators() async {
+  final speechesBox = Hive.box('collectionsOfOrators');
+  List orators = await Hive.box('orators').get('list');
+
+  for(var i in orators){
+    String url = 'http://menbar.sobhe.ir/api/collections/?sokhanran=${i['id']}&start=0&count=500';
+    http.Response newsResponse = await http.get(Uri.parse(url));
+    List speeches = json.decode(utf8.decode(newsResponse.bodyBytes));
+    speechesBox.put('${i['id']}',speeches);
+  }
 }
 
 void getSpeechesOfCollections() async {
