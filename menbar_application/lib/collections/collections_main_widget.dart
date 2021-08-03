@@ -128,7 +128,8 @@ class Collections extends StatelessWidget {
                                 snapshot.data[index]['id'],
                                 snapshot.data[index]["is_sequence"],
                                 getName(snapshot.data[index]["sokhanran"]),
-                                snapshot.data[index]["origin_url"]
+                                snapshot.data[index]["origin_url"],
+                                snapshot.data[index]['downloads']
                             ),
                             fullscreenDialog: true
                           )

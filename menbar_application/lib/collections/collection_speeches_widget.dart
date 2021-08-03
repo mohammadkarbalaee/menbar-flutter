@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:hive/hive.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -11,10 +12,18 @@ class CollectionInstance extends StatelessWidget {
   var isSequenced;
   var orator;
   var url;
-
-  CollectionInstance(this.image,this.title,this.id,this.isSequenced,this.orator,this.url);
-
+  var downloads;
   var collection = [];
+
+  CollectionInstance(
+      this.image,
+      this.title,
+      this.id,
+      this.isSequenced,
+      this.orator,
+      this.url,
+      this.downloads
+      );
 
   Future<List> _getData() async {
     List speeches = await Hive.box('speeches').get('$id');
@@ -29,6 +38,8 @@ class CollectionInstance extends StatelessWidget {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            primary: true,
+            automaticallyImplyLeading: false,
             backgroundColor: Color(0xff607d8d),
             expandedHeight: 270,
             pinned: true,
@@ -121,7 +132,29 @@ class CollectionInstance extends StatelessWidget {
               ),
               collapseMode: CollapseMode.parallax,
             ),
-            leading: BackButton(),
+            actions: [
+              BackButton(),
+            ],
+          ),
+          SliverToBoxAdapter(
+            child: Container(
+              height: 35,
+              child: Card(
+                shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(0),
+                ),
+                elevation: 3,
+                color: Color(0xfff5f5f5),
+                child: Text(
+                  'بیش از  $downloads دریافت از این مجموعه',
+                  style: TextStyle(
+                    fontFamily: 'sans',
+                    fontSize: 18,
+                  ),
+                  textDirection: TextDirection.rtl,
+                ),
+              ),
+            ),
           ),
           SliverToBoxAdapter(
 
@@ -132,14 +165,13 @@ class CollectionInstance extends StatelessWidget {
                 builder: (BuildContext context,AsyncSnapshot snapshot){
 
                   return ListView.separated(
-
                     primary: false,
                     shrinkWrap: true,
                     itemCount: snapshot.data.length,
 
                     separatorBuilder: (BuildContext context, int index) {
                       return Divider(
-                        height: 15,
+                        height: 10,
                         thickness: 1.5,
                         color: Colors.black38,
                       );
@@ -215,7 +247,7 @@ class BackButton extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Icon(Icons.arrow_back,color: Colors.white,),
+          child: Icon(Icons.arrow_forward,color: Colors.white,),
         ),
       ),
     );
