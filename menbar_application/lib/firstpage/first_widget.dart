@@ -16,7 +16,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
   bool isBookmarksEmpty = Hive.box('bookmarks').isEmpty;
 
   List orators = Hive.box('orators').get('list');
@@ -185,82 +185,90 @@ class _HomePageState extends State<HomePage> {
       home: DefaultTabController(
         initialIndex: 1,
         length: isBookmarksEmpty ? 3 : 4,
-        child: Scaffold(
-          appBar: AppBar(
-            elevation: 7.0,
-            bottomOpacity: 1,
-            leading:isSearching ? Container(): AboutButton(),
-            actions: isSearching ? [
-            Container(
-              width: 300,
-              child: TextField(
-                onChanged: (value) {
-                  setState(() {
-                    filterValue = value;
-                  });
-                },
-                cursorColor: Colors.yellow,
-
-                textDirection: TextDirection.rtl,
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  border: InputBorder.none,
-                  hintText: 'جستجو',
-                  hintTextDirection: TextDirection.rtl,
-                  hintStyle: TextStyle(
-                    color: Colors.grey,
+        child: Builder(
+          builder: (context){
+            return Scaffold(
+              appBar: AppBar(
+                elevation: 7.0,
+                bottomOpacity: 1,
+                leading:isSearching ? Container(): AboutButton(),
+                actions: isSearching ? [
+                Container(
+                  width: 300,
+                  child: TextField(
+                    controller: controller,
+                    onChanged: (value) {
+                      setState(() {
+                        filterValue = value;
+                      });
+                    },
+                    cursorColor: Colors.yellow,
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                    textDirection: TextDirection.rtl,
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      border: InputBorder.none,
+                      hintText: 'جستجو',
+                      hintTextDirection: TextDirection.rtl,
+                      hintStyle: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-            Container(
-              child: ButtonTheme(
-                height: 50,
-                minWidth:30,
-                splashColor: Colors.grey,
-                child: RaisedButton(
-                  elevation: 0,
-                  color: Color(0xffffff),
-                  onPressed: (){
-                    setState(() {
-                      isSearching = !isSearching;
-                    });
-                  },
-                  child: Icon(Icons.arrow_forward,color: Colors.white,),
+                Container(
+                  child: ButtonTheme(
+                    height: 50,
+                    minWidth:30,
+                    splashColor: Colors.grey,
+                    child: RaisedButton(
+                      elevation: 0,
+                      color: Color(0xffffff),
+                      onPressed: (){
+                        setState(() {
+                          isSearching = !isSearching;
+                        });
+                      },
+                      child: Icon(Icons.arrow_forward,color: Colors.white,),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            ]: normalActions,
-            bottom: TabBar(
+                ]: normalActions,
+              bottom: TabBar(
               isScrollable: true,
               indicatorColor: Colors.yellow,
               indicatorWeight: 2.5,
-              tabs: isBookmarksEmpty ? threeTabs : fourTabs,
-            ),
-            title: isSearching ? Container() :
-            Container(
-              child: ButtonTheme(
-                height: 50,
-                minWidth:30,
-                splashColor: Colors.grey,
-                child: RaisedButton(
-                  elevation: 0,
-                  color: Color(0xff607d8d),
-                  onPressed: () {
-                    setState(() {
-                      isSearching = !isSearching;
-                    });
-                  },
-                  child: Icon(Icons.search,color: Colors.white,),
+                tabs: isBookmarksEmpty ? threeTabs : fourTabs,
+              ),
+              title: isSearching ? Container() :
+              Container(
+                child: ButtonTheme(
+                  height: 50,
+                  minWidth:30,
+                  splashColor: Colors.grey,
+                  child: RaisedButton(
+                    elevation: 0,
+                    color: Color(0xff607d8d),
+                    onPressed: () {
+                      setState(() {
+                        DefaultTabController.of(context)!.animateTo(2);
+                        isSearching = !isSearching;
+                      });
+                    },
+                    child: Icon(Icons.search,color: Colors.white,),
+                  ),
                 ),
               ),
+              backgroundColor: Color(0xff607d8d),
             ),
-            backgroundColor: Color(0xff607d8d),
-          ),
-          body: TabBarView(
+            body: TabBarView(
             children: isBookmarksEmpty ? getThree(): getFour(),
-          ),
-        ),
+            ),
+            );
+          },
+        )
       ),
     );
   }
