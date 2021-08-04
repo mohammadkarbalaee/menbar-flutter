@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:menbar_application/boookmarks/bookmarks_main.dart';
+import 'package:menbar_application/new_peeches/new_speeches_widget.dart';
 import 'package:menbar_application/newspeeches/new_speeches_widget.dart';
 import 'package:menbar_application/Orators/orators_view_widget.dart';
 import 'package:menbar_application/collections/collections_main_widget.dart';
@@ -8,15 +10,152 @@ import 'package:menbar_application/collections/collections_main_widget.dart';
 // ignore: must_be_immutable
 class HomePage extends StatelessWidget {
 
+  bool isBookmarksEmpty = Hive.box('bookmarks').isEmpty;
   List orators = Hive.box('orators').get('list');
   List collections = Hive.box('collections').get('list');
+
+  List<Widget> threeTabs = [
+    Tab(
+      child: Row(
+        children: [
+          Text(
+            'سخنران ها',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'sans',
+            ),
+          ),
+          SizedBox(width: 5,),
+          Icon(Icons.person),
+        ],
+      ),
+    ),
+    Tab(
+      child: Row(
+        children: [
+          Text(
+            'تازه ها',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'sans',
+            ),
+          ),
+          SizedBox(width: 5,),
+          Icon(Icons.new_releases),
+        ],
+      ),
+    ),
+    Tab(
+      child: Row(
+        children: [
+          Text(
+            'مجموعه ها',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'sans',
+            ),
+          ),
+          SizedBox(width: 5,),
+          Icon(Icons.apps),
+        ],
+      ),
+    ),
+  ];
+
+  List<Widget> fourTabs = [
+    Tab(
+      child: Row(
+        children: [
+          Text(
+            'سخنران ها',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'sans',
+            ),
+          ),
+          SizedBox(width: 5,),
+          Icon(Icons.person),
+        ],
+      ),
+    ),
+    Tab(
+      child: Row(
+        children: [
+          Text(
+            'تازه ها',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'sans',
+            ),
+          ),
+          SizedBox(width: 5,),
+          Icon(Icons.new_releases),
+        ],
+      ),
+    ),
+    Tab(
+      child: Row(
+        children: [
+          Text(
+            'مجموعه ها',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'sans',
+            ),
+          ),
+          SizedBox(width: 5,),
+          Icon(Icons.apps),
+        ],
+      ),
+    ),
+    Tab(
+      child: Row(
+        children: [
+          Text(
+            'نشان ها',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'sans',
+            ),
+          ),
+          SizedBox(width: 5,),
+          Icon(Icons.apps),
+        ],
+      ),
+    ),
+  ];
+
+
+  List<Widget> getThree(){
+    return [
+      Orators(),
+      NewSpeeches(this.orators,this.collections),
+      Collections(this.orators),
+    ];
+  }
+
+  List<Widget> getFour(){
+    return [
+      Orators(),
+      NewSpeeches(this.orators,this.collections),
+      Collections(this.orators),
+      Bookmarks(),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: DefaultTabController(
         initialIndex: 1,
-        length: 3,
+        length: isBookmarksEmpty ? 3 : 4,
         child: Scaffold(
           appBar: AppBar(
             elevation: 7.0,
@@ -42,68 +181,16 @@ class HomePage extends StatelessWidget {
 
             ],
             bottom: TabBar(
+              isScrollable: true,
               indicatorColor: Colors.yellow,
               indicatorWeight: 2.5,
-              tabs: [
-                Tab(
-                  child: Row(
-                    children: [
-                      Text(
-                          'سخنران ها',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'sans',
-                        ),
-                      ),
-                      SizedBox(width: 5,),
-                      Icon(Icons.person),
-                    ],
-                  ),
-                ),
-                Tab(
-                  child: Row(
-                    children: [
-                      Text(
-                        'تازه ها',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          fontFamily: 'sans',
-                        ),
-                      ),
-                      SizedBox(width: 5,),
-                      Icon(Icons.new_releases),
-                    ],
-                  ),
-                ),
-                Tab(
-                  child: Row(
-                    children: [
-                      Text(
-                        'مجموعه ها',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          fontFamily: 'sans',
-                        ),
-                      ),
-                      SizedBox(width: 5,),
-                      Icon(Icons.apps),
-                    ],
-                  ),
-                )
-              ],
+              tabs: isBookmarksEmpty ? threeTabs : fourTabs,
             ),
             title: SearchButton(),
             backgroundColor: Color(0xff607d8d),
           ),
           body: TabBarView(
-            children: [
-              Orators(),
-              NewSpeeches(this.orators,this.collections),
-              Collections(this.orators),
-            ],
+            children: isBookmarksEmpty ? getThree(): getFour(),
           ),
         ),
       ),

@@ -21,6 +21,7 @@ main() async {
   await Hive.openBox('news');
   await Hive.openBox('speeches');
   await Hive.openBox('collectionsOfOrators');
+  await Hive.openBox('bookmarks');
 //getting the made boxes
   final oratorsBox = Hive.box('orators');
   final collectionsBox = Hive.box('collections');
