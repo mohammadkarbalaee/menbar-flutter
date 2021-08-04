@@ -4,6 +4,14 @@ import 'package:flutter/painting.dart';
 import 'package:hive/hive.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+var globalTitle;
+var globalImage;
+var globalId;
+var globalIsSequenced;
+var globalOrator;
+var globalUrl;
+var globalDownloads;
+
 class CollectionInstance extends StatelessWidget {
 
   var image;
@@ -15,6 +23,7 @@ class CollectionInstance extends StatelessWidget {
   var downloads;
   var collection = [];
 
+
   CollectionInstance(image, title, id, isSequenced, orator, url, downloads){
     this.image = image;
     this.title = title;
@@ -23,6 +32,13 @@ class CollectionInstance extends StatelessWidget {
     this.orator = orator;
     this.url = url == null ? "" : url;
     this.downloads = downloads;
+    globalId = id;
+    globalTitle = title;
+    globalImage = image;
+    globalIsSequenced = isSequenced;
+    globalOrator = orator;
+    globalUrl = url;
+    globalDownloads = downloads;
   }
 
   Future<List> _getData() async {
@@ -39,10 +55,7 @@ class CollectionInstance extends StatelessWidget {
         slivers: [
           SliverAppBar(
             primary: true,
-            leading: HeaderButton(
-                icon: Icon(Icons.bookmark_border,color: Colors.white,),
-                onPress: () => {},
-            ),
+            leading: BookmarkButton(),
             automaticallyImplyLeading: false,
             backgroundColor: Color(0xff607d8d),
             expandedHeight: 270,
@@ -238,11 +251,17 @@ class CollectionInstance extends StatelessWidget {
 }
 
 
-class HeaderButton extends StatelessWidget {
+class HeaderButton extends StatefulWidget {
   var icon;
   var onPress;
 
   HeaderButton({this.icon,this.onPress});
+
+  @override
+  _HeaderButtonState createState() => _HeaderButtonState();
+}
+
+class _HeaderButtonState extends State<HeaderButton> {
 
   @override
   Widget build(BuildContext context) {
@@ -254,14 +273,62 @@ class HeaderButton extends StatelessWidget {
         child: RaisedButton(
           elevation: 0,
           color: Color(0xffffff),
-          onPressed: onPress,
-          child: icon,
+          onPressed: widget.onPress,
+          child: widget.icon,
         ),
       ),
     );
   }
 }
 
+
+class BookmarkButton extends StatefulWidget {
+  @override
+  _BookmarkButtonState createState() => _BookmarkButtonState();
+}
+
+class _BookmarkButtonState extends State<BookmarkButton> {
+  bool isBookmarked = getIsBookmarked();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: ButtonTheme(
+        height: 50,
+        minWidth:30,
+        splashColor: Colors.grey,
+        child: RaisedButton(
+          elevation: 0,
+          color: Color(0xffffff),
+          // onPressed: (){},
+          onPressed: () {
+            setState(() {
+              final box = Hive.box('bookmarks');
+              if(isBookmarked){
+                box.delete(globalId);
+                isBookmarked = !isBookmarked;
+              } else {
+                var collection = {
+                  'title': globalTitle,
+                  'image': globalImage,
+                  'id' : globalId,
+                  'is_squenced':globalIsSequenced,
+                  'sokhanran': globalOrator,
+                  'url': globalUrl,
+                  'downloads': globalDownloads,
+                };
+
+                box.put(globalId,collection);
+                isBookmarked = !isBookmarked;
+              }
+            });
+          },
+          child: isBookmarked ? Icon(Icons.bookmark,color: Colors.white,): Icon(Icons.bookmark_border,color: Colors.white,),
+        ),
+      ),
+    );
+  }
+}
 class DownloadButton extends StatefulWidget {
   @override
   _DownloadButtonState createState() => _DownloadButtonState();
@@ -308,4 +375,11 @@ class _DownloadButtonState extends State<DownloadButton> {
 String cutUrl(String url){
   List pieces = url.split('/');
   return pieces.length != 1? pieces[2] : "";
+}
+
+bool getIsBookmarked(){
+  final box = Hive.box('bookmarks');
+  bool isBookmarked = box.get(globalId) == null ? false : true;
+  print(isBookmarked);
+  return isBookmarked;
 }
