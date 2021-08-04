@@ -21,7 +21,7 @@ class Collections extends StatelessWidget {
     return MaterialApp(
 
       home: Scaffold(
-
+        resizeToAvoidBottomInset: false,
         body: FutureBuilder(
 
           future: _getData(),
