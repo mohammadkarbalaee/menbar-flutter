@@ -1,10 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:async/async.dart';
 import 'package:hive/hive.dart';
-import 'package:http/http.dart' as http;
-import 'package:menbar_application/newspeeches/new_speech_instance_widget.dart';
-import 'dart:convert';
+
 
 import  'package:persian_number_utility/persian_number_utility.dart';
 
