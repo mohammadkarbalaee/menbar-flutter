@@ -1,19 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:async/async.dart';
 import 'package:hive/hive.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 import 'collection_speeches_widget.dart';
 
 class Collections extends StatelessWidget {
   List orators;
-  Collections(this.orators);
+  var value;
+  Collections(this.orators,{this.value});
 
   Future<List> _getData() async {
     List collections = await Hive.box('collections').get('list');
-    return collections;
+    if(value == null){
+      return collections;
+    } else {
+      print("value $value");
+      return collections;
+    }
   }
   @override
   Widget build(BuildContext context) {

@@ -7,6 +7,7 @@ import 'package:menbar_application/Orators/orators_view_widget.dart';
 import 'package:menbar_application/collections/collections_main_widget.dart';
 
 var isSearching = false;
+var filterValue = '';
 
 // ignore: must_be_immutable
 class HomePage extends StatefulWidget {
@@ -163,7 +164,7 @@ class _HomePageState extends State<HomePage> {
     return [
       Orators(),
       NewSpeeches(this.orators,this.collections),
-      Collections(this.orators),
+      Collections(this.orators,value : filterValue),
     ];
   }
 
@@ -171,10 +172,12 @@ class _HomePageState extends State<HomePage> {
     return [
       Orators(),
       NewSpeeches(this.orators,this.collections),
-      Collections(this.orators),
+      Collections(this.orators,value : filterValue),
       Bookmarks(this.orators),
     ];
   }
+
+  TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -191,10 +194,22 @@ class _HomePageState extends State<HomePage> {
             Container(
               width: 300,
               child: TextField(
+                onChanged: (value) {
+                  setState(() {
+                    filterValue = value;
+                  });
+                },
                 cursorColor: Colors.yellow,
+
                 textDirection: TextDirection.rtl,
                 decoration: InputDecoration(
+                  fillColor: Colors.white,
                   border: InputBorder.none,
+                  hintText: 'جستجو',
+                  hintTextDirection: TextDirection.rtl,
+                  hintStyle: TextStyle(
+                    color: Colors.grey,
+                  ),
                 ),
               ),
             ),
