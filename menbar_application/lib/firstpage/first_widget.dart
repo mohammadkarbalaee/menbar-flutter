@@ -11,6 +11,7 @@ class HomePage extends StatelessWidget {
 
   bool isBookmarksEmpty = Hive.box('bookmarks').isEmpty;
   List orators = Hive.box('orators').get('list');
+
   List collections = Hive.box('collections').get('list');
 
   List<Widget> threeTabs = [
@@ -145,7 +146,7 @@ class HomePage extends StatelessWidget {
       Orators(),
       NewSpeeches(this.orators,this.collections),
       Collections(this.orators),
-      Bookmarks(),
+      Bookmarks(this.orators),
     ];
   }
 

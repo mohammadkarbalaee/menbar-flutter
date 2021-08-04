@@ -8,7 +8,6 @@ import 'dart:convert';
 import 'collection_speeches_widget.dart';
 
 class Collections extends StatelessWidget {
-
   List orators;
   Collections(this.orators);
 
