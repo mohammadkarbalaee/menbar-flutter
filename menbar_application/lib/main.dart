@@ -49,7 +49,7 @@ main() async {
 //retrieving data from DB
 
   runApp(
-      HomePage(),
+    HomePage(),
   );
 }
 
