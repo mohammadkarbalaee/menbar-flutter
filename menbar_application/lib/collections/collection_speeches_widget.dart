@@ -15,6 +15,7 @@ var globalOrator;
 var globalUrl;
 var globalDownloads;
 var showIt = true;
+bool isBookmarked = getIsBookmarked();
 
 class CollectionInstance extends StatefulWidget {
 
@@ -80,6 +81,7 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: NotificationListener<UserScrollNotification>(
         onNotification: (notification){
@@ -254,8 +256,30 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                           child: Padding(
                             padding: const EdgeInsets.only(left: 35,bottom: 0,),
                             child: ElevatedButton(
-                              onPressed: (){},
-                              child: Icon(Icons.bookmark,size: 30,),
+                              onPressed: () {
+                                setState(() {
+                                  final box = Hive.box('bookmarks');
+                                  if(isBookmarked){
+                                    box.delete(globalId);
+                                    isBookmarked = !isBookmarked;
+                                  } else {
+                                    var collection = {
+                                      'title': globalTitle,
+                                      'image': globalImage,
+                                      'id' : globalId,
+                                      'is_squenced':globalIsSequenced,
+                                      'sokhanran': globalOrator,
+                                      'url': globalUrl,
+                                      'downloads': globalDownloads,
+                                    };
+
+                                    box.put(globalId,collection);
+                                    isBookmarked = !isBookmarked;
+                                  }
+                                });
+                              },
+                              child: isBookmarked ? Icon(Icons.bookmark,color: Colors.white,size: 25,):
+                              Icon(Icons.bookmark_border,color: Colors.white,size: 25,),
                               style: ElevatedButton.styleFrom(
                                 primary: Colors.yellow[500],
                                 elevation: 7,
@@ -382,7 +406,7 @@ class BookmarkButton extends StatefulWidget {
 }
 
 class _BookmarkButtonState extends State<BookmarkButton> {
-  bool isBookmarked = getIsBookmarked();
+
 
   @override
   Widget build(BuildContext context) {
