@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:http/http.dart';
-
+import 'package:menbar_application/orators/orator_instance_widget.dart';
 import 'collection_speeches_widget.dart';
 
 var titles;
@@ -22,7 +21,7 @@ class _CollectionsState extends State<Collections> {
   Future<List> _getData() async {
     List collections = await Hive.box('collections').get('list');
 
-    if(titles == null){
+    if(titles == null && widget.value != ''){
       List temp = [];
       for(var i in collections){
         temp.add(i['title']);
@@ -30,7 +29,7 @@ class _CollectionsState extends State<Collections> {
       titles = temp;
     }
 
-    if(oratorList == null){
+    if(oratorList == null && widget.value != ''){
       List temp = [];
       for(var i in collections){
         temp.add(i['sokhanran']);
@@ -38,16 +37,10 @@ class _CollectionsState extends State<Collections> {
       oratorList = temp;
     }
 
-    if(widget.value == null || widget.value == ''){
+    if(widget.value == ''){
       return collections;
     } else {
-      print(widget.value);
-      List matchedJsonsByTitle = getMatchedJsons(getMatchedTitles(widget.value),collections,'title');
-      if(matchedJsonsByTitle == []){
-        return getMatchedJsons(getMatchedOrators(widget.value),collections,'sokhanran');
-      } else {
-        return matchedJsonsByTitle;
-      }
+      return getMatched(widget.value, collections);
     }
   }
 
@@ -207,38 +200,14 @@ class _CollectionsState extends State<Collections> {
   }
 }
 
-List getMatchedJsons(List matchedTitles,List collections,String type) {
-  List result = [];
-  for(var i in matchedTitles){
-    for(var j in collections){
-      if(i == j[type]){
-        result.add(j);
-      }
-    }
-  }
-  return result;
-}
+List getMatched(value,collections) {
+  List matchedIntances = [];
 
-List getMatchedTitles(value) {
-  List result = [];
-  for(var i in titles){
-    if(i != null){
-      if(i.contains(value)){
-        result.add(i);
-      }
+  for(var i in collections){
+    if(i['title'].contains(value) || getName(i["sokhanran"]).contains(value)){
+      matchedIntances.add(i);
     }
   }
-  return result;
-}
 
-List getMatchedOrators(value) {
-  List result = [];
-  for(var i in oratorList){
-    if(i != null){
-      if(i.contains(value)){
-        result.add(i);
-      }
-    }
-  }
-  return result;
+  return matchedIntances;
 }

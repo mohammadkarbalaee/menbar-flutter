@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 import 'package:hive/hive.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:sliver_tools/sliver_tools.dart';
+import 'package:animations/animations.dart';
 
 var globalTitle;
 var globalImage;
@@ -11,8 +14,10 @@ var globalIsSequenced;
 var globalOrator;
 var globalUrl;
 var globalDownloads;
+var showIt = true;
+bool isBookmarked = getIsBookmarked();
 
-class CollectionInstance extends StatelessWidget {
+class CollectionInstance extends StatefulWidget {
 
   var image;
   var title;
@@ -21,8 +26,6 @@ class CollectionInstance extends StatelessWidget {
   var orator;
   var url;
   var downloads;
-  var collection = [];
-
 
   CollectionInstance(image, title, id, isSequenced, orator, url, downloads){
     this.image = image;
@@ -41,102 +44,196 @@ class CollectionInstance extends StatelessWidget {
     globalDownloads = downloads;
   }
 
-  Future<List> _getData() async {
-    List speeches = await Hive.box('speeches').get('$id');
+  @override
+  _CollectionInstanceState createState() => _CollectionInstanceState();
+}
 
-    return isSequenced ? new List.from(speeches.reversed) : speeches;
+class _CollectionInstanceState extends State<CollectionInstance> with SingleTickerProviderStateMixin{
+  var collection = [];
+
+  Future<List> _getData() async {
+    List speeches = await Hive.box('speeches').get('${widget.id}');
+
+    return widget.isSequenced ? new List.from(speeches.reversed) : speeches;
+  }
+
+   late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+        vsync: this,
+        value: 1,
+        duration: Duration(milliseconds: 2300),
+        reverseDuration: Duration(milliseconds: 1300),
+    )..addStatusListener((status) {
+
+    });
   }
 
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            primary: true,
-            leading: BookmarkButton(),
-            automaticallyImplyLeading: false,
-            backgroundColor: Color(0xff607d8d),
-            expandedHeight: 270,
-            pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Stack(
-                alignment: AlignmentDirectional.bottomEnd,
+      body: NotificationListener<UserScrollNotification>(
+        onNotification: (notification){
+          setState(() {
+            if(notification.direction == ScrollDirection.reverse){
+              _controller.reverse();
+            } else if(notification.direction == ScrollDirection.forward){
+               _controller.forward();
+            }
+          });
+          return true;
+        },
+        child: CustomScrollView(
+          slivers: [
+            SliverStack(
+              positionedAlignment: Alignment.topLeft,
                 children: [
-                  Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(image),
-                        ),
-                      )
-                  ),
-                  Positioned(
-                    child: PhysicalModel(
-                      borderRadius: BorderRadius.circular(0),
-                      color: Colors.black12,
-                      elevation: 10,
-                      child: Padding(
-                        padding: EdgeInsets.only(right: 10),
-                        child: Container(
-                          height: 60,
-                          child: Padding(
-                            padding: EdgeInsets.only(bottom: 6),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Flexible(
-                                      child: Text(
-                                        title,
-                                        textDirection: TextDirection.rtl,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            fontSize: 30,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                            fontFamily: 'sans'
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                  SliverAppBar(
+                    primary: true,
+                    leading: BookmarkButton(),
+                    automaticallyImplyLeading: false,
+                    backgroundColor: Color(0xff607d8d),
+                    expandedHeight: 270,
+                    pinned: true,
+                    flexibleSpace: FlexibleSpaceBar(
+                      background: Stack(
+                        alignment: AlignmentDirectional.bottomEnd,
+                        children: [
+                          Container(
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: NetworkImage(widget.image),
                                 ),
-                                SizedBox(height: 5,),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Container(
-                                      width: 110,
-                                      child: InkWell(
-                                        child: Text(
-                                          cutUrl(url),
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            decoration: TextDecoration.underline,
-                                            color: Colors.yellow[600],
-                                          ),
+                              )
+                          ),
+                          Positioned(
+                            child: PhysicalModel(
+                              borderRadius: BorderRadius.circular(0),
+                              color: Colors.black12,
+                              elevation: 10,
+                              child: Padding(
+                                padding: EdgeInsets.only(right: 10),
+                                child: Container(
+                                  height: 60,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(bottom: 6),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            Flexible(
+                                              child: Text(
+                                                widget.title,
+                                                textDirection: TextDirection.rtl,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    fontSize: 26,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                    fontFamily: 'sans'
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        onTap: () => launch(url),
-                                      ),
-                                    ),
-                                    Flexible(
-                                      child: Text(
-                                        orator,
-                                        textDirection: TextDirection.rtl,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                            fontFamily: 'sans'
+                                        SizedBox(height: 5,),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            Container(
+                                              width: 110,
+                                              child: InkWell(
+                                                child: Text(
+                                                  cutUrl(widget.url),
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    decoration: TextDecoration.underline,
+                                                    color: Colors.yellow[500],
+                                                  ),
+                                                ),
+                                                onTap: () => launch(widget.url),
+                                              ),
+                                            ),
+                                            Flexible(
+                                              child: Text(
+                                                widget.orator,
+                                                textDirection: TextDirection.rtl,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                    fontFamily: 'sans'
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      collapseMode: CollapseMode.parallax,
+                    ),
+                    actions: [
+                      HeaderButton(
+                        icon: Icon(Icons.arrow_forward,color: Colors.white,),
+                        onPress: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+                  showIt ? SliverToBoxAdapter(
+                    child:AnimatedBuilder(
+                      animation: _controller,
+                      builder: (context, child) => FadeScaleTransition(
+                        animation: _controller,
+                        child: child,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 290),
+                        child: Container(
+
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 0,bottom: 0),
+                            child: Stack(
+                              children: [
+                                Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(0),
+                                    ),
+                                    elevation: 3,
+                                    color: Color(0xfff5f5f5),
+                                    child: Text(
+                                      'بیش از  ${widget.downloads} دریافت از این مجموعه',
+                                      style: TextStyle(
+                                        fontFamily: 'sans',
+                                        fontSize: 15,
+                                      ),
+                                      textDirection: TextDirection.rtl,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -144,107 +241,128 @@ class CollectionInstance extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              collapseMode: CollapseMode.parallax,
-            ),
-            actions: [
-              HeaderButton(
-                icon: Icon(Icons.arrow_forward,color: Colors.white,),
-                onPress: () => Navigator.pop(context),
-              ),
-            ],
-          ),
-          SliverToBoxAdapter(
-            child: Container(
-              height: 35,
-              child: Card(
-                shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(0),
-                ),
-                elevation: 3,
-                color: Color(0xfff5f5f5),
-                child: Text(
-                  'بیش از  $downloads دریافت از این مجموعه',
-                  style: TextStyle(
-                    fontFamily: 'sans',
-                    fontSize: 18,
-                  ),
-                  textDirection: TextDirection.rtl,
-                ),
-              ),
-            ),
-          ),
-          SliverToBoxAdapter(
+                  ) : Container(),
+                  showIt ? SliverToBoxAdapter(
+                    child: AnimatedBuilder(
+                      animation: _controller,
+                      builder: (context, child) => FadeScaleTransition(
+                        animation: _controller,
+                        child: child,
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 260,right: 290),
+                        child: Container(
+                          height: 60,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 35,bottom: 0,),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  final box = Hive.box('bookmarks');
+                                  if(isBookmarked){
+                                    box.delete(globalId);
+                                    isBookmarked = !isBookmarked;
+                                  } else {
+                                    var collection = {
+                                      'title': globalTitle,
+                                      'image': globalImage,
+                                      'id' : globalId,
+                                      'is_squenced':globalIsSequenced,
+                                      'sokhanran': globalOrator,
+                                      'url': globalUrl,
+                                      'downloads': globalDownloads,
+                                    };
 
-            child: FutureBuilder(
-
-                future: _getData(),
-
-                builder: (BuildContext context,AsyncSnapshot snapshot){
-
-                  return ListView.separated(
-                    primary: false,
-                    shrinkWrap: true,
-                    itemCount: snapshot.data.length,
-
-                    separatorBuilder: (BuildContext context, int index) {
-                      return Divider(
-                        height: 10,
-                        thickness: 1.5,
-                        color: Colors.black38,
-                      );
-                    },
-                    itemBuilder: (BuildContext context, int index) {
-                      return ListTile(
-                        dense: true,
-                        title: Text(
-                          snapshot.data[index]['title'],
-                          textDirection: TextDirection.rtl,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'sans',
-                            fontSize: 19,
-                          ),
-                        ),
-                        subtitle: Align(
-                          alignment: Alignment.bottomRight,
-                          child: Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  '${snapshot.data[index]["file_size"]} مگابایت',
-                                  textDirection: TextDirection.rtl,
-                                  style: TextStyle(
-                                    fontFamily: 'sans',
-                                    fontSize: 15,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                SizedBox(width: 30,),
-                                Text(
-                                  '${snapshot.data[index]["duration"]} دقیقه',
-                                  textDirection: TextDirection.rtl,
-                                  style: TextStyle(
-                                    fontFamily: 'sans',
-                                    fontSize: 15,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
+                                    box.put(globalId,collection);
+                                    isBookmarked = !isBookmarked;
+                                  }
+                                });
+                              },
+                              child: isBookmarked ? Icon(Icons.bookmark,color: Colors.white,size: 25,):
+                              Icon(Icons.bookmark_border,color: Colors.white,size: 25,),
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.yellow[500],
+                                elevation: 7,
+                                shape: CircleBorder(),
+                              ),
                             ),
                           ),
                         ),
-                        leading: DownloadButton(),
-                      );
-                    },
-                  );
-                }
+                      ),
+                    ),
+                  ) : Container(),
+                ]
             ),
-          ),
-        ],
+            SliverToBoxAdapter(
+
+              child: FutureBuilder(
+
+                  future: _getData(),
+
+                  builder: (BuildContext context,AsyncSnapshot snapshot){
+
+                    return ListView.separated(
+                      primary: false,
+                      shrinkWrap: true,
+                      itemCount: snapshot.data.length,
+
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Divider(
+                          height: 10,
+                          thickness: 1.5,
+                          color: Colors.black38,
+                        );
+                      },
+                      itemBuilder: (BuildContext context, int index) {
+                        return ListTile(
+                          dense: true,
+                          title: Text(
+                            snapshot.data[index]['title'],
+                            textDirection: TextDirection.rtl,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'sans',
+                              fontSize: 19,
+                            ),
+                          ),
+                          subtitle: Align(
+                            alignment: Alignment.bottomRight,
+                            child: Container(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    '${snapshot.data[index]["file_size"]} مگابایت',
+                                    textDirection: TextDirection.rtl,
+                                    style: TextStyle(
+                                      fontFamily: 'sans',
+                                      fontSize: 15,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  SizedBox(width: 30,),
+                                  Text(
+                                    '${snapshot.data[index]["duration"]} دقیقه',
+                                    textDirection: TextDirection.rtl,
+                                    style: TextStyle(
+                                      fontFamily: 'sans',
+                                      fontSize: 15,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          leading: DownloadButton(),
+                        );
+                      },
+                    );
+                  }
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -288,7 +406,7 @@ class BookmarkButton extends StatefulWidget {
 }
 
 class _BookmarkButtonState extends State<BookmarkButton> {
-  bool isBookmarked = getIsBookmarked();
+
 
   @override
   Widget build(BuildContext context) {
@@ -344,26 +462,29 @@ class _DownloadButtonState extends State<DownloadButton> {
         alignment: Alignment.center,
         children: [
           boool ? Container(
-            height: 36,
-            width: 36,
+            height: 47,
+            width: 47,
             child: CircularProgressIndicator(
               strokeWidth: 3,
               color: Colors.black38,
             ),
           )
               : Text(''),
-          OutlinedButton(
-            child: boool ? Icon(Icons.close, size: 25,) : Icon(Icons.get_app, size: 25,),
-            onPressed: () {
-              setState(() {
-                boool = !boool;
-              });
-            },
-            style: OutlinedButton.styleFrom(
-              primary: Colors.black,
-              backgroundColor: Colors.white,
-              elevation: 0,
-              shape: CircleBorder(),
+          Container(
+            height: 100,
+            child: OutlinedButton(
+              child: boool ? Icon(Icons.close, size: 25,) : Icon(Icons.get_app, size: 25,),
+              onPressed: () {
+                setState(() {
+                  boool = !boool;
+                });
+              },
+              style: OutlinedButton.styleFrom(
+                primary: Colors.black,
+                backgroundColor: Colors.white,
+                elevation: 0,
+                shape: CircleBorder(),
+              ),
             ),
           ),
         ],
@@ -377,9 +498,10 @@ String cutUrl(String url){
   return pieces.length != 1? pieces[2] : "";
 }
 
-bool getIsBookmarked(){
+bool getIsBookmarked() {
   final box = Hive.box('bookmarks');
   bool isBookmarked = box.get(globalId) == null ? false : true;
   print(isBookmarked);
   return isBookmarked;
 }
+
