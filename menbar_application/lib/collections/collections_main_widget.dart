@@ -1,23 +1,58 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:http/http.dart';
 
 import 'collection_speeches_widget.dart';
 
-class Collections extends StatelessWidget {
+var titles;
+var oratorList;
+
+class Collections extends StatefulWidget {
   List orators;
   var value;
   Collections(this.orators,{this.value});
 
+  @override
+  _CollectionsState createState() => _CollectionsState();
+}
+
+class _CollectionsState extends State<Collections> {
+
   Future<List> _getData() async {
     List collections = await Hive.box('collections').get('list');
-    if(value == null){
+
+    if(titles == null){
+      List temp = [];
+      for(var i in collections){
+        temp.add(i['title']);
+      }
+      titles = temp;
+    }
+
+    if(oratorList == null){
+      List temp = [];
+      for(var i in collections){
+        temp.add(i['sokhanran']);
+      }
+      oratorList = temp;
+    }
+
+    if(widget.value == null || widget.value == ''){
       return collections;
     } else {
-      print("value $value");
-      return collections;
+      print(widget.value);
+      List matchedJsonsByTitle = getMatchedJsons(getMatchedTitles(widget.value),collections,'title');
+      if(matchedJsonsByTitle == []){
+        return getMatchedJsons(getMatchedOrators(widget.value),collections,'sokhanran');
+      } else {
+        return matchedJsonsByTitle;
+      }
     }
   }
+
+  @override
+
   @override
   Widget build(BuildContext context) {
 
@@ -162,7 +197,7 @@ class Collections extends StatelessWidget {
 
     String name = 'failed to find';
 
-    for(var orator in orators){
+    for(var orator in widget.orators){
       if(orator['id'].toString() == oratorID){
         name = orator['title'];
       }
@@ -170,4 +205,40 @@ class Collections extends StatelessWidget {
 
     return name;
   }
+}
+
+List getMatchedJsons(List matchedTitles,List collections,String type) {
+  List result = [];
+  for(var i in matchedTitles){
+    for(var j in collections){
+      if(i == j[type]){
+        result.add(j);
+      }
+    }
+  }
+  return result;
+}
+
+List getMatchedTitles(value) {
+  List result = [];
+  for(var i in titles){
+    if(i != null){
+      if(i.contains(value)){
+        result.add(i);
+      }
+    }
+  }
+  return result;
+}
+
+List getMatchedOrators(value) {
+  List result = [];
+  for(var i in oratorList){
+    if(i != null){
+      if(i.contains(value)){
+        result.add(i);
+      }
+    }
+  }
+  return result;
 }
