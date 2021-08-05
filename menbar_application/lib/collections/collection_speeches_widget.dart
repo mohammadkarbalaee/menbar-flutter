@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -65,9 +63,9 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
     super.initState();
     _controller = AnimationController(
         vsync: this,
-        value: 0,
-        duration: Duration(milliseconds: 2000),
-        reverseDuration: Duration(milliseconds: 2000),
+        value: 1,
+        duration: Duration(milliseconds: 2300),
+        reverseDuration: Duration(milliseconds: 1300),
     )..addStatusListener((status) {
 
     });
@@ -76,8 +74,8 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
 
   @override
   void dispose() {
+    _controller.dispose();
     super.dispose();
-
   }
 
   @override
@@ -87,9 +85,9 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
         onNotification: (notification){
           setState(() {
             if(notification.direction == ScrollDirection.reverse){
-              showIt = false;
+              _controller.reverse();
             } else if(notification.direction == ScrollDirection.forward){
-               showIt = true;
+               _controller.forward();
             }
           });
           return true;
@@ -203,52 +201,66 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                     ],
                   ),
                   showIt ? SliverToBoxAdapter(
-                    child:Padding(
-                      padding: const EdgeInsets.only(top: 290),
-                      child: Container(
+                    child:AnimatedBuilder(
+                      animation: _controller,
+                      builder: (context, child) => FadeScaleTransition(
+                        animation: _controller,
+                        child: child,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 290),
+                        child: Container(
 
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 0,bottom: 0),
-                          child: Stack(
-                            children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width,
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(0),
-                                  ),
-                                  elevation: 3,
-                                  color: Color(0xfff5f5f5),
-                                  child: Text(
-                                    'بیش از  ${widget.downloads} دریافت از این مجموعه',
-                                    style: TextStyle(
-                                      fontFamily: 'sans',
-                                      fontSize: 15,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 0,bottom: 0),
+                            child: Stack(
+                              children: [
+                                Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(0),
                                     ),
-                                    textDirection: TextDirection.rtl,
+                                    elevation: 3,
+                                    color: Color(0xfff5f5f5),
+                                    child: Text(
+                                      'بیش از  ${widget.downloads} دریافت از این مجموعه',
+                                      style: TextStyle(
+                                        fontFamily: 'sans',
+                                        fontSize: 15,
+                                      ),
+                                      textDirection: TextDirection.rtl,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ) : Container(),
                   showIt ? SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 260,right: 290),
-                      child: Container(
-                        height: 60,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 35,bottom: 0,),
-                          child: ElevatedButton(
-                            onPressed: (){},
-                            child: Icon(Icons.bookmark,size: 30,),
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.yellow[500],
-                              elevation: 7,
-                              shape: CircleBorder(),
+                    child: AnimatedBuilder(
+                      animation: _controller,
+                      builder: (context, child) => FadeScaleTransition(
+                        animation: _controller,
+                        child: child,
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 260,right: 290),
+                        child: Container(
+                          height: 60,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 35,bottom: 0,),
+                            child: ElevatedButton(
+                              onPressed: (){},
+                              child: Icon(Icons.bookmark,size: 30,),
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.yellow[500],
+                                elevation: 7,
+                                shape: CircleBorder(),
+                              ),
                             ),
                           ),
                         ),
