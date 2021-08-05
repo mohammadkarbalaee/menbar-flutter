@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:menbar_application/orators/orator_instance_widget.dart';
 import 'collection_speeches_widget.dart';
 
 var titles;
@@ -203,7 +204,7 @@ List getMatched(value,collections) {
   List matchedIntances = [];
 
   for(var i in collections){
-    if(i['title'].contains(value) || i["sokhanran"].contains(value)){
+    if(i['title'].contains(value) || getName(i["sokhanran"]).contains(value)){
       matchedIntances.add(i);
     }
   }
