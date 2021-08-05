@@ -177,7 +177,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     ];
   }
 
-  TextEditingController controller = TextEditingController();
+  final fieldText = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +196,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 Container(
                   width: 300,
                   child: TextField(
-                    controller: controller,
+                    controller: fieldText,
                     onChanged: (value) {
                       setState(() {
                         filterValue = value;
@@ -228,6 +228,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                       color: Color(0xffffff),
                       onPressed: (){
                         setState(() {
+                          fieldText.text = '';
+                          filterValue = '';
                           isSearching = !isSearching;
                         });
                       },
