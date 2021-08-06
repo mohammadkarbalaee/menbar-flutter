@@ -213,32 +213,24 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                         child: child,
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 290),
+                        padding: EdgeInsets.only(top: 290),
                         child: Container(
-
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 0,bottom: 0),
-                            child: Stack(
-                              children: [
-                                Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(0),
-                                    ),
-                                    elevation: 3,
-                                    color: Color(0xfff5f5f5),
-                                    child: Text(
-                                      'بیش از  ${widget.downloads} دریافت از این مجموعه',
-                                      style: TextStyle(
-                                        fontFamily: 'sans',
-                                        fontSize: 15,
-                                      ),
-                                      textDirection: TextDirection.rtl,
-                                    ),
-                                  ),
+                          height: 38,
+                          child: Card(
+                            margin: EdgeInsets.zero,
+                            semanticContainer: true,
+                            elevation: 3,
+                            color: Color(0xfff5f5f5),
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 6,bottom: 6,right: 15),
+                              child: Text(
+                                'بیش از  ${widget.downloads} دریافت از این مجموعه',
+                                style: TextStyle(
+                                  fontFamily: 'sans',
+                                  fontSize: 15,
                                 ),
-                              ],
+                                textDirection: TextDirection.rtl,
+                              ),
                             ),
                           ),
                         ),
