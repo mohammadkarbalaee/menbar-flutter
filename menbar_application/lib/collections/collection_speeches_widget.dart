@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:hive/hive.dart';
+import 'package:menbar_application/firstpage/first_widget.dart';
+import 'package:menbar_application/firstpage/shared_data.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:animations/animations.dart';
@@ -15,7 +17,7 @@ var globalOrator;
 var globalUrl;
 var globalDownloads;
 var showIt = true;
-bool isBookmarked = getIsBookmarked();
+var isBookmarked;
 
 class CollectionInstance extends StatefulWidget {
 
@@ -62,6 +64,7 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
   @override
   void initState() {
     super.initState();
+    isBookmarked = getIsBookmarked();
     _controller = AnimationController(
         vsync: this,
         value: 1,
@@ -262,6 +265,7 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                                   if(isBookmarked){
                                     box.delete(globalId);
                                     isBookmarked = !isBookmarked;
+                                    Shared.isBookmarksEmpty.value = box.isEmpty;
                                   } else {
                                     var collection = {
                                       'title': globalTitle,
@@ -275,6 +279,7 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
 
                                     box.put(globalId,collection);
                                     isBookmarked = !isBookmarked;
+                                    Shared.isBookmarksEmpty.value = false;
                                   }
                                 });
                               },
@@ -425,6 +430,7 @@ class _BookmarkButtonState extends State<BookmarkButton> {
               if(isBookmarked){
                 box.delete(globalId);
                 isBookmarked = !isBookmarked;
+                Shared.isBookmarksEmpty.value = box.isEmpty;
               } else {
                 var collection = {
                   'title': globalTitle,
@@ -438,6 +444,7 @@ class _BookmarkButtonState extends State<BookmarkButton> {
 
                 box.put(globalId,collection);
                 isBookmarked = !isBookmarked;
+                Shared.isBookmarksEmpty.value = false;
               }
             });
           },
@@ -501,7 +508,6 @@ String cutUrl(String url){
 bool getIsBookmarked() {
   final box = Hive.box('bookmarks');
   bool isBookmarked = box.get(globalId) == null ? false : true;
-  print(isBookmarked);
   return isBookmarked;
 }
 
