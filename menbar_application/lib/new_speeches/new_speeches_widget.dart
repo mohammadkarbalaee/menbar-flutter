@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
@@ -105,7 +105,11 @@ class NewSpeeches extends StatelessWidget {
                               SizedBox(width: 20),
                               Container(
                                 height: 120,
-                                child: Image.network(getImage(snapshot.data[index]['collection'])),
+                                child: CachedNetworkImage(
+                                    imageUrl: getImage(snapshot.data[index]['collection']),
+                                  fadeInDuration:Duration(milliseconds: 500),
+                                  fadeInCurve:Curves.easeInExpo,
+                                )
                               ),
                             ],
                           ),

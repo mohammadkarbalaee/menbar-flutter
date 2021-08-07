@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:hive/hive.dart';
-import 'package:menbar_application/firstpage/first_widget.dart';
 import 'package:menbar_application/firstpage/shared_data.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sliver_tools/sliver_tools.dart';

@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:menbar_application/collections/collection_speeches_widget.dart';
@@ -151,7 +151,11 @@ class OratorInstance extends StatelessWidget {
                                 SizedBox(width: 10,),
                                 Container(
                                   height: 120,
-                                  child: Image.network(snapshot.data[index]['image']),
+                                  child: CachedNetworkImage(
+                                    imageUrl: snapshot.data[index]['image'],
+                                    fadeInDuration:Duration(milliseconds: 500),
+                                    fadeInCurve:Curves.easeInExpo,
+                                  )
                                 ),
                               ],
                             ),
