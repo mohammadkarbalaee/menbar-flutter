@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:hive/hive.dart';
 import 'package:menbar_application/firstpage/shared_data.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:animations/animations.dart';
@@ -203,7 +206,7 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                       ),
                     ],
                   ),
-                  showIt ? SliverToBoxAdapter(
+                  SliverToBoxAdapter(
                     child:AnimatedBuilder(
                       animation: _controller,
                       builder: (context, child) => FadeScaleTransition(
@@ -234,8 +237,8 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                         ),
                       ),
                     ),
-                  ) : Container(),
-                  showIt ? SliverToBoxAdapter(
+                  ),
+                  SliverToBoxAdapter(
                     child: AnimatedBuilder(
                       animation: _controller,
                       builder: (context, child) => FadeScaleTransition(
@@ -245,47 +248,50 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                       child: Padding(
                         padding: EdgeInsets.only(top: 260,right: 290),
                         child: Container(
-                          height: 60,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 35,bottom: 0,),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                setState(() {
-                                  final box = Hive.box('bookmarks');
-                                  if(isBookmarked){
-                                    box.delete(globalId);
-                                    isBookmarked = !isBookmarked;
-                                    Shared.isBookmarksEmpty.value = box.isEmpty;
-                                  } else {
-                                    var collection = {
-                                      'title': globalTitle,
-                                      'image': globalImage,
-                                      'id' : globalId,
-                                      'is_squenced':globalIsSequenced,
-                                      'sokhanran': globalOrator,
-                                      'url': globalUrl,
-                                      'downloads': globalDownloads,
-                                    };
+                          child: SizedBox(
+                            height: 60,
+                            width: 60,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 35,bottom: 0,),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    final box = Hive.box('bookmarks');
+                                    if(isBookmarked){
+                                      box.delete(globalId);
+                                      isBookmarked = !isBookmarked;
+                                      Shared.isBookmarksEmpty.value = box.isEmpty;
+                                    } else {
+                                      var collection = {
+                                        'title': globalTitle,
+                                        'image': globalImage,
+                                        'id' : globalId,
+                                        'is_squenced':globalIsSequenced,
+                                        'sokhanran': globalOrator,
+                                        'url': globalUrl,
+                                        'downloads': globalDownloads,
+                                      };
 
-                                    box.put(globalId,collection);
-                                    isBookmarked = !isBookmarked;
-                                    Shared.isBookmarksEmpty.value = false;
-                                  }
-                                });
-                              },
-                              child: isBookmarked ? Icon(Icons.bookmark,color: Colors.white,size: 25,):
-                              Icon(Icons.bookmark_border,color: Colors.white,size: 25,),
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.yellow[500],
-                                elevation: 7,
-                                shape: CircleBorder(),
+                                      box.put(globalId,collection);
+                                      isBookmarked = !isBookmarked;
+                                      Shared.isBookmarksEmpty.value = false;
+                                    }
+                                  });
+                                },
+                                child: isBookmarked ? Icon(Icons.bookmark,color: Colors.white,size: 25,):
+                                Icon(Icons.bookmark_border,color: Colors.white,size: 25,),
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.yellow[500],
+                                  elevation: 7,
+                                  shape: CircleBorder(),
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ) : Container(),
+                  ),
                 ]
             ),
             SliverToBoxAdapter(
@@ -450,7 +456,17 @@ class DownloadButton extends StatefulWidget {
 }
 
 class _DownloadButtonState extends State<DownloadButton> {
-  var boool = false;
+  var buttonStatus = false;
+  double progress = 0;
+
+  Future startDownload() async {
+
+  }
+
+  Future<File> getFile(fileName) async {
+    final directory = await getApplicationDocumentsDirectory();
+    return File("${directory.path}/filename");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -458,22 +474,25 @@ class _DownloadButtonState extends State<DownloadButton> {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          boool ? Container(
+          buttonStatus ? Container(
             height: 47,
             width: 47,
             child: CircularProgressIndicator(
-              strokeWidth: 3,
-              color: Colors.black38,
+              value: progress,
+              valueColor: AlwaysStoppedAnimation(Colors.black38),
+              strokeWidth: 3.5,
+              backgroundColor: Colors.white,
+
             ),
           )
               : Text(''),
           Container(
             height: 100,
             child: OutlinedButton(
-              child: boool ? Icon(Icons.close, size: 25,) : Icon(Icons.get_app, size: 25,),
+              child: buttonStatus ? Icon(Icons.close, size: 25,) : Icon(Icons.get_app, size: 25,),
               onPressed: () {
                 setState(() {
-                  boool = !boool;
+                  buttonStatus = !buttonStatus;
                 });
               },
               style: OutlinedButton.styleFrom(
