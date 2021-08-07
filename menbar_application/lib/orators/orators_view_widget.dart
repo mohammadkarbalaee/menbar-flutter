@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
@@ -62,11 +64,11 @@ class Orators extends StatelessWidget {
                                   child: Container(
                                     width: MediaQuery.of(context).size.width,
                                     height: 210,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: NetworkImage(snapshot.data[index]['image']),
-                                      ),
+                                    child: CachedNetworkImage(
+                                        imageUrl: snapshot.data[index]['image'],
+                                      fit: BoxFit.cover,
+                                      fadeInDuration:Duration(milliseconds: 500),
+                                      fadeInCurve:Curves.easeInExpo,
                                     ),
                                   ),
                                 ),

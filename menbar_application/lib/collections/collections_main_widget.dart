@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -86,9 +87,14 @@ class _CollectionsState extends State<Collections> {
                             children: [
                               Container(
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                                  borderRadius: BorderRadius.all(Radius.circular(30)),
                                 ),
-                                child: Image.network(snapshot.data[index]['image'],),
+                                child: CachedNetworkImage(
+                                  imageUrl: snapshot.data[index]['image'],
+                                  fadeInDuration:Duration(milliseconds: 500),
+                                  fadeInCurve:Curves.easeInExpo,
+                                  maxHeightDiskCache: 200,
+                                ),
                               ),
                               Positioned(
                                   child: PhysicalModel(
