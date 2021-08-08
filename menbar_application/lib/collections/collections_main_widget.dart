@@ -59,13 +59,12 @@ class _CollectionsState extends State<Collections> {
 
           builder: (BuildContext context,AsyncSnapshot snapshot){
 
-            if(snapshot.data == null){
-              return Center(
+              if(snapshot.data == null){
+                return Center(
                 child: CircularProgressIndicator()
-              );
-            }
-            else {
-
+                );
+              }
+              else {
               return GridView.builder(
 
                   itemCount: snapshot.data.length,
