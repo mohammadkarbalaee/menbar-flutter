@@ -226,6 +226,7 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                             child: Padding(
                               padding: const EdgeInsets.only(top: 6,bottom: 6,right: 15),
                               child: Text(
+                                widget.downloads == null ? "" :
                                 'بیش از  ${widget.downloads} دریافت از این مجموعه',
                                 style: TextStyle(
                                   fontFamily: 'sans',
@@ -303,69 +304,75 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
 
                   builder: (BuildContext context,AsyncSnapshot snapshot){
 
-    if(snapshot.data == null){
-    return Center(
-    child: CircularProgressIndicator()
-    );
-    }
-    else
-                    return ListView.separated(
-                      primary: false,
-                      shrinkWrap: true,
-                      itemCount: snapshot.data.length,
+                    if(snapshot.data == null){
+                      return Padding(
+                      padding: const EdgeInsets.only(top: 30.0),
+                        child: Center(
+                          child: CircularProgressIndicator()
+                        ),
+                      );
+                    }
+                    else {
+                      return ListView.separated(
+                        primary: false,
+                        shrinkWrap: true,
+                        itemCount: snapshot.data.length,
 
-                      separatorBuilder: (BuildContext context, int index) {
-                        return Divider(
-                          height: 10,
-                          thickness: 1.5,
-                          color: Colors.black38,
-                        );
-                      },
-                      itemBuilder: (BuildContext context, int index) {
-                        return ListTile(
-                          dense: true,
-                          title: Text(
-                            snapshot.data[index]['title'],
-                            textDirection: TextDirection.rtl,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'sans',
-                              fontSize: 19,
-                            ),
-                          ),
-                          subtitle: Align(
-                            alignment: Alignment.bottomRight,
-                            child: Container(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    '${snapshot.data[index]["file_size"]} مگابایت',
-                                    textDirection: TextDirection.rtl,
-                                    style: TextStyle(
-                                      fontFamily: 'sans',
-                                      fontSize: 15,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  SizedBox(width: 30,),
-                                  Text(
-                                    '${snapshot.data[index]["duration"]} دقیقه',
-                                    textDirection: TextDirection.rtl,
-                                    style: TextStyle(
-                                      fontFamily: 'sans',
-                                      fontSize: 15,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ],
+                        separatorBuilder: (BuildContext context, int index) {
+                          return Divider(
+                            height: 10,
+                            thickness: 1.5,
+                            color: Colors.black38,
+                          );
+                        },
+                        itemBuilder: (BuildContext context, int index) {
+                          return ListTile(
+                            dense: true,
+                            title: Text(
+                              snapshot.data[index]['title'],
+                              textDirection: TextDirection.rtl,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'sans',
+                                fontSize: 19,
                               ),
                             ),
-                          ),
-                          leading: DownloadButton(snapshot.data[index]['file']),
-                        );
-                      },
-                    );
+                            subtitle: Align(
+                              alignment: Alignment.bottomRight,
+                              child: Container(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      snapshot.data[index]['file_size'] == null ? "":
+                                      '${snapshot.data[index]["file_size"]} مگابایت',
+                                      textDirection: TextDirection.rtl,
+                                      style: TextStyle(
+                                        fontFamily: 'sans',
+                                        fontSize: 15,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    SizedBox(width: 30,),
+                                    Text(
+                                      snapshot.data[index]['duration'] == null ? "" :
+                                      '${snapshot.data[index]["duration"]} دقیقه',
+                                      textDirection: TextDirection.rtl,
+                                      style: TextStyle(
+                                        fontFamily: 'sans',
+                                        fontSize: 15,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            leading: DownloadButton(snapshot.data[index]['file'] == null ? "": snapshot.data[index]['file']),
+                          );
+                        },
+                      );
+                    }
                   }
               ),
             ),
@@ -479,6 +486,22 @@ class _DownloadButtonState extends State<DownloadButton> {
   }
 
   Future startDownload(String url) async {
+
+    if(url == ""){
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+              'فایل صوتی سخنرانی برای دانلود موجود نیست',
+            textDirection: TextDirection.rtl,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      );
+      return;
+    }
+
     setState(() {
       buttonStatus = !buttonStatus;
     });

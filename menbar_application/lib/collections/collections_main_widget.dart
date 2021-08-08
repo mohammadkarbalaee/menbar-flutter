@@ -60,11 +60,8 @@ class _CollectionsState extends State<Collections> {
           builder: (BuildContext context,AsyncSnapshot snapshot){
 
               if(snapshot.data == null){
-                return Padding(
-                  padding: const EdgeInsets.only(top: 30.0),
-                  child: Center(
-                    child: CircularProgressIndicator()
-                  ),
+                return Center(
+                child: CircularProgressIndicator()
                 );
               }
               else {
