@@ -17,7 +17,7 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
   List orators = Hive.box('orators').get('list');
-
+  var showDeleteButton = false;
   List collections = Hive.box('collections').get('list');
 
   List<Widget> threeTabs = [
@@ -178,6 +178,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       home: ValueListenableBuilder(
 
@@ -191,7 +192,23 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
                     appBar: AppBar(
                       elevation: 7.0,
                       bottomOpacity: 1,
-                      leading:isSearching ? Container(): AboutButton(),
+                      leading:isSearching ? showDeleteButton ? Container(
+                        child: ButtonTheme(
+                          height: 45,
+                          minWidth: 40,
+                          splashColor: Colors.grey,
+                          child: RaisedButton(
+                            elevation: 0,
+                            color: Color(0xff607d8d),
+                            onPressed: () {
+                              setState(() {
+                                fieldText.text = '';
+                              });
+                            },
+                            child: Icon(Icons.clear,color: Colors.white,),
+                          ),
+                        ),
+                      ): Container() : AboutButton(),
                       actions: isSearching ? [
                       Container(
                         width: 300,
@@ -199,6 +216,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
                           controller: fieldText,
                           onChanged: (value) {
                             setState(() {
+                              showDeleteButton = true;
                               filterValue = value;
                             });
                           },
