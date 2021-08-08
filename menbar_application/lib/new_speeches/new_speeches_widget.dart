@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:menbar_application/collections/collection_speeches_widget.dart';
 
 
 import  'package:persian_number_utility/persian_number_utility.dart';
@@ -116,8 +117,16 @@ class NewSpeeches extends StatelessWidget {
                         ),
                       ),
                       onTap: (){
-                        Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => NewSpeechInstance(getImage(snapshot.data[index]['collection']))
+                        Navigator.of(context,rootNavigator: true).push(MaterialPageRoute(
+                            builder: (context) => CollectionInstance(
+                                getImage(snapshot.data[index]['collection']),
+                                getTitle(snapshot.data[index]['collection']),
+                                getID(snapshot.data[index]['collection']),
+                                getIsSequenced(snapshot.data[index]['collection']),
+                                getName(snapshot.data[index]['sokhanran']),
+                                getUrl(snapshot.data[index]['collection']),
+                                getDonwloads(snapshot.data[index]['collection']),
+                            )
                         )
                         );
                       },
@@ -133,11 +142,16 @@ class NewSpeeches extends StatelessWidget {
 
   String getName(String oratorUrl) {
 
-    List splited = oratorUrl.split("/");
-    String  oratorID = splited[splited.length - 2];
+    String oratorID = getID(oratorUrl);
     String oratorName = findNameByID(oratorID);
 
     return oratorName;
+  }
+
+  String getID(String url) {
+    List splited = url.split("/");
+    String  oratorID = splited[splited.length - 2];
+    return oratorID;
   }
 
   String findNameByID(String oratorID) {
@@ -154,10 +168,8 @@ class NewSpeeches extends StatelessWidget {
   }
 
   String getImage(speechUrl) {
-    List splited = speechUrl.split("/");
-    String  collectionID = splited[splited.length - 2];
+    String  collectionID = getID(speechUrl);
     String collectionImage = findImageByID(collectionID);
-
     return collectionImage;
   }
 
@@ -182,4 +194,64 @@ class NewSpeeches extends StatelessWidget {
     return result;
   }
 
+  String getTitle(collection) {
+    String id = getID(collection);
+
+    String title = 'failed to find';
+
+    for(var collection in collections){
+      if(collection['id'].toString() == id){
+        title = collection['title'];
+      }
+    }
+
+    return title;
+
+  }
+
+  bool getIsSequenced(collection) {
+    String id = getID(collection);
+
+    bool sequence = false;
+
+    for(var collection in collections){
+      if(collection['id'].toString() == id){
+        sequence = collection['is_sequence'];
+      }
+    }
+
+    return sequence;
+  }
+
+  String getUrl(collection) {
+    String id = getID(collection);
+
+    String url = 'failed to find';
+
+    for(var collection in collections){
+      if(collection['id'].toString() == id){
+        url = collection["origin_url"];
+      }
+    }
+
+    return url;
+  }
+
+  int? getDonwloads(collection) {
+    String id = getID(collection);
+
+    int? url = null;
+
+    for(var collection in collections){
+      if(collection['id'].toString() == id){
+        if(collection["downloads"] == 0){
+          url = null;
+        } else {
+          url = collection["downloads"];
+        }
+      }
+    }
+
+    return url;
+  }
 }
