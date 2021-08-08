@@ -303,6 +303,12 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
 
                   builder: (BuildContext context,AsyncSnapshot snapshot){
 
+    if(snapshot.data == null){
+    return Center(
+    child: CircularProgressIndicator()
+    );
+    }
+    else
                     return ListView.separated(
                       primary: false,
                       shrinkWrap: true,
