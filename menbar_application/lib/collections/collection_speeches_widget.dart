@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:hive/hive.dart';
+import 'package:http/http.dart';
 import 'package:menbar_application/firstpage/shared_data.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -355,7 +356,7 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                               ),
                             ),
                           ),
-                          leading: DownloadButton(),
+                          leading: DownloadButton(snapshot.data[index]['file']),
                         );
                       },
                     );
@@ -451,6 +452,10 @@ class _BookmarkButtonState extends State<BookmarkButton> {
   }
 }
 class DownloadButton extends StatefulWidget {
+  String url;
+
+  DownloadButton(this.url);
+
   @override
   _DownloadButtonState createState() => _DownloadButtonState();
 }
@@ -458,10 +463,39 @@ class DownloadButton extends StatefulWidget {
 class _DownloadButtonState extends State<DownloadButton> {
   var buttonStatus = false;
   double progress = 0;
+  var isDownloaded = false;
 
-  Future startDownload() async {
+  Future startDownload(String url) async {
+    setState(() {
+      buttonStatus = !buttonStatus;
+    });
 
-  }
+    final request = Request('GET', Uri.parse(url));
+    final response = await Client().send(request);
+    final voiceLength = response.contentLength;
+
+    final file = await getFile(url);
+    final downloadedBytes = <int> [];
+
+    response.stream.listen(
+       (newBytes) {
+      downloadedBytes.addAll(newBytes);
+
+      setState(() {
+        if (voiceLength != null) {
+          progress = downloadedBytes.length / voiceLength;
+        }
+      });
+    },
+    onDone: () async {
+      setState(() {
+        isDownloaded = !isDownloaded;
+      });
+
+      await file.writeAsBytes(downloadedBytes);
+    },
+    );
+}
 
   Future<File> getFile(fileName) async {
     final directory = await getApplicationDocumentsDirectory();
@@ -477,7 +511,7 @@ class _DownloadButtonState extends State<DownloadButton> {
           buttonStatus ? Container(
             height: 47,
             width: 47,
-            child: CircularProgressIndicator(
+            child: isDownloaded ? Container() :CircularProgressIndicator(
               value: progress,
               valueColor: AlwaysStoppedAnimation(Colors.black38),
               strokeWidth: 3.5,
@@ -489,11 +523,9 @@ class _DownloadButtonState extends State<DownloadButton> {
           Container(
             height: 100,
             child: OutlinedButton(
-              child: buttonStatus ? Icon(Icons.close, size: 25,) : Icon(Icons.get_app, size: 25,),
-              onPressed: () {
-                setState(() {
-                  buttonStatus = !buttonStatus;
-                });
+              child: isDownloaded ? Icon(Icons.play_arrow, size: 25,) : buttonStatus ? Icon(Icons.close, size: 25,) : Icon(Icons.get_app, size: 25,),
+              onPressed: isDownloaded ? (){} :(){
+                startDownload(widget.url);
               },
               style: OutlinedButton.styleFrom(
                 primary: Colors.black,
