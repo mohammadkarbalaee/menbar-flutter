@@ -465,6 +465,13 @@ class _DownloadButtonState extends State<DownloadButton> {
   double progress = 0;
   var isDownloaded = false;
 
+
+  @override
+  void initState() {
+    super.initState();
+    isDownloaded = getIsDownloaded(widget.url);
+  }
+
   Future startDownload(String url) async {
     setState(() {
       buttonStatus = !buttonStatus;
@@ -493,6 +500,8 @@ class _DownloadButtonState extends State<DownloadButton> {
       });
 
       await file.writeAsBytes(downloadedBytes);
+      downloadedBytes.clear();
+      Hive.box('downloadeds').put(widget.url, true);
     },
     );
 }
@@ -523,13 +532,13 @@ class _DownloadButtonState extends State<DownloadButton> {
           Container(
             height: 100,
             child: OutlinedButton(
-              child: isDownloaded ? Icon(Icons.play_arrow, size: 25,) : buttonStatus ? Icon(Icons.close, size: 25,) : Icon(Icons.get_app, size: 25,),
+              child: isDownloaded ? Icon(Icons.play_arrow, size: 25,color: Colors.white,) : buttonStatus ? Icon(Icons.close, size: 25,) : Icon(Icons.get_app, size: 25,),
               onPressed: isDownloaded ? (){} :(){
                 startDownload(widget.url);
               },
               style: OutlinedButton.styleFrom(
                 primary: Colors.black,
-                backgroundColor: Colors.white,
+                backgroundColor: isDownloaded ? Colors.grey :Colors.white,
                 elevation: 0,
                 shape: CircleBorder(),
               ),
@@ -538,6 +547,12 @@ class _DownloadButtonState extends State<DownloadButton> {
         ],
       )
     );
+  }
+
+  bool getIsDownloaded(String url) {
+    final box = Hive.box('downloadeds');
+    bool isDownloaded = box.get(url) == null ? false : true;
+    return isDownloaded;
   }
 }
 
