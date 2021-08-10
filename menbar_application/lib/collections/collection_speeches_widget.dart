@@ -477,6 +477,7 @@ class _DownloadButtonState extends State<DownloadButton> {
   var buttonStatus = false;
   double progress = 0;
   var isDownloaded = false;
+  var isInProgress = false;
 
 
   @override
@@ -501,10 +502,6 @@ class _DownloadButtonState extends State<DownloadButton> {
       );
       return;
     }
-
-    setState(() {
-      buttonStatus = !buttonStatus;
-    });
 
     final request = Request('GET', Uri.parse(url));
     final response = await Client().send(request);
@@ -551,7 +548,7 @@ class _DownloadButtonState extends State<DownloadButton> {
             width: 47,
             child: isDownloaded ? Container() :CircularProgressIndicator(
               value: progress,
-              valueColor: AlwaysStoppedAnimation(Colors.black38),
+              valueColor: AlwaysStoppedAnimation(Color(0xff607d8d)),
               strokeWidth: 3.5,
               backgroundColor: Colors.white,
 
@@ -563,7 +560,13 @@ class _DownloadButtonState extends State<DownloadButton> {
             child: OutlinedButton(
               child: isDownloaded ? Icon(Icons.play_arrow, size: 25,color: Colors.white,) : buttonStatus ? Icon(Icons.close, size: 25,) : Icon(Icons.get_app, size: 25,),
               onPressed: isDownloaded ? (){} :(){
-                startDownload(widget.url);
+                setState(() {
+                    buttonStatus = !buttonStatus;
+                    if(isInProgress == false){
+                      startDownload(widget.url);
+                      isInProgress = !isInProgress;
+                    }
+                });
               },
               style: OutlinedButton.styleFrom(
                 primary: Colors.black,
