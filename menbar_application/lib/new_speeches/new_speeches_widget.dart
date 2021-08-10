@@ -57,24 +57,28 @@ class NewSpeeches extends StatelessWidget {
                             borderRadius: BorderRadius.zero,
                           ),
                           elevation: 10,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          child: Stack(
                             children: [
                               Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(height: 100,),
-                                  Text(
-                                    getDateTime(snapshot.data[index]["performed_at"]).toPersianDateStr(showDayStr: true),
-                                    style: TextStyle(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 100,),
+                                Text(
+                                  getDateTime(snapshot.data[index]["performed_at"]).toPersianDateStr(showDayStr: true),
+                                  style: TextStyle(
                                       fontFamily: 'sans',
                                       fontSize: 17
-                                    ),
-                                    textAlign: TextAlign.left,
                                   ),
-                                ],
-                              ),
-                              Flexible(
+                                  textAlign: TextAlign.left,
+                                ),
+                              ],
+                            ),
+                              Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Container(
+                                width: (MediaQuery.of(context).size.width / 2),
+                                child: Flexible(
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
@@ -90,7 +94,7 @@ class NewSpeeches extends StatelessWidget {
                                       Text(
                                         getName(snapshot.data[index]['sokhanran']),
                                         overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.right,
+                                        textAlign: TextAlign.end,
                                         style: TextStyle(
                                           fontSize: 17,
                                           fontWeight: FontWeight.bold,
@@ -99,16 +103,20 @@ class NewSpeeches extends StatelessWidget {
                                       ),
                                     ],
                                   ),
+                                ),
                               ),
                               SizedBox(width: 20),
                               Container(
-                                height: 120,
-                                child: CachedNetworkImage(
+                                  height: 120,
+                                  child: CachedNetworkImage(
                                     imageUrl: getImage(snapshot.data[index]['collection']),
-                                  fadeInDuration:Duration(milliseconds: 500),
-                                  fadeInCurve:Curves.easeInExpo,
-                                )
+                                    fadeInDuration:Duration(milliseconds: 500),
+                                    fadeInCurve:Curves.easeInExpo,
+                                    fit: BoxFit.cover,
+                                  )
                               ),
+                            ],
+                          ),
                             ],
                           ),
                         ),
