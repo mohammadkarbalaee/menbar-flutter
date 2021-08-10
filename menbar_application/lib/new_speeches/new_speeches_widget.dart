@@ -6,9 +6,6 @@ import 'package:menbar_application/collections/collection_speeches_widget.dart';
 
 import  'package:persian_number_utility/persian_number_utility.dart';
 
-import 'new_speech_instance_widget.dart';
-
-
 class NewSpeeches extends StatelessWidget {
 
   List orators;
