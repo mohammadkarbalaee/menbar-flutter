@@ -478,7 +478,7 @@ class _DownloadButtonState extends State<DownloadButton> {
   double progress = 0;
   var isDownloaded = false;
   var isInProgress = false;
-
+  var downloadStream;
 
   @override
   void initState() {
@@ -486,7 +486,7 @@ class _DownloadButtonState extends State<DownloadButton> {
     isDownloaded = getIsDownloaded(widget.url);
   }
 
-  Future startDownload(String url) async {
+  Future startDownload(String url,bool pause) async {
 
     if(url == ""){
       ScaffoldMessenger.of(context).showSnackBar(
@@ -503,33 +503,37 @@ class _DownloadButtonState extends State<DownloadButton> {
       return;
     }
 
-    final request = Request('GET', Uri.parse(url));
-    final response = await Client().send(request);
-    final voiceLength = response.contentLength;
+    if(pause){
 
-    final file = await getFile(url);
-    final downloadedBytes = <int> [];
+    } else {
+      final request = Request('GET', Uri.parse(url));
+      final response = await Client().send(request);
+      final voiceLength = response.contentLength;
 
-    response.stream.listen(
-       (newBytes) {
-      downloadedBytes.addAll(newBytes);
+      final file = await getFile(url);
+      final downloadedBytes = <int> [];
 
-      setState(() {
-        if (voiceLength != null) {
-          progress = downloadedBytes.length / voiceLength;
-        }
-      });
-    },
-    onDone: () async {
-      setState(() {
-        isDownloaded = !isDownloaded;
-      });
+      response.stream.listen(
+            (newBytes) {
+          downloadedBytes.addAll(newBytes);
 
-      await file.writeAsBytes(downloadedBytes);
-      downloadedBytes.clear();
-      Hive.box('downloadeds').put(widget.url, true);
-    },
-    );
+          setState(() {
+            if (voiceLength != null) {
+              progress = downloadedBytes.length / voiceLength;
+            }
+          });
+        },
+        onDone: () async {
+          setState(() {
+            isDownloaded = !isDownloaded;
+          });
+
+          await file.writeAsBytes(downloadedBytes);
+          downloadedBytes.clear();
+          Hive.box('downloadeds').put(widget.url, true);
+        },
+      );
+    }
 }
 
   Future<File> getFile(fileName) async {
@@ -549,23 +553,35 @@ class _DownloadButtonState extends State<DownloadButton> {
             child: isDownloaded ? Container() :CircularProgressIndicator(
               value: progress,
               valueColor: AlwaysStoppedAnimation(Color(0xff607d8d)),
-              strokeWidth: 3.5,
+              strokeWidth: 5,
               backgroundColor: Colors.white,
-
-            ),
+            )
           )
-              : Text(''),
+              :
+          Container(
+              height: 47,
+              width: 47,
+              child: CircularProgressIndicator(
+                value: progress == 1 ? 0 : progress,
+                valueColor: AlwaysStoppedAnimation(Colors.black26),
+                strokeWidth: 5,
+                backgroundColor: Colors.white,
+              ),
+          ),
           Container(
             height: 100,
             child: OutlinedButton(
               child: isDownloaded ? Icon(Icons.play_arrow, size: 25,color: Colors.white,) : buttonStatus ? Icon(Icons.close, size: 25,) : Icon(Icons.get_app, size: 25,),
               onPressed: isDownloaded ? (){} :(){
                 setState(() {
-                    buttonStatus = !buttonStatus;
-                    if(isInProgress == false){
-                      startDownload(widget.url);
-                      isInProgress = !isInProgress;
-                    }
+                  buttonStatus = !buttonStatus;
+                  if(isInProgress == false){
+                    startDownload(widget.url,false);
+                    isInProgress = !isInProgress;
+                  }
+                  else {
+                    startDownload(widget.url,true);
+                  }
                 });
               },
               style: OutlinedButton.styleFrom(
