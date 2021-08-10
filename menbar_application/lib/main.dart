@@ -36,7 +36,7 @@ main() async {
   http.Response collectionsResponse = await http.get(Uri.parse(collectionsApiUrl));
   List collectionsServer = json.decode(utf8.decode(collectionsResponse.bodyBytes));
 
-  String newsApiUrl = 'http://menbar.sobhe.ir/api/sokhanranis/?start=0&count=100';
+  String newsApiUrl = 'http://menbar.sobhe.ir/api/sokhanranis/?start=0&count=30';
   http.Response newsResponse = await http.get(Uri.parse(newsApiUrl));
   List newsServer = json.decode(utf8.decode(newsResponse.bodyBytes));
 

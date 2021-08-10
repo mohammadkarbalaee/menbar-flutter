@@ -21,6 +21,8 @@ var globalDownloads;
 var showIt = true;
 var isBookmarked;
 
+var allSpeeches;
+
 class CollectionInstance extends StatefulWidget {
 
   var image;
@@ -55,26 +57,22 @@ class CollectionInstance extends StatefulWidget {
 class _CollectionInstanceState extends State<CollectionInstance> with SingleTickerProviderStateMixin{
   var collection = [];
 
-  Future<List> _getData() async {
-    List speeches = await Hive.box('speeches').get('${widget.id}');
-
-    return widget.isSequenced ? new List.from(speeches.reversed) : speeches;
-  }
-
-   late AnimationController _controller;
+  late AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
+
+    List speeches = Hive.box('speeches').get('${widget.id}');
+     allSpeeches = widget.isSequenced ? new List.from(speeches.reversed) : speeches;
+
     isBookmarked = getIsBookmarked();
     _controller = AnimationController(
         vsync: this,
         value: 1,
         duration: Duration(milliseconds: 2300),
         reverseDuration: Duration(milliseconds: 1300),
-    )..addStatusListener((status) {
-
-    });
+    )..addStatusListener((status) {});
   }
 
 
@@ -219,6 +217,9 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                         child: Container(
                           height: 38,
                           child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(0),
+                            ),
                             margin: EdgeInsets.zero,
                             semanticContainer: true,
                             elevation: 3,
@@ -297,39 +298,19 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                 ]
             ),
             SliverToBoxAdapter(
-
-              child: FutureBuilder(
-
-                  future: _getData(),
-
-                  builder: (BuildContext context,AsyncSnapshot snapshot){
-
-                    if(snapshot.data == null){
-                      return Padding(
-                      padding: const EdgeInsets.only(top: 30.0),
-                        child: Center(
-                          child: CircularProgressIndicator()
-                        ),
-                      );
-                    }
-                    else {
-                      return ListView.separated(
-                        primary: false,
-                        shrinkWrap: true,
-                        itemCount: snapshot.data.length,
-
-                        separatorBuilder: (BuildContext context, int index) {
-                          return Divider(
-                            height: 10,
-                            thickness: 1.5,
-                            color: Colors.black38,
-                          );
-                        },
-                        itemBuilder: (BuildContext context, int index) {
-                          return ListTile(
+              child: SizedBox(
+                height: 6,
+              ),
+            ),
+            SliverList(
+                delegate: SliverChildBuilderDelegate(
+                    (context,index){
+                      return Column(
+                        children:[
+                          ListTile(
                             dense: true,
                             title: Text(
-                              snapshot.data[index]['title'],
+                              allSpeeches[index]['title'],
                               textDirection: TextDirection.rtl,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
@@ -344,8 +325,8 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     Text(
-                                      snapshot.data[index]['file_size'] == null ? "":
-                                      '${snapshot.data[index]["file_size"]} مگابایت',
+                                      allSpeeches[index]['file_size'] == null ? "":
+                                      '${allSpeeches[index]["file_size"]} مگابایت',
                                       textDirection: TextDirection.rtl,
                                       style: TextStyle(
                                         fontFamily: 'sans',
@@ -355,8 +336,8 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                                     ),
                                     SizedBox(width: 30,),
                                     Text(
-                                      snapshot.data[index]['duration'] == null ? "" :
-                                      '${snapshot.data[index]["duration"]} دقیقه',
+                                      allSpeeches[index]['duration'] == null ? "" :
+                                      '${allSpeeches[index]["duration"]} دقیقه',
                                       textDirection: TextDirection.rtl,
                                       style: TextStyle(
                                         fontFamily: 'sans',
@@ -368,14 +349,55 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                                 ),
                               ),
                             ),
-                            leading: DownloadButton(snapshot.data[index]['file'] == null ? "": snapshot.data[index]['file']),
-                          );
-                        },
+                            leading: DownloadButton(allSpeeches[index]['file'] == null ? "": allSpeeches[index]['file']),
+                          ),
+                          Divider(
+                            height: 10,
+                            thickness: 1.5,
+                            color: Colors.black38,
+                          ),
+                      ],
                       );
                     }
-                  }
-              ),
+                )
             ),
+            // SliverToBoxAdapter(
+            //
+            //   child: FutureBuilder(
+            //
+            //       future: _getData(),
+            //
+            //       builder: (BuildContext context,AsyncSnapshot snapshot){
+            //
+            //         if(snapshot.data == null){
+            //           return Padding(
+            //           padding: const EdgeInsets.only(top: 30.0),
+            //             child: Center(
+            //               child: CircularProgressIndicator()
+            //             ),
+            //           );
+            //         }
+            //         else {
+            //           return ListView.separated(
+            //             primary: false,
+            //             shrinkWrap: true,
+            //             itemCount: snapshot.data.length,
+            //
+            //             separatorBuilder: (BuildContext context, int index) {
+            //               return Divider(
+            //                 height: 10,
+            //                 thickness: 1.5,
+            //                 color: Colors.black38,
+            //               );
+            //             },
+            //             itemBuilder: (BuildContext context, int index) {
+            //               return
+            //             },
+            //           );
+            //         }
+            //       }
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -550,7 +572,9 @@ class _DownloadButtonState extends State<DownloadButton> {
           buttonStatus ? Container(
             height: 47,
             width: 47,
-            child: isDownloaded ? Container() :CircularProgressIndicator(
+            child: isDownloaded ? Container() : progress <= 0.01 ? CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation(Colors.black26),
+            ):CircularProgressIndicator(
               value: progress,
               valueColor: AlwaysStoppedAnimation(Color(0xff607d8d)),
               strokeWidth: 5,
