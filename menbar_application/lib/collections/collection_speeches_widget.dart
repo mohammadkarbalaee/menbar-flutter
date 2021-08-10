@@ -550,7 +550,9 @@ class _DownloadButtonState extends State<DownloadButton> {
           buttonStatus ? Container(
             height: 47,
             width: 47,
-            child: isDownloaded ? Container() :CircularProgressIndicator(
+            child: isDownloaded ? Container() : progress <= 0.01 ? CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation(Colors.black26),
+            ):CircularProgressIndicator(
               value: progress,
               valueColor: AlwaysStoppedAnimation(Color(0xff607d8d)),
               strokeWidth: 5,
