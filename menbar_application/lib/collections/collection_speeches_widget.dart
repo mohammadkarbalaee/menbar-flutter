@@ -520,13 +520,15 @@ class _DownloadButtonState extends State<DownloadButton> {
               }
         },
         onDone: () async {
-          setState(() {
-            isDownloaded = !isDownloaded;
-          });
+          if(isPaused == false){
+            setState(() {
+              isDownloaded = !isDownloaded;
+            });
 
-          await file.writeAsBytes(downloadedBytes);
-          downloadedBytes.clear();
-          Hive.box('downloadeds').put(widget.url, true);
+            await file.writeAsBytes(downloadedBytes);
+            downloadedBytes.clear();
+            Hive.box('downloadeds').put(widget.url, true);
+          }
         },
       );
     }
