@@ -499,19 +499,24 @@ class _DownloadButtonState extends State<DownloadButton> {
 
       final file = await getFile(url);
       final downloadedBytes = <int> [];
+      if(progress != 0){
+        downloadedBytes.addAll(file.readAsBytesSync());
+        print(downloadedBytes);
+      }
 
       response.stream.listen(
-            (newBytes) {
+            (newBytes) async {
               if(isPaused == false){
                 downloadedBytes.addAll(newBytes);
-
                 setState(() {
                   if (voiceLength != null) {
                     progress = downloadedBytes.length / voiceLength;
                   }
                 });
 
+              } else {
                 Hive.box('pauseds').put(widget.url, progress);
+                await file.writeAsBytes(downloadedBytes);
               }
         },
         onDone: () async {
