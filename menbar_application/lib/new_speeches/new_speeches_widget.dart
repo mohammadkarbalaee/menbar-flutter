@@ -77,7 +77,7 @@ class NewSpeeches extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Container(
-                                width: (MediaQuery.of(context).size.width / 2),
+                                width: 200,
                                 child: Flexible(
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
