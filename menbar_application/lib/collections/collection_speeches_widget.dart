@@ -361,43 +361,6 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                     }
                 )
             ),
-            // SliverToBoxAdapter(
-            //
-            //   child: FutureBuilder(
-            //
-            //       future: _getData(),
-            //
-            //       builder: (BuildContext context,AsyncSnapshot snapshot){
-            //
-            //         if(snapshot.data == null){
-            //           return Padding(
-            //           padding: const EdgeInsets.only(top: 30.0),
-            //             child: Center(
-            //               child: CircularProgressIndicator()
-            //             ),
-            //           );
-            //         }
-            //         else {
-            //           return ListView.separated(
-            //             primary: false,
-            //             shrinkWrap: true,
-            //             itemCount: snapshot.data.length,
-            //
-            //             separatorBuilder: (BuildContext context, int index) {
-            //               return Divider(
-            //                 height: 10,
-            //                 thickness: 1.5,
-            //                 color: Colors.black38,
-            //               );
-            //             },
-            //             itemBuilder: (BuildContext context, int index) {
-            //               return
-            //             },
-            //           );
-            //         }
-            //       }
-            //   ),
-            // ),
           ],
         ),
       ),
@@ -501,11 +464,13 @@ class _DownloadButtonState extends State<DownloadButton> {
   var isDownloaded = false;
   var isInProgress = false;
   var downloadStream;
+  var isPaused = false;
 
   @override
   void initState() {
     super.initState();
     isDownloaded = getIsDownloaded(widget.url);
+    progress = getProgress(widget.url);
   }
 
   Future startDownload(String url,bool pause) async {
@@ -537,13 +502,17 @@ class _DownloadButtonState extends State<DownloadButton> {
 
       response.stream.listen(
             (newBytes) {
-          downloadedBytes.addAll(newBytes);
+              if(isPaused == false){
+                downloadedBytes.addAll(newBytes);
 
-          setState(() {
-            if (voiceLength != null) {
-              progress = downloadedBytes.length / voiceLength;
-            }
-          });
+                setState(() {
+                  if (voiceLength != null) {
+                    progress = downloadedBytes.length / voiceLength;
+                  }
+                });
+
+                Hive.box('pauseds').put(widget.url, progress);
+              }
         },
         onDone: () async {
           setState(() {
@@ -599,12 +568,13 @@ class _DownloadButtonState extends State<DownloadButton> {
               onPressed: isDownloaded ? (){} :(){
                 setState(() {
                   buttonStatus = !buttonStatus;
+
+                  if(isInProgress == true){
+                    isPaused = !isPaused;
+                  }
                   if(isInProgress == false){
                     startDownload(widget.url,false);
                     isInProgress = !isInProgress;
-                  }
-                  else {
-                    startDownload(widget.url,true);
                   }
                 });
               },
@@ -625,6 +595,11 @@ class _DownloadButtonState extends State<DownloadButton> {
     final box = Hive.box('downloadeds');
     bool isDownloaded = box.get(url) == null ? false : true;
     return isDownloaded;
+  }
+
+  double getProgress(url) {
+    double progress = Hive.box('pauseds').get(url) == null ? 0 : Hive.box('pauseds').get(url);
+    return progress;
   }
 }
 
