@@ -53,6 +53,10 @@ flutter:
          - asset: fonts/iran_sans_bold.ttf
          - asset: fonts/iran_sans.ttf
            style: normal
+
+     - family:  MyFlutterApp
+       fonts:
+         - asset: fonts/my_flutter_app.ttf
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
