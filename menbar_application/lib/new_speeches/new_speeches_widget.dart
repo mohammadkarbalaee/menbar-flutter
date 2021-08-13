@@ -76,38 +76,36 @@ class NewSpeeches extends StatelessWidget {
                               Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Container(
-                                width: 200,
-                                child: Flexible(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        snapshot.data[index]['title'],
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.end,
-                                        style: TextStyle(
-                                          fontSize: 17,
-                                          fontFamily: 'sans',
-                                        ),
+                              Flexible(
+                                flex: 4,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      snapshot.data[index]['title'],
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.end,
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        fontFamily: 'sans',
                                       ),
-                                      Text(
-                                        getName(snapshot.data[index]['sokhanran']),
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.end,
-                                        style: TextStyle(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: 'sans',
-                                        ),
+                                    ),
+                                    Text(
+                                      getName(snapshot.data[index]['sokhanran']),
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.end,
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'sans',
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
                               SizedBox(width: 20),
-                              Container(
-                                  height: 120,
+                              Flexible(
+                                flex: 2,
                                   child: CachedNetworkImage(
                                     imageUrl: getImage(snapshot.data[index]['collection']),
                                     fadeInDuration:Duration(milliseconds: 500),
