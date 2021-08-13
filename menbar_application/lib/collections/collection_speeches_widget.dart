@@ -358,7 +358,8 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                           ),
                       ],
                       );
-                    }
+                    },
+                  childCount: allSpeeches.length,
                 )
             ),
           ],
@@ -499,27 +500,37 @@ class _DownloadButtonState extends State<DownloadButton> {
 
       final file = await getFile(url);
       final downloadedBytes = <int> [];
+      int wasteSize = 0;
+      var shouldResume = false;
+
       if(progress != 0){
         downloadedBytes.addAll(file.readAsBytesSync());
-        print(downloadedBytes);
+        shouldResume = downloadedBytes.length == 0 ? false : true;
+        print(shouldResume);
       }
-
-      response.stream.listen(
+      var process;
+      process = response.stream.listen(
             (newBytes) async {
-              if(isPaused == false){
+              if(isPaused == false && shouldResume == false){
                 downloadedBytes.addAll(newBytes);
                 setState(() {
                   if (voiceLength != null) {
                     progress = downloadedBytes.length / voiceLength;
                   }
                 });
-
-              } else {
+              } else if(isPaused == false && shouldResume == true) {
+                wasteSize += newBytes.length;
+                if(wasteSize >= downloadedBytes.length){
+                  shouldResume = false;
+                }
+            } else {
                 Hive.box('pauseds').put(widget.url, progress);
                 await file.writeAsBytes(downloadedBytes);
+                isInProgress = !isInProgress;
               }
         },
         onDone: () async {
+              print('done here');
           if(isPaused == false){
             setState(() {
               isDownloaded = !isDownloaded;
