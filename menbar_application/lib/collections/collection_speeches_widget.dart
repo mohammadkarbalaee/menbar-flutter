@@ -107,21 +107,25 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                     leading: BookmarkButton(),
                     automaticallyImplyLeading: false,
                     backgroundColor: Color(0xff607d8d),
-                    expandedHeight: 270,
+                    expandedHeight: 260,
                     pinned: true,
                     flexibleSpace: FlexibleSpaceBar(
                       background: Stack(
                         alignment: AlignmentDirectional.bottomEnd,
                         children: [
-                          Container(
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: NetworkImage(widget.image),
-                                ),
-                              )
+                          Flexible(
+                            flex: 3,
+                            child: Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(widget.image),
+                                  ),
+                                )
+                            ),
                           ),
-                          Positioned(
+                          Flexible(
+                            flex: 1,
                             child: PhysicalModel(
                               borderRadius: BorderRadius.circular(0),
                               color: Colors.black12,
