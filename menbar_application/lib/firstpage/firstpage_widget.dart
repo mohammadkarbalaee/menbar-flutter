@@ -6,7 +6,7 @@ import 'package:menbar_application/new_speeches/new_speeches_widget.dart';
 import 'package:menbar_application/Orators/orators_view_widget.dart';
 import 'package:menbar_application/collections/collections_main_widget.dart';
 
-import 'about_page.dart';
+import 'about_page_widget.dart';
 
 var isSearching = false;
 var filterValue = '';

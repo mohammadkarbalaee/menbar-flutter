@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:menbar_application/managers/ApiManager.dart';
-import 'firstpage/first_widget.dart';
-import 'managers/HiveManager.dart';
+import 'package:menbar_application/managers/api_manager.dart';
+import 'firstpage/firstpage_widget.dart';
+import 'managers/hive_manager.dart';
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
