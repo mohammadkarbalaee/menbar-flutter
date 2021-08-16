@@ -24,11 +24,11 @@ class HiveManager {
   Future<void> saveDataInHive({oratorsList,collectionsList,newOnesList,speechesOfCollections,speechesOfOrators}) async {
 
     saveSpeechesOfCollections(
-      speechesOfCollections: speechesOfCollections
+      speechesOfCollections: await speechesOfCollections
     );
 
     saveSpeechesOfOrators(
-      speechesOfOrators: speechesOfOrators
+      speechesOfOrators: await speechesOfOrators
     );
 
     saveGeneralLists(
@@ -62,9 +62,9 @@ class HiveManager {
     }
   }
 
-  void saveSpeechesOfCollections({speechesOfCollections}){
+  Future<void> saveSpeechesOfCollections({speechesOfCollections}) async {
     final speechesBox = Hive.box('speeches');
-    List collections = getAllCollections();
+    List collections = await getAllCollections();
 
     for(var i = 0;i < speechesOfCollections.length; i++){
       speechesBox.put('${collections[i]['id']}',speechesOfCollections[i]);
@@ -72,7 +72,7 @@ class HiveManager {
   }
 
   getAllCollections() async {
-    List collections = await Hive.box('orators').get('list');
+    List collections = await Hive.box('collections').get('list');
     return collections;
   }
 

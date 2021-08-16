@@ -29,10 +29,10 @@ main() async {
         urlForApiCall: apiCallUrls['getNewOnes']
     ),
     speechesOfCollections: apiManager.getSpeechesOfCollections(
-        allCollectionsList: databaseManager.getAllCollections(),
+        allCollectionsList: await databaseManager.getAllCollections(),
     ),
     speechesOfOrators: apiManager.getSpeechesOfOrators(
-      allOratorsList: databaseManager.getAllOrators(),
+      allOratorsList: await databaseManager.getAllOrators(),
     ),
   );
 
