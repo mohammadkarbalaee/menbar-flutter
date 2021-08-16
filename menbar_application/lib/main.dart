@@ -19,21 +19,23 @@ main() async {
   await databaseManager.makeHiveBoxes();
 
   databaseManager.saveDataInHive(
-    oratorsList: apiManager.getListData(
+    oratorsList: await apiManager.getListData(
         urlForApiCall: apiCallUrls['getOrators']
     ),
-    collectionsList: apiManager.getListData(
+    collectionsList: await apiManager.getListData(
         urlForApiCall: apiCallUrls['getCollections']
     ),
-    newOnesList: apiManager.getListData(
+    newOnesList: await apiManager.getListData(
         urlForApiCall: apiCallUrls['getNewOnes']
     ),
-    speechesOfCollections: apiManager.getSpeechesOfCollections(
-        allCollectionsList: databaseManager.getAllCollections(),
-    ),
-    speechesOfOrators: apiManager.getSpeechesOfOrators(
-      allOratorsList: databaseManager.getAllOrators(),
-    ),
+  );
+
+  apiManager.getAndSaveSpeechesOfCollections(
+    allCollectionsList: await databaseManager.getAllCollections(),
+  );
+
+  apiManager.getAndSaveSpeechesOfOrators(
+  allOratorsList: await databaseManager.getAllOrators(),
   );
 
   runApp(HomePage());

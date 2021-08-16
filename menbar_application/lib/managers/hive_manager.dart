@@ -16,28 +16,19 @@ class HiveManager {
     await Hive.openBox('news');
     await Hive.openBox('speeches');
     await Hive.openBox('collectionsOfOrators');
+
     await Hive.openBox('bookmarks');
     await Hive.openBox('downloadeds');
     await Hive.openBox('pauseds');
   }
 
-  Future<void> saveDataInHive({oratorsList,collectionsList,newOnesList,speechesOfCollections,speechesOfOrators}) async {
-
-    saveSpeechesOfCollections(
-      speechesOfCollections: speechesOfCollections
-    );
-
-    saveSpeechesOfOrators(
-      speechesOfOrators: speechesOfOrators
-    );
-
+  Future<void> saveDataInHive({oratorsList,collectionsList,newOnesList}) async {
     saveGeneralLists(
         oratorsList: oratorsList,
         collectionsList: collectionsList,
         newOnesList: newOnesList,
     );
   }
-
 
   Future<void> saveGeneralLists({oratorsList,collectionsList,newOnesList}) async => putDataInBoxes(oratorsList,collectionsList,newOnesList);
 
@@ -52,31 +43,12 @@ class HiveManager {
     newOnesBox.put('list',receivedNewOnes);
   }
 
-
-  void saveSpeechesOfOrators({speechesOfOrators}) async {
-    final speechesBox = Hive.box('collectionsOfOrators');
-    List orators = getAllCollections();
-
-    for(var i = 0;i < speechesOfOrators.length; i++){
-      speechesBox.put('${orators[i]['id']}',speechesOfOrators[i]);
-    }
-  }
-
-  void saveSpeechesOfCollections({speechesOfCollections}){
-    final speechesBox = Hive.box('speeches');
-    List collections = getAllCollections();
-
-    for(var i = 0;i < speechesOfCollections.length; i++){
-      speechesBox.put('${collections[i]['id']}',speechesOfCollections[i]);
-    }
-  }
-
-  getAllCollections() async {
-    List collections = await Hive.box('orators').get('list');
+  Future<List> getAllCollections() async {
+    List collections = await Hive.box('collections').get('list');
     return collections;
   }
 
-  getAllOrators() async {
+  Future<List> getAllOrators() async {
     List orators = await Hive.box('orators').get('list');
     return orators;
   }

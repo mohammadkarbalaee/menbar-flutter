@@ -120,6 +120,7 @@ class NewSpeeches extends StatelessWidget {
                         ),
                       ),
                       onTap: (){
+
                         Navigator.of(context,rootNavigator: true).push(MaterialPageRoute(
                             builder: (context) => CollectionInstance(
                                 getImage(snapshot.data[index]['collection']),
@@ -233,7 +234,7 @@ class NewSpeeches extends StatelessWidget {
 
     for(var collection in collections){
       if(collection['id'].toString() == id){
-        url = collection["origin_url"];
+        url = collection["origin_url"] == null ? '': collection["origin_url"];
       }
     }
 

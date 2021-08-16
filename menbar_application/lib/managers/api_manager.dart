@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
 class ApiManager {
@@ -10,31 +11,24 @@ class ApiManager {
     return receivedList;
   }
 
-  Future<List> getSpeechesOfOrators({allOratorsList}) async {
-    List result = [];
-    String url;
 
+  Future<void> getAndSaveSpeechesOfOrators({allOratorsList}) async {
+    final speechesBox = Hive.box('collectionsOfOrators');
     for(var i in allOratorsList){
-      url = 'http://menbar.sobhe.ir/api/collections/?sokhanran=${i['id']}&start=0&count=500';
+      String url = 'http://menbar.sobhe.ir/api/collections/?sokhanran=${i['id']}&start=0&count=500';
       http.Response severResponse = await http.get(Uri.parse(url));
       List speeches = json.decode(utf8.decode(severResponse.bodyBytes));
-      result.add(speeches);
+      speechesBox.put('${i['id']}',speeches);
     }
-
-    return result;
   }
 
-  Future<List> getSpeechesOfCollections({allCollectionsList}) async {
-    List result = [];
-    String url;
-
+  Future<void> getAndSaveSpeechesOfCollections({allCollectionsList}) async {
+    final speechesBox = Hive.box('speeches');
     for(var i in allCollectionsList){
-      url = 'http://menbar.sobhe.ir/api/sokhanranis/?collection=${i['id']}&start=0&count=500';
+      String url = 'http://menbar.sobhe.ir/api/sokhanranis/?collection=${i['id']}&start=0&count=500';
       http.Response serverResponse = await http.get(Uri.parse(url));
       List speeches = json.decode(utf8.decode(serverResponse.bodyBytes));
-      result.add(speeches);
+      speechesBox.put('${i['id']}',speeches);
     }
-
-    return result;
   }
 }
