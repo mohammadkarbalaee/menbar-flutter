@@ -214,7 +214,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
                       ),
                       actions: isSearching ? [
                       Container(
-                        width: 300,
+                        width: 200,
                         child: TextField(
                           controller: fieldText,
                           onChanged: (value) {
