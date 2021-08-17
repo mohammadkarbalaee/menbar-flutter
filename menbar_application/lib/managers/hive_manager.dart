@@ -3,7 +3,6 @@ import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 
 class HiveManager {
-
   Future<void> initializeHiveDatabase() async {
     Directory appDocumentDirectory = await getApplicationDocumentsDirectory();
     String appDocumentPath = appDocumentDirectory.path;
@@ -43,13 +42,22 @@ class HiveManager {
     newOnesBox.put('list',receivedNewOnes);
   }
 
-  Future<List> getAllCollections() async {
+  static Future<List> getAllCollections() async {
     List collections = await Hive.box('collections').get('list');
     return collections;
   }
 
-  Future<List> getAllOrators() async {
+  static Future<List> getAllOrators() async {
     List orators = await Hive.box('orators').get('list');
     return orators;
+  }
+
+  static Future<List> getCollectionsById(int id) async {
+    List speeches = await Hive.box('collectionsOfOrators').get('$id');
+    return speeches;
+  }
+
+  static bool isBookmarksEmpty(){
+    return Hive.box('bookmarks').isEmpty;
   }
 }

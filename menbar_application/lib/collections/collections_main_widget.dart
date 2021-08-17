@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:menbar_application/orators/orator_instance_widget.dart';
 import 'collection_speeches_widget.dart';
 
 var titles;
@@ -181,15 +180,6 @@ class _CollectionsState extends State<Collections> {
     );
   }
 
-  String getName(String oratorUrl) {
-
-    List splited = oratorUrl.split("/");
-    String  oratorID = splited[splited.length - 2];
-    String oratorName = findNameByID(oratorID);
-
-    return oratorName;
-  }
-
   String findNameByID(String oratorID) {
 
     String name = 'failed to find';
@@ -202,16 +192,27 @@ class _CollectionsState extends State<Collections> {
 
     return name;
   }
-}
 
-List getMatched(value,collections) {
-  List matchedIntances = [];
+  String getName(String oratorUrl) {
 
-  for(var i in collections){
-    if(i['title'].contains(value) || getName(i["sokhanran"]).contains(value)){
-      matchedIntances.add(i);
-    }
+    List splited = oratorUrl.split("/");
+    String  oratorID = splited[splited.length - 2];
+    String oratorName = findNameByID(oratorID);
+
+    return oratorName;
   }
 
-  return matchedIntances;
+  List getMatched(value,collections) {
+    List matchedIntances = [];
+
+    for(var i in collections){
+      if(i['title'].contains(value) || getName(i["sokhanran"]).contains(value)){
+        matchedIntances.add(i);
+      }
+    }
+
+    return matchedIntances;
+  }
 }
+
+

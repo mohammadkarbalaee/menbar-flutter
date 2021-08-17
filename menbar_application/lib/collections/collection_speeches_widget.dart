@@ -5,7 +5,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
-import 'package:menbar_application/firstpage/shared_data.dart';
+import 'package:menbar_application/shared_data.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sliver_tools/sliver_tools.dart';
@@ -261,7 +261,7 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                                     if(isBookmarked){
                                       box.delete(globalId);
                                       isBookmarked = !isBookmarked;
-                                      Shared.isBookmarksEmpty.value = box.isEmpty;
+                                      SharedData.isBookmarksEmpty.value = box.isEmpty;
                                     } else {
                                       var collection = {
                                         'title': globalTitle,
@@ -275,7 +275,7 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
 
                                       box.put(globalId,collection);
                                       isBookmarked = !isBookmarked;
-                                      Shared.isBookmarksEmpty.value = false;
+                                      SharedData.isBookmarksEmpty.value = false;
                                     }
                                   });
                                 },
@@ -424,7 +424,7 @@ class _BookmarkButtonState extends State<BookmarkButton> {
               if(isBookmarked){
                 box.delete(globalId);
                 isBookmarked = !isBookmarked;
-                Shared.isBookmarksEmpty.value = box.isEmpty;
+                SharedData.isBookmarksEmpty.value = box.isEmpty;
               } else {
                 var collection = {
                   'title': globalTitle,
@@ -438,7 +438,7 @@ class _BookmarkButtonState extends State<BookmarkButton> {
 
                 box.put(globalId,collection);
                 isBookmarked = !isBookmarked;
-                Shared.isBookmarksEmpty.value = false;
+                SharedData.isBookmarksEmpty.value = false;
               }
             });
           },

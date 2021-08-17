@@ -5,10 +5,9 @@ import 'package:menbar_application/managers/hive_manager.dart';
 import 'orator_instance_widget.dart';
 
 class Orators extends StatelessWidget {
-  final HiveManager databaseManager = HiveManager();
 
   Future<List> _getData() async {
-    List orators = await databaseManager.getAllOrators();
+    List orators = await HiveManager.getAllOrators();
     return orators;
   }
 

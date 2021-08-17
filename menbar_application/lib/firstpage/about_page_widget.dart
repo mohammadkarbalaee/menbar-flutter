@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../header_back_button.dart';
 import 'my_flutter_app_icons.dart';
 
 List texts = [
@@ -31,19 +32,10 @@ class AboutPage extends StatelessWidget {
             ),
           ),
           SizedBox(width: 5,),
-          Container(
-            child: ButtonTheme(
-              height: 50,
-              minWidth:30,
-              splashColor: Colors.grey,
-              child: RaisedButton(
-                elevation: 0,
-                color: Color(0xffffff),
-                onPressed: () => Navigator.pop(context),
-                child: Icon(Icons.arrow_forward,color: Colors.white,),
-              ),
-            ),
-          ),
+          HeaderBackButton(
+            icon: Icon(Icons.arrow_forward,color: Colors.white,),
+            onPress: () => Navigator.pop(context),
+          )
         ],
       ),
       body: AboutBody(),

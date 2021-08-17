@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:menbar_application/boookmarks/bookmarks_main.dart';
-import 'package:menbar_application/firstpage/shared_data.dart';
+import 'package:menbar_application/shared_data.dart';
 import 'package:menbar_application/new_speeches/new_speeches_widget.dart';
 import 'package:menbar_application/Orators/orators_view_widget.dart';
 import 'package:menbar_application/collections/collections_main_widget.dart';
@@ -187,7 +187,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
         builder: (BuildContext context, value, Widget? child) {
           return DefaultTabController(
               initialIndex: 1,
-              length: Shared.isBookmarksEmpty.value ? 3 : 4,
+              length: SharedData.isBookmarksEmpty.value ? 3 : 4,
               child: Builder(
                 builder: (context){
                   return Scaffold(
@@ -262,7 +262,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
                     isScrollable: true,
                     indicatorColor: Colors.yellow,
                     indicatorWeight: 2.5,
-                    tabs: Shared.isBookmarksEmpty.value ? threeTabs : fourTabs,
+                    tabs: SharedData.isBookmarksEmpty.value ? threeTabs : fourTabs,
                     ),
                     title: isSearching ? Container() :
                     Container(
@@ -286,14 +286,14 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
                     backgroundColor: Color(0xff607d8d),
                   ),
                   body: TabBarView(
-                  children: Shared.isBookmarksEmpty.value ? getThree(): getFour(),
+                  children: SharedData.isBookmarksEmpty.value ? getThree(): getFour(),
                   ),
                   );
                 },
               )
           );
         },
-        valueListenable: Shared.isBookmarksEmpty,
+        valueListenable: SharedData.isBookmarksEmpty,
         child: Container(),
       ),
     );

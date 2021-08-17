@@ -31,11 +31,11 @@ main() async {
   );
 
   apiManager.getAndSaveSpeechesOfCollections(
-    allCollectionsList: await databaseManager.getAllCollections(),
+    allCollectionsList: await HiveManager.getAllCollections(),
   );
 
   apiManager.getAndSaveSpeechesOfOrators(
-  allOratorsList: await databaseManager.getAllOrators(),
+  allOratorsList: await HiveManager.getAllOrators(),
   );
 
   runApp(HomePage());

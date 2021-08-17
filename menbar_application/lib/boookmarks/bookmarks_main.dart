@@ -20,32 +20,21 @@ class Bookmarks extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return MaterialApp(
-
       home: Scaffold(
-
           body: FutureBuilder(
-
             future: _getData(),
-
             builder: (BuildContext context,AsyncSnapshot snapshot){
-
               if(snapshot.data == null){
                 return Center(
                     child: CircularProgressIndicator()
                 );
               }
               else {
-
                 return GridView.builder(
-
                   itemCount: snapshot.data.length,
-
                   itemBuilder: (context,index) {
-
                     return GestureDetector(
-
                       child: Container(
-
                         child: Card(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(Radius.circular(5)),
