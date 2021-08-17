@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:menbar_application/collections/collection_speeches_widget.dart';
+import 'package:menbar_application/managers/hive_manager.dart';
 
 
 class Bookmarks extends StatelessWidget {
@@ -9,7 +9,7 @@ class Bookmarks extends StatelessWidget {
   Bookmarks(this.orators);
 
   Future<Iterable> _getData() async {
-    Iterable values = await Hive.box('bookmarks').values;
+    Iterable values = await HiveManager.getBookmarkBoxValues();
     List collections = [];
     for(var i in values){
       collections.add(i);

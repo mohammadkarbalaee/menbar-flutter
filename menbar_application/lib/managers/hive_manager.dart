@@ -109,4 +109,8 @@ class HiveManager {
     List speeches = Hive.box('speeches').get('${id}');
     return speeches;
   }
+
+  static Future<Iterable> getBookmarkBoxValues() async{
+    return Hive.box('bookmarks').values;
+  }
 }
