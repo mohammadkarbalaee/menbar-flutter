@@ -79,33 +79,15 @@ class HeaderBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FlexibleSpaceBar(
-      title: Align(
-        alignment: Alignment.bottomRight,
-        child: Padding(
-          padding: EdgeInsets.only(right: 10),
-          child: Text(
-            name,
-            textDirection: TextDirection.rtl,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontFamily: 'sans'
-            ),
-          ),
-        ),
-      ),
+      title: Title(name),
       background: Stack(
         alignment: AlignmentDirectional.bottomEnd,
         children: [
           Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(image),
-                ),
-              )
+            child: CachedNetworkImage(
+              imageUrl: image,
+              fit: BoxFit.cover,
+            ),
           ),
           HeaderGradient(''),
         ],
@@ -114,6 +96,31 @@ class HeaderBox extends StatelessWidget {
     );
   }
 }
+ class Title extends StatelessWidget {
+  var name;
+  Title(this.name);
+
+   @override
+   Widget build(BuildContext context) {
+     return Align(
+       alignment: Alignment.bottomRight,
+       child: Padding(
+         padding: EdgeInsets.only(right: 10),
+         child: Text(
+           name,
+           textDirection: TextDirection.rtl,
+           overflow: TextOverflow.ellipsis,
+           style: TextStyle(
+               fontSize: 16,
+               fontWeight: FontWeight.bold,
+               color: Colors.white,
+               fontFamily: 'sans'
+           ),
+         ),
+       ),
+     );
+   }
+ }
 
 class CollectionsList extends StatelessWidget {
   var getDataFunction;
@@ -126,79 +133,85 @@ class CollectionsList extends StatelessWidget {
       child: FutureBuilder(
         future: getDataFunction(),
         builder: (BuildContext context,AsyncSnapshot snapshot){
-          if(snapshot.data == null){
-            return Center(
-              child: Text('',),
-            );
-          }
-          else {
-            return ListView.builder(
-              primary: false,
-              shrinkWrap: true,
-              itemCount: snapshot.data.length,
-              itemBuilder: (context,index) {
-                return GestureDetector(
-                  child: Container(
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.zero,
-                      ),
-                      elevation: 10,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Flexible(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  snapshot.data[index]['title'],
-                                  overflow: TextOverflow.ellipsis,
-                                  textDirection: TextDirection.rtl,
-                                  textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'sans',
-                                  ),
+          bool isNotReady = snapshot.data == null;
+          return isNotReady ? Center(child: Text(''),): ListView.builder(
+            primary: false,
+            shrinkWrap: true,
+            itemCount: snapshot.data.length,
+            itemBuilder: (context,index) {
+              return GestureDetector(
+                child: Container(
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.zero,
+                    ),
+                    elevation: 10,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Flexible(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                snapshot.data[index]['title'],
+                                overflow: TextOverflow.ellipsis,
+                                textDirection: TextDirection.rtl,
+                                textAlign: TextAlign.end,
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'sans',
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                          SizedBox(width: 10,),
-                          Container(
-                              height: 120,
-                              child: CachedNetworkImage(
-                                imageUrl: snapshot.data[index]['image'],
-                                fadeInDuration:Duration(milliseconds: 500),
-                                fadeInCurve:Curves.easeInExpo,
-                              )
-                          ),
-                        ],
-                      ),
+                        ),
+                        SizedBox(width: 10,),
+                        Container(
+                            height: 120,
+                            child: CachedNetworkImage(
+                              imageUrl: snapshot.data[index]['image'],
+                              fadeInDuration:Duration(milliseconds: 500),
+                              fadeInCurve:Curves.easeInExpo,
+                            )
+                        ),
+                      ],
                     ),
                   ),
-                  onTap: (){
-                    Navigator.of(context,rootNavigator: true).push(MaterialPageRoute(
-                        builder: (context) => CollectionInstance(
-                            snapshot.data[index]['image'],
-                            snapshot.data[index]['title'],
-                            snapshot.data[index]['id'],
-                            snapshot.data[index]["is_sequence"],
-                            getName(snapshot.data[index]["sokhanran"]),
-                            snapshot.data[index]["origin_url"],
-                            snapshot.data[index]['downloads']
-                        ),
-                        fullscreenDialog: true
-                    )
-                    );
-                  },
-                );
-              },
-            );
-          }
+                ),
+                onTap: (){
+                  navigateToCollection(context,
+                      snapshot.data[index]['image'],
+                      snapshot.data[index]['title'],
+                      snapshot.data[index]['id'],
+                      snapshot.data[index]["is_sequence"],
+                      getName(snapshot.data[index]["sokhanran"]),
+                      snapshot.data[index]["origin_url"],
+                      snapshot.data[index]['downloads']
+                  );
+                },
+              );
+            },
+          );
         },
       ),
     );
   }
+}
+
+navigateToCollection(context,image,title,id,is_sequence,oratorName,origin_url,downloads){
+  Navigator.of(context,rootNavigator: true).push(MaterialPageRoute(
+      builder: (context) => CollectionInstance(
+          image,
+          title,
+          id,
+          is_sequence,
+          oratorName,
+          origin_url,
+          downloads,
+      ),
+      fullscreenDialog: true
+  )
+  );
 }
