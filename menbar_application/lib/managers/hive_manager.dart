@@ -64,4 +64,49 @@ class HiveManager {
   static Future<List> getAllNewOnes() async {
     return await Hive.box('news').get('list');
   }
+
+  static bool getIsBookmarked(id) {
+    final box = Hive.box('bookmarks');
+    bool isBookmarked = box.get(id) == null ? false : true;
+    return isBookmarked;
+  }
+
+  static bool getIsDownloaded(String url) {
+    final box = Hive.box('downloadeds');
+    bool isDownloaded = box.get(url) == null ? false : true;
+    return isDownloaded;
+  }
+
+  static double getProgress(url) {
+    double progress = Hive.box('pauseds').get(url) == null ? 0 : Hive.box('pauseds').get(url);
+    return progress;
+  }
+
+  static void putDownloaded(String url) {
+    Hive.box('downloadeds').put(url, true);
+  }
+
+  static void putPaused(String url,double progress) {
+    Hive.box('pauseds').put(url, progress);
+  }
+
+  static void deleteBookmard(id){
+    final box = Hive.box('bookmarks');
+    box.delete(id);
+  }
+
+  static bool getIsBookmarkedEmpty(){
+    final box = Hive.box('bookmarks');
+    return box.isEmpty;
+  }
+
+  static void putBookmarked(id,collection){
+    final box = Hive.box('bookmarks');
+    box.put(id,collection);
+  }
+
+  static List getSpeechesById(int id) {
+    List speeches = Hive.box('speeches').get('${id}');
+    return speeches;
+  }
 }

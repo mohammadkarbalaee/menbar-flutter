@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:menbar_application/managers/hive_manager.dart';
 import 'collection_speeches_widget.dart';
 
 var titles;
@@ -18,7 +19,7 @@ class Collections extends StatefulWidget {
 class _CollectionsState extends State<Collections> {
 
   Future<List> _getData() async {
-    List collections = await Hive.box('collections').get('list');
+    List collections = HiveManager.getAllCollections();
 
     if(titles == null && widget.value != ''){
       List temp = [];
@@ -47,17 +48,12 @@ class _CollectionsState extends State<Collections> {
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
-
       home: Scaffold(
         resizeToAvoidBottomInset: false,
         body: FutureBuilder(
-
           future: _getData(),
-
           builder: (BuildContext context,AsyncSnapshot snapshot){
-
               if(snapshot.data == null){
                 return Center(
                 child: CircularProgressIndicator()
@@ -65,15 +61,10 @@ class _CollectionsState extends State<Collections> {
               }
               else {
               return GridView.builder(
-
                   itemCount: snapshot.data.length,
-
                   itemBuilder: (context,index) {
-
                     return GestureDetector(
-
                       child: Container(
-
                         child: Card(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -214,5 +205,3 @@ class _CollectionsState extends State<Collections> {
     return matchedIntances;
   }
 }
-
-
