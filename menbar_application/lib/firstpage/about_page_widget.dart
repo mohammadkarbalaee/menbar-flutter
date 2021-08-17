@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:menbar_application/reusable_widgets/header_back_button.dart';
+import 'package:menbar_application/reusable_widgets/shared_data.dart';
 import 'my_flutter_app_icons.dart';
 
 List texts = [
@@ -18,7 +19,7 @@ class AboutPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xff607d8d),
+        backgroundColor: Color(SharedData.mainColor),
         leading: Container(),
         actions: [
           Center(

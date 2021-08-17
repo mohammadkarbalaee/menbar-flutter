@@ -60,4 +60,8 @@ class HiveManager {
   static bool isBookmarksEmpty(){
     return Hive.box('bookmarks').isEmpty;
   }
+
+  static Future<List> getAllNewOnes() async {
+    return await Hive.box('news').get('list');
+  }
 }

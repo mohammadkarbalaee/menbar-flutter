@@ -1,8 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:menbar_application/collections/collection_speeches_widget.dart';
-
+import 'package:menbar_application/managers/hive_manager.dart';
 
 import  'package:persian_number_utility/persian_number_utility.dart';
 
@@ -13,22 +12,16 @@ class NewSpeeches extends StatelessWidget {
   NewSpeeches(this.orators,this.collections);
 
   Future<List> _getData() async {
-    List news = await Hive.box('news').get('list');
+    List news = await HiveManager.getAllNewOnes();
     return news;
   }
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
-
       home: Scaffold(
-
           body: FutureBuilder(
-
             future: _getData(),
-
             builder: (BuildContext context,AsyncSnapshot snapshot){
-
               if(snapshot.data == null){
                 return Center(
                   child: Text(
@@ -41,17 +34,11 @@ class NewSpeeches extends StatelessWidget {
                 );
               }
               else {
-
                 return ListView.builder(
-
                   itemCount: snapshot.data.length,
-
                   itemBuilder: (context,index) {
-
                     return GestureDetector(
-
                       child: Container(
-
                         child: Card(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.zero,
@@ -120,7 +107,6 @@ class NewSpeeches extends StatelessWidget {
                         ),
                       ),
                       onTap: (){
-
                         Navigator.of(context,rootNavigator: true).push(MaterialPageRoute(
                             builder: (context) => CollectionInstance(
                                 getImage(snapshot.data[index]['collection']),
