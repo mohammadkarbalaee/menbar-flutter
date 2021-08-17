@@ -42,13 +42,13 @@ class HiveManager {
     newOnesBox.put('list',receivedNewOnes);
   }
 
-  static Future<List> getAllCollections() async {
-    List collections = await Hive.box('collections').get('list');
+  static List getAllCollections() {
+    List collections = Hive.box('collections').get('list');
     return collections;
   }
 
-  static Future<List> getAllOrators() async {
-    List orators = await Hive.box('orators').get('list');
+  static List getAllOrators() {
+    List orators = Hive.box('orators').get('list');
     return orators;
   }
 

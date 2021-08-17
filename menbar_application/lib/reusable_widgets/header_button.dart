@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class HeaderBackButton extends StatelessWidget {
+class HeaderButton extends StatelessWidget {
   var icon;
   var onPress;
 
-  HeaderBackButton({this.icon,this.onPress});
+  HeaderButton({this.icon,this.onPress});
 
   @override
   Widget build(BuildContext context) {

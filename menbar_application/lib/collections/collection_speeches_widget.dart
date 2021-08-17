@@ -5,6 +5,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
+import 'package:menbar_application/reusable_widgets/header_button.dart';
 import 'package:menbar_application/reusable_widgets/shared_data.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -361,37 +362,6 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                 )
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-
-class HeaderButton extends StatefulWidget {
-  var icon;
-  var onPress;
-
-  HeaderButton({this.icon,this.onPress});
-
-  @override
-  _HeaderButtonState createState() => _HeaderButtonState();
-}
-
-class _HeaderButtonState extends State<HeaderButton> {
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: ButtonTheme(
-        height: 50,
-        minWidth:30,
-        splashColor: Colors.grey,
-        child: RaisedButton(
-          elevation: 0,
-          color: Color(0xffffff),
-          onPressed: widget.onPress,
-          child: widget.icon,
         ),
       ),
     );

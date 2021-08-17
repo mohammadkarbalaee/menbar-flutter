@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:menbar_application/reusable_widgets/header_back_button.dart';
+import 'package:menbar_application/reusable_widgets/header_button.dart';
 import 'package:menbar_application/reusable_widgets/shared_data.dart';
 import 'my_flutter_app_icons.dart';
 
@@ -33,7 +33,7 @@ class AboutPage extends StatelessWidget {
             ),
           ),
           SizedBox(width: 5,),
-          HeaderBackButton(
+          HeaderButton(
             icon: Icon(Icons.arrow_forward,color: Colors.white,),
             onPress: () => Navigator.pop(context),
           )

@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:menbar_application/collections/collection_speeches_widget.dart';
 import 'package:menbar_application/managers/hive_manager.dart';
-import 'package:menbar_application/reusable_widgets/header_back_button.dart';
+import 'package:menbar_application/reusable_widgets/header_button.dart';
 import 'package:menbar_application/reusable_widgets/header_gradient.dart';
 
 import '../reusable_widgets/shared_data.dart';
@@ -57,7 +57,7 @@ class AppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      leading: HeaderBackButton(
+      leading: HeaderButton(
         icon: Icon(Icons.arrow_back,color: Colors.white,),
         onPress: () => Navigator.pop(context),
       ),
