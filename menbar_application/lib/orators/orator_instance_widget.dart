@@ -2,9 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:menbar_application/collections/collection_speeches_widget.dart';
 import 'package:menbar_application/managers/hive_manager.dart';
+import 'package:menbar_application/reusable_widgets/header_back_button.dart';
+import 'package:menbar_application/reusable_widgets/header_gradient.dart';
 
-import '../header_back_button.dart';
-import '../shared_data.dart';
+import '../reusable_widgets/shared_data.dart';
 
 class OratorInstance extends StatelessWidget {
   var image;
@@ -28,7 +29,6 @@ class OratorInstance extends StatelessWidget {
     );
   }
 }
-
 
 Future<String> getName(String oratorUrl) async {
   List splited = oratorUrl.split("/");
@@ -66,74 +66,54 @@ class AppBar extends StatelessWidget {
       backgroundColor: Color(SharedData.mainColor),
       expandedHeight: 200,
       pinned: true,
-      flexibleSpace: FlexibleSpaceBar(
-        title: Align(
-          alignment: Alignment.bottomRight,
-          child: Padding(
-            padding: EdgeInsets.only(right: 10),
-            child: Text(
-              name,
-              textDirection: TextDirection.rtl,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  fontFamily: 'sans'
-              ),
-            ),
-          ),
-        ),
-
-        background: Stack(
-          alignment: AlignmentDirectional.bottomEnd,
-          children: [
-            Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(image),
-                  ),
-                )
-            ),
-            Positioned(
-              child: PhysicalModel(
-                borderRadius: BorderRadius.circular(0),
-                color: Colors.black12,
-                elevation: 10,
-                child: Padding(
-                  padding: EdgeInsets.only(right: 10),
-                  child: Container(
-                    height: 60,
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: 6),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Flexible(
-                                child: Text(''),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        collapseMode: CollapseMode.parallax,
-      ),
+      flexibleSpace: HeaderBox(name,image),
     );
   }
 }
 
+class HeaderBox extends StatelessWidget {
+  var name;
+  var image;
+  HeaderBox(this.name,this.image);
+
+  @override
+  Widget build(BuildContext context) {
+    return FlexibleSpaceBar(
+      title: Align(
+        alignment: Alignment.bottomRight,
+        child: Padding(
+          padding: EdgeInsets.only(right: 10),
+          child: Text(
+            name,
+            textDirection: TextDirection.rtl,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontFamily: 'sans'
+            ),
+          ),
+        ),
+      ),
+      background: Stack(
+        alignment: AlignmentDirectional.bottomEnd,
+        children: [
+          Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(image),
+                ),
+              )
+          ),
+          HeaderGradient(''),
+        ],
+      ),
+      collapseMode: CollapseMode.parallax,
+    );
+  }
+}
 
 class CollectionsList extends StatelessWidget {
   var getDataFunction;

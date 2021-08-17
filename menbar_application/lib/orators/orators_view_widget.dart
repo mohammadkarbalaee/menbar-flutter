@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:menbar_application/managers/hive_manager.dart';
+import 'package:menbar_application/reusable_widgets/header_gradient.dart';
 
 import 'orator_instance_widget.dart';
 
@@ -76,7 +77,7 @@ class OratorCardWidget extends StatelessWidget {
           alignment: AlignmentDirectional.bottomEnd,
           children: [
             BackgroundImage(imageUlr),
-            NameWidget(oratorName),
+            HeaderGradient(oratorName),
           ],
         ),
       ),
@@ -95,50 +96,6 @@ class LoadingWidget extends StatelessWidget {
         style: TextStyle(
           fontSize: 27,
           fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-}
-
-class NameWidget extends StatelessWidget {
-  var oratorName;
-  NameWidget(this.oratorName);
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      child: PhysicalModel(
-        borderRadius: BorderRadius.circular(0),
-        color: Colors.black38,
-        elevation: 30,
-        child: Padding(
-          padding: EdgeInsets.all(0),
-          child: Container(
-            height: 50,
-            width: 1000,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      oratorName,
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'sans',
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(width: 15,),
-                  ],
-                ),
-              ],
-            ),
-          ),
         ),
       ),
     );

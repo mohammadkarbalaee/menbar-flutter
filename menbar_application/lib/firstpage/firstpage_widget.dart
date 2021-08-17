@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:menbar_application/boookmarks/bookmarks_main.dart';
-import 'package:menbar_application/shared_data.dart';
+import 'package:menbar_application/reusable_widgets/shared_data.dart';
 import 'package:menbar_application/new_speeches/new_speeches_widget.dart';
 import 'package:menbar_application/Orators/orators_view_widget.dart';
 import 'package:menbar_application/collections/collections_main_widget.dart';

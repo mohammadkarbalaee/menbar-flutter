@@ -5,7 +5,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
-import 'package:menbar_application/shared_data.dart';
+import 'package:menbar_application/reusable_widgets/shared_data.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sliver_tools/sliver_tools.dart';
