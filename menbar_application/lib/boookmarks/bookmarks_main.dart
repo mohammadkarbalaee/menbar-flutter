@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:menbar_application/collections/collection_speeches_widget.dart';
+import 'package:menbar_application/managers/hive_manager.dart';
 
 
 class Bookmarks extends StatelessWidget {
@@ -9,7 +9,7 @@ class Bookmarks extends StatelessWidget {
   Bookmarks(this.orators);
 
   Future<Iterable> _getData() async {
-    Iterable values = await Hive.box('bookmarks').values;
+    Iterable values = await HiveManager.getBookmarkBoxValues();
     List collections = [];
     for(var i in values){
       collections.add(i);
@@ -20,32 +20,21 @@ class Bookmarks extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return MaterialApp(
-
       home: Scaffold(
-
           body: FutureBuilder(
-
             future: _getData(),
-
             builder: (BuildContext context,AsyncSnapshot snapshot){
-
               if(snapshot.data == null){
                 return Center(
                     child: CircularProgressIndicator()
                 );
               }
               else {
-
                 return GridView.builder(
-
                   itemCount: snapshot.data.length,
-
                   itemBuilder: (context,index) {
-
                     return GestureDetector(
-
                       child: Container(
-
                         child: Card(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(Radius.circular(5)),

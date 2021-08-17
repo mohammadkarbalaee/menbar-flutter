@@ -1,15 +1,15 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
-import 'package:hive/hive.dart';
-import 'package:http/http.dart';
-import 'package:menbar_application/firstpage/shared_data.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:menbar_application/managers/hive_manager.dart';
+import 'package:menbar_application/reusable_widgets/header_button.dart';
+import 'package:menbar_application/reusable_widgets/shared_data.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:animations/animations.dart';
+
+import 'bookmark_buttons.dart';
+import 'download_button.dart';
 
 var globalTitle;
 var globalImage;
@@ -63,10 +63,11 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
   void initState() {
     super.initState();
 
-    List speeches = Hive.box('speeches').get('${widget.id}');
+    List speeches = HiveManager.getSpeechesById(widget.id);
+
      allSpeeches = widget.isSequenced ? new List.from(speeches.reversed) : speeches;
 
-    isBookmarked = getIsBookmarked();
+    isBookmarked = HiveManager.getIsBookmarked(globalId);
     _controller = AnimationController(
         vsync: this,
         value: 1,
@@ -84,7 +85,6 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: NotificationListener<UserScrollNotification>(
         onNotification: (notification){
@@ -104,9 +104,14 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                 children: [
                   SliverAppBar(
                     primary: true,
-                    leading: BookmarkButton(),
+                    leading: BookmarkButton(
+                        (){
+                          bookmarkAction();
+                        },
+                      isBookmarked,
+                    ),
                     automaticallyImplyLeading: false,
-                    backgroundColor: Color(0xff607d8d),
+                    backgroundColor: Color(SharedData.mainColor),
                     expandedHeight: 260,
                     pinned: true,
                     flexibleSpace: FlexibleSpaceBar(
@@ -202,7 +207,7 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                         onPress: () => Navigator.pop(context),
                       ),
                     ],
-                  ),
+                  ),//app bar
                   SliverToBoxAdapter(
                     child:AnimatedBuilder(
                       animation: _controller,
@@ -238,7 +243,7 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                         ),
                       ),
                     ),
-                  ),
+                  ),//downloads quantity label
                   SliverToBoxAdapter(
                     child: AnimatedBuilder(
                       animation: _controller,
@@ -254,52 +259,25 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                             width: 60,
                             child: Padding(
                               padding: const EdgeInsets.only(left: 35,bottom: 0,),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  setState(() {
-                                    final box = Hive.box('bookmarks');
-                                    if(isBookmarked){
-                                      box.delete(globalId);
-                                      isBookmarked = !isBookmarked;
-                                      Shared.isBookmarksEmpty.value = box.isEmpty;
-                                    } else {
-                                      var collection = {
-                                        'title': globalTitle,
-                                        'image': globalImage,
-                                        'id' : globalId,
-                                        'is_squenced':globalIsSequenced,
-                                        'sokhanran': globalOrator,
-                                        'url': globalUrl,
-                                        'downloads': globalDownloads,
-                                      };
-
-                                      box.put(globalId,collection);
-                                      isBookmarked = !isBookmarked;
-                                      Shared.isBookmarksEmpty.value = false;
-                                    }
-                                  });
-                                },
-                                child: isBookmarked ? Icon(Icons.bookmark,color: Colors.white,size: 25,):
-                                Icon(Icons.bookmark_border,color: Colors.white,size: 25,),
-                                style: ElevatedButton.styleFrom(
-                                  primary: Colors.yellow[500],
-                                  elevation: 7,
-                                  shape: CircleBorder(),
-                                ),
+                              child: YellowBookMarkButton(
+                                  (){
+                                    bookmarkAction();
+                                  },
+                                isBookmarked,
                               ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
+                  ),//yellow bookmark button
                 ]
             ),
             SliverToBoxAdapter(
               child: SizedBox(
                 height: 6,
               ),
-            ),
+            ),//space between
             SliverList(
                 delegate: SliverChildBuilderDelegate(
                     (context,index){
@@ -359,274 +337,33 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                     },
                   childCount: allSpeeches.length,
                 )
-            ),
+            ),//speeches list
           ],
         ),
       ),
     );
   }
-}
 
-
-class HeaderButton extends StatefulWidget {
-  var icon;
-  var onPress;
-
-  HeaderButton({this.icon,this.onPress});
-
-  @override
-  _HeaderButtonState createState() => _HeaderButtonState();
-}
-
-class _HeaderButtonState extends State<HeaderButton> {
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: ButtonTheme(
-        height: 50,
-        minWidth:30,
-        splashColor: Colors.grey,
-        child: RaisedButton(
-          elevation: 0,
-          color: Color(0xffffff),
-          onPressed: widget.onPress,
-          child: widget.icon,
-        ),
-      ),
-    );
-  }
-}
-
-
-class BookmarkButton extends StatefulWidget {
-  @override
-  _BookmarkButtonState createState() => _BookmarkButtonState();
-}
-
-class _BookmarkButtonState extends State<BookmarkButton> {
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: ButtonTheme(
-        height: 50,
-        minWidth:30,
-        splashColor: Colors.grey,
-        child: RaisedButton(
-          elevation: 0,
-          color: Color(0xffffff),
-          // onPressed: (){},
-          onPressed: () {
-            setState(() {
-              final box = Hive.box('bookmarks');
-              if(isBookmarked){
-                box.delete(globalId);
-                isBookmarked = !isBookmarked;
-                Shared.isBookmarksEmpty.value = box.isEmpty;
-              } else {
-                var collection = {
-                  'title': globalTitle,
-                  'image': globalImage,
-                  'id' : globalId,
-                  'is_squenced':globalIsSequenced,
-                  'sokhanran': globalOrator,
-                  'url': globalUrl,
-                  'downloads': globalDownloads,
-                };
-
-                box.put(globalId,collection);
-                isBookmarked = !isBookmarked;
-                Shared.isBookmarksEmpty.value = false;
-              }
-            });
-          },
-          child: isBookmarked ? Icon(Icons.bookmark,color: Colors.white,): Icon(Icons.bookmark_border,color: Colors.white,),
-        ),
-      ),
-    );
-  }
-}
-class DownloadButton extends StatefulWidget {
-  String url;
-
-  DownloadButton(this.url);
-
-  @override
-  _DownloadButtonState createState() => _DownloadButtonState();
-}
-
-class _DownloadButtonState extends State<DownloadButton> {
-  var buttonStatus = false;
-  double progress = 0;
-  var isDownloaded = false;
-  var isInProgress = false;
-  var downloadStream;
-  var isPaused = false;
-
-  @override
-  void initState() {
-    super.initState();
-    isDownloaded = getIsDownloaded(widget.url);
-    progress = getProgress(widget.url);
-  }
-
-  Future startDownload(String url,bool pause) async {
-
-    if(url == ""){
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-              'فایل صوتی سخنرانی برای دانلود موجود نیست',
-            textDirection: TextDirection.rtl,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      );
-      return;
-    }
-
-    if(pause){
-
-    } else {
-      final request = Request('GET', Uri.parse(url));
-      final response = await Client().send(request);
-      final voiceLength = response.contentLength;
-
-      final file = await getFile(url);
-      final downloadedBytes = <int> [];
-      int wasteSize = 0;
-      var shouldResume = false;
-
-      if(progress != 0){
-        downloadedBytes.addAll(file.readAsBytesSync());
-        shouldResume = downloadedBytes.length == 0 ? false : true;
-        print(shouldResume);
+  void bookmarkAction() {
+    setState(() {
+      if(isBookmarked){
+        HiveManager.deleteBookmard(globalId);
+        isBookmarked = !isBookmarked;
+        SharedData.isBookmarksEmpty.value = HiveManager.isBookmarksEmpty();
+      } else {
+        var collection = {
+          'title': globalTitle,
+          'image': globalImage,
+          'id' : globalId,
+          'is_squenced':globalIsSequenced,
+          'sokhanran': globalOrator,
+          'url': globalUrl,
+          'downloads': globalDownloads,
+        };
+        HiveManager.putBookmarked(globalId, collection);
+        isBookmarked = !isBookmarked;
+        SharedData.isBookmarksEmpty.value = false;
       }
-      var process;
-      process = response.stream.listen(
-            (newBytes) async {
-              if(isPaused == false && shouldResume == false){
-                downloadedBytes.addAll(newBytes);
-                setState(() {
-                  if (voiceLength != null) {
-                    progress = downloadedBytes.length / voiceLength;
-                  }
-                });
-              } else if(isPaused == false && shouldResume == true) {
-                wasteSize += newBytes.length;
-                if(wasteSize >= downloadedBytes.length){
-                  shouldResume = false;
-                }
-            } else {
-                Hive.box('pauseds').put(widget.url, progress);
-                await file.writeAsBytes(downloadedBytes);
-                isInProgress = !isInProgress;
-              }
-        },
-        onDone: () async {
-              print('done here');
-          if(isPaused == false){
-            setState(() {
-              isDownloaded = !isDownloaded;
-            });
-
-            await file.writeAsBytes(downloadedBytes);
-            downloadedBytes.clear();
-            Hive.box('downloadeds').put(widget.url, true);
-          }
-        },
-      );
-    }
-}
-
-  Future<File> getFile(fileName) async {
-    final directory = await getApplicationDocumentsDirectory();
-    return File("${directory.path}/filename");
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          buttonStatus ? Container(
-            height: 47,
-            width: 47,
-            child: isDownloaded ? Container() : progress <= 0.01 ? CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation(Colors.black26),
-            ):CircularProgressIndicator(
-              value: progress,
-              valueColor: AlwaysStoppedAnimation(Color(0xff607d8d)),
-              strokeWidth: 5,
-              backgroundColor: Colors.white,
-            )
-          )
-              :
-          Container(
-              height: 47,
-              width: 47,
-              child: CircularProgressIndicator(
-                value: progress == 1 ? 0 : progress,
-                valueColor: AlwaysStoppedAnimation(Colors.black26),
-                strokeWidth: 5,
-                backgroundColor: Colors.white,
-              ),
-          ),
-          Container(
-            height: 100,
-            child: OutlinedButton(
-              child: isDownloaded ? Icon(Icons.play_arrow, size: 25,color: Colors.white,) : buttonStatus ? Icon(Icons.close, size: 25,) : Icon(Icons.get_app, size: 25,),
-              onPressed: isDownloaded ? (){} :(){
-                setState(() {
-                  buttonStatus = !buttonStatus;
-
-                  if(isInProgress == true){
-                    isPaused = !isPaused;
-                  }
-                  if(isInProgress == false){
-                    startDownload(widget.url,false);
-                    isInProgress = !isInProgress;
-                  }
-                });
-              },
-              style: OutlinedButton.styleFrom(
-                primary: Colors.black,
-                backgroundColor: isDownloaded ? Colors.grey :Colors.white,
-                elevation: 0,
-                shape: CircleBorder(),
-              ),
-            ),
-          ),
-        ],
-      )
-    );
-  }
-
-  bool getIsDownloaded(String url) {
-    final box = Hive.box('downloadeds');
-    bool isDownloaded = box.get(url) == null ? false : true;
-    return isDownloaded;
-  }
-
-  double getProgress(url) {
-    double progress = Hive.box('pauseds').get(url) == null ? 0 : Hive.box('pauseds').get(url);
-    return progress;
+    });
   }
 }
-
-String cutUrl(String url){
-  List pieces = url.split('/');
-  return pieces.length != 1? pieces[2] : "";
-}
-
-bool getIsBookmarked() {
-  final box = Hive.box('bookmarks');
-  bool isBookmarked = box.get(globalId) == null ? false : true;
-  return isBookmarked;
-}
-

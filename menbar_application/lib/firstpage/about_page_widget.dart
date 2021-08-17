@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:menbar_application/reusable_widgets/header_button.dart';
+import 'package:menbar_application/reusable_widgets/shared_data.dart';
 import 'my_flutter_app_icons.dart';
 
 List texts = [
@@ -17,7 +19,7 @@ class AboutPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xff607d8d),
+        backgroundColor: Color(SharedData.mainColor),
         leading: Container(),
         actions: [
           Center(
@@ -31,19 +33,10 @@ class AboutPage extends StatelessWidget {
             ),
           ),
           SizedBox(width: 5,),
-          Container(
-            child: ButtonTheme(
-              height: 50,
-              minWidth:30,
-              splashColor: Colors.grey,
-              child: RaisedButton(
-                elevation: 0,
-                color: Color(0xffffff),
-                onPressed: () => Navigator.pop(context),
-                child: Icon(Icons.arrow_forward,color: Colors.white,),
-              ),
-            ),
-          ),
+          HeaderButton(
+            icon: Icon(Icons.arrow_forward,color: Colors.white,),
+            onPress: () => Navigator.pop(context),
+          )
         ],
       ),
       body: AboutBody(),

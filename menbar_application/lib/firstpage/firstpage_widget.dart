@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:menbar_application/boookmarks/bookmarks_main.dart';
-import 'package:menbar_application/firstpage/shared_data.dart';
+import 'package:menbar_application/managers/hive_manager.dart';
+import 'package:menbar_application/reusable_widgets/header_button.dart';
+import 'package:menbar_application/reusable_widgets/shared_data.dart';
 import 'package:menbar_application/new_speeches/new_speeches_widget.dart';
 import 'package:menbar_application/Orators/orators_view_widget.dart';
 import 'package:menbar_application/collections/collections_main_widget.dart';
@@ -18,9 +20,9 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
-  List orators = Hive.box('orators').get('list');
+  List orators = HiveManager.getAllOrators();
   var showDeleteButton = false;
-  List collections = Hive.box('collections').get('list');
+  List collections = HiveManager.getAllCollections();
 
   List<Widget> threeTabs = [
     Tab(
@@ -38,7 +40,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
           Icon(Icons.person),
         ],
       ),
-    ),
+    ),//orators Tag
     Tab(
       child: Row(
         children: [
@@ -54,7 +56,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
           Icon(Icons.new_releases),
         ],
       ),
-    ),
+    ),// news Tab
     Tab(
       child: Row(
         children: [
@@ -70,7 +72,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
           Icon(Icons.apps),
         ],
       ),
-    ),
+    ),// collections Tab
   ];
 
   List<Widget> fourTabs = [
@@ -89,7 +91,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
           Icon(Icons.person),
         ],
       ),
-    ),
+    ),//orators tab
     Tab(
       child: Row(
         children: [
@@ -105,7 +107,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
           Icon(Icons.new_releases),
         ],
       ),
-    ),
+    ),// news Tab
     Tab(
       child: Row(
         children: [
@@ -121,7 +123,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
           Icon(Icons.apps),
         ],
       ),
-    ),
+    ),//collections tab
     Tab(
       child: Row(
         children: [
@@ -137,7 +139,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
           Icon(Icons.bookmark),
         ],
       ),
-    ),
+    ),//bookmarks tab
   ];
 
   List<Widget> normalActions = [
@@ -152,14 +154,14 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
           fontSize: 25,
         ),
       ),
-    ),
+    ),//title
     Padding(
       padding: EdgeInsets.all(10),
       child: Image.asset('images/menbar_logo.png'),
-    ),
+    ),//logo
   ];
 
-  List<Widget> getThree(){
+  List<Widget> getThreeTabs(){
     return [
       Orators(),
       NewSpeeches(this.orators,this.collections),
@@ -167,7 +169,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
     ];
   }
 
-  List<Widget> getFour(){
+  List<Widget> getFourTabs(){
     return [
       Orators(),
       NewSpeeches(this.orators,this.collections),
@@ -183,37 +185,36 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
 
     return MaterialApp(
       home: ValueListenableBuilder(
-
         builder: (BuildContext context, value, Widget? child) {
           return DefaultTabController(
               initialIndex: 1,
-              length: Shared.isBookmarksEmpty.value ? 3 : 4,
+              length: SharedData.isBookmarksEmpty.value ? 3 : 4,
               child: Builder(
                 builder: (context){
                   return Scaffold(
                     appBar: AppBar(
                       elevation: 7.0,
                       bottomOpacity: 1,
-                      leading:isSearching ? showDeleteButton ? Container(
-                        child: ButtonTheme(
-                          height: 45,
-                          minWidth: 40,
-                          splashColor: Colors.grey,
-                          child: RaisedButton(
-                            elevation: 0,
-                            color: Color(0xff607d8d),
-                            onPressed: () {
-                              setState(() {
-                                fieldText.text = '';
-                              });
-                            },
-                            child: Icon(Icons.clear,color: Colors.white,),
-                          ),
-                        ),
-                      ): Container() : AboutButton(),
+                      leading:isSearching ? showDeleteButton ? HeaderButton(
+                        icon: Icon(Icons.clear,color: Colors.white,),
+                        onPress: () {
+                          setState(() {
+                            fieldText.text = '';
+                          });
+                        }
+                      ): Container() : HeaderButton(
+                        icon: Icon(Icons.messenger_outline,color: Colors.white,),
+                        onPress: () {
+                          Navigator.of(context,rootNavigator: false).push(MaterialPageRoute(
+                                builder: (context) => AboutPage(),
+                                fullscreenDialog: true
+                            )
+                          );
+                        }
+                      ),
                       actions: isSearching ? [
                       Container(
-                        width: 300,
+                        width: 200,
                         child: TextField(
                           controller: fieldText,
                           onChanged: (value) {
@@ -238,90 +239,45 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
                           ),
                         ),
                       ),
-                      Container(
-                        child: ButtonTheme(
-                          height: 50,
-                          minWidth:30,
-                          splashColor: Colors.grey,
-                          child: RaisedButton(
-                            elevation: 0,
-                            color: Color(0xffffff),
-                            onPressed: (){
-                              setState(() {
-                                fieldText.text = '';
-                                filterValue = '';
-                                isSearching = !isSearching;
-                              });
-                            },
-                            child: Icon(Icons.arrow_forward,color: Colors.white,),
-                          ),
-                        ),
-                      ),
+                      HeaderButton(
+                        icon: Icon(Icons.arrow_forward,color: Colors.white,),
+                        onPress:() {
+                          setState(() {
+                            fieldText.text = '';
+                            filterValue = '';
+                            isSearching = !isSearching;
+                          });
+                        }
+                    )
                       ]: normalActions,
                     bottom: TabBar(
                     isScrollable: true,
                     indicatorColor: Colors.yellow,
                     indicatorWeight: 2.5,
-                    tabs: Shared.isBookmarksEmpty.value ? threeTabs : fourTabs,
+                    tabs: SharedData.isBookmarksEmpty.value ? threeTabs : fourTabs,
                     ),
                     title: isSearching ? Container() :
-                    Container(
-                      child: ButtonTheme(
-                        height: 50,
-                        minWidth:30,
-                        splashColor: Colors.grey,
-                        child: RaisedButton(
-                          elevation: 0,
-                          color: Color(0xff607d8d),
-                          onPressed: () {
-                            setState(() {
-                              DefaultTabController.of(context)!.animateTo(2);
-                              isSearching = !isSearching;
-                            });
-                          },
-                          child: Icon(Icons.search,color: Colors.white,),
-                        ),
-                      ),
+                    HeaderButton(
+                        icon:Icon(Icons.search,color: Colors.white,),
+                        onPress: (){
+                          setState(() {
+                            DefaultTabController.of(context)!.animateTo(2);
+                            isSearching = !isSearching;
+                          });
+                        }
                     ),
                     backgroundColor: Color(0xff607d8d),
                   ),
                   body: TabBarView(
-                  children: Shared.isBookmarksEmpty.value ? getThree(): getFour(),
+                  children: SharedData.isBookmarksEmpty.value ? getThreeTabs(): getFourTabs(),
                   ),
                   );
                 },
               )
           );
         },
-        valueListenable: Shared.isBookmarksEmpty,
+        valueListenable: SharedData.isBookmarksEmpty,
         child: Container(),
-      ),
-    );
-  }
-}
-
-class AboutButton extends StatelessWidget {
-  const AboutButton({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: ButtonTheme(
-        height: 45,
-        minWidth: 40,
-        splashColor: Colors.grey,
-        child: RaisedButton(
-          elevation: 0,
-          color: Color(0xff607d8d),
-          onPressed: () {
-            Navigator.of(context,rootNavigator: false).push(MaterialPageRoute(
-                builder: (context) => AboutPage(),
-                fullscreenDialog: true
-            )
-            );
-          },
-          child: Icon(Icons.messenger_outline,color: Colors.white,),
-        ),
       ),
     );
   }
