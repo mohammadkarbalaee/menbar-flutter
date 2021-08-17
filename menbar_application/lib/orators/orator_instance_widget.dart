@@ -180,13 +180,14 @@ class CollectionsList extends StatelessWidget {
                     ),
                   ),
                 ),
-                onTap: (){
+                onTap: () async {
+                  var oratorName = await getName(snapshot.data[index]["sokhanran"]);
                   navigateToCollection(context,
                       snapshot.data[index]['image'],
                       snapshot.data[index]['title'],
                       snapshot.data[index]['id'],
                       snapshot.data[index]["is_sequence"],
-                      getName(snapshot.data[index]["sokhanran"]),
+                      oratorName,
                       snapshot.data[index]["origin_url"],
                       snapshot.data[index]['downloads']
                   );
