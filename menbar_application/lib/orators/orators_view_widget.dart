@@ -14,35 +14,33 @@ class Orators extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-          body: FutureBuilder(
-            future: _getData(),
-            builder: (BuildContext context,AsyncSnapshot snapshot){
-              bool isNotReady = snapshot.data == null;
+    return Scaffold(
+        body: FutureBuilder(
+          future: _getData(),
+          builder: (BuildContext context,AsyncSnapshot snapshot){
+            bool isNotReady = snapshot.data == null;
 
-              return isNotReady ? LoadingWidget() : ListView.builder(
-                itemCount: snapshot.data.length,
-                itemBuilder: (context,index) {
-                  return GestureDetector(
-                      child: OratorCardWidget(
-                        snapshot.data[index]['image'],
-                        snapshot.data[index]['title'],
-                      ),
-                      onTap: (){
-                        navigateToInstance(
-                            context:context,
-                            imageUrl: snapshot.data[index]['image'],
-                            title: snapshot.data[index]['title'],
-                            id: snapshot.data[index]['id']
-                        );
-                      }
-                  );
-                },
-              );
-            },
-          )
-      ),
+            return isNotReady ? LoadingWidget() : ListView.builder(
+              itemCount: snapshot.data.length,
+              itemBuilder: (context,index) {
+                return GestureDetector(
+                    child: OratorCardWidget(
+                      snapshot.data[index]['image'],
+                      snapshot.data[index]['title'],
+                    ),
+                    onTap: (){
+                      navigateToInstance(
+                          context:context,
+                          imageUrl: snapshot.data[index]['image'],
+                          title: snapshot.data[index]['title'],
+                          id: snapshot.data[index]['id']
+                      );
+                    }
+                );
+              },
+            );
+          },
+        )
     );
   }
 }
