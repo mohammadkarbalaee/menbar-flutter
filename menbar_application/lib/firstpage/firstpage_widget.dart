@@ -24,6 +24,18 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
   var showDeleteButton = false;
   List collections = HiveManager.getAllCollections();
 
+  // late TabController tabController;
+  //
+  //
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   tabController = TabController(
+  //       length: SharedData.isBookmarksEmpty.value ? 3: 4,
+  //       vsync: this
+  //   );
+  // }
+
   List<Widget> threeTabs = [
     Tab(
       child: Row(
@@ -180,6 +192,12 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
 
   final fieldText = TextEditingController();
 
+  // @override
+  // void dispose() {
+  //   tabController.dispose();
+  //   super.dispose();
+  // }
+
   @override
   Widget build(BuildContext context) {
 
@@ -192,85 +210,92 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
               child: Builder(
                 builder: (context){
                   return Scaffold(
-                    appBar: AppBar(
-                      elevation: 7.0,
-                      bottomOpacity: 1,
-                      leading:isSearching ? showDeleteButton ? HeaderButton(
-                        icon: Icon(Icons.clear,color: Colors.white,),
-                        onPress: () {
-                          setState(() {
-                            fieldText.text = '';
-                          });
-                        }
-                      ): Container() : HeaderButton(
-                        icon: Icon(Icons.messenger_outline,color: Colors.white,),
-                        onPress: () {
-                          Navigator.of(context,rootNavigator: false).push(MaterialPageRoute(
-                                builder: (context) => AboutPage(),
-                                fullscreenDialog: true
-                            )
-                          );
-                        }
-                      ),
-                      actions: isSearching ? [
-                      Container(
-                        width: 200,
-                        child: TextField(
-                          controller: fieldText,
-                          onChanged: (value) {
-                            setState(() {
-                              showDeleteButton = true;
-                              filterValue = value;
-                            });
-                          },
-                          cursorColor: Colors.yellow,
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                          textDirection: TextDirection.rtl,
-                          decoration: InputDecoration(
-                            fillColor: Colors.white,
-                            border: InputBorder.none,
-                            hintText: 'جستجو',
-                            hintTextDirection: TextDirection.rtl,
-                            hintStyle: TextStyle(
-                              color: Colors.grey,
+                    body: NestedScrollView(
+                      floatHeaderSlivers: true,
+                      headerSliverBuilder: (context,innerBoxIsScrolled){
+                        return [
+                          SliverAppBar(
+                            elevation: 7.0,
+                            floating:true,
+                            leading:isSearching ? showDeleteButton ? HeaderButton(
+                                icon: Icon(Icons.clear,color: Colors.white,),
+                                onPress: () {
+                                  setState(() {
+                                    fieldText.text = '';
+                                  });
+                                }
+                            ): Container() : HeaderButton(
+                                icon: Icon(Icons.messenger_outline,color: Colors.white,),
+                                onPress: () {
+                                  Navigator.of(context,rootNavigator: false).push(MaterialPageRoute(
+                                      builder: (context) => AboutPage(),
+                                      fullscreenDialog: true
+                                  )
+                                  );
+                                }
                             ),
+                            actions: isSearching ? [
+                            Container(
+                              width: 200,
+                              child: TextField(
+                                controller: fieldText,
+                                onChanged: (value) {
+                                  setState(() {
+                                    showDeleteButton = true;
+                                    filterValue = value;
+                                  });
+                                },
+                                cursorColor: Colors.yellow,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                                textDirection: TextDirection.rtl,
+                                decoration: InputDecoration(
+                                  fillColor: Colors.white,
+                                  border: InputBorder.none,
+                                  hintText: 'جستجو',
+                                  hintTextDirection: TextDirection.rtl,
+                                  hintStyle: TextStyle(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            HeaderButton(
+                                icon: Icon(Icons.arrow_forward,color: Colors.white,),
+                                onPress:() {
+                                  setState(() {
+                                    fieldText.text = '';
+                                    filterValue = '';
+                                    isSearching = !isSearching;
+                                  });
+                                }
+                            )
+                            ]: normalActions,
+                            bottom: TabBar(
+                              isScrollable: true,
+                              indicatorColor: Colors.yellow,
+                              indicatorWeight: 2.5,
+                              tabs: SharedData.isBookmarksEmpty.value ? threeTabs : fourTabs,
+                            ),
+                            title: isSearching ? Container() :
+                            HeaderButton(
+                                icon:Icon(Icons.search,color: Colors.white,),
+                                onPress: (){
+                                  setState(() {
+                                    DefaultTabController.of(context)!.animateTo(2);
+                                    isSearching = !isSearching;
+                                  });
+                                }
+                            ),
+                            backgroundColor: Color(0xff607d8d),
                           ),
-                        ),
+                        ];
+                      },
+                      body: TabBarView(
+                          children: SharedData.isBookmarksEmpty.value ? getThreeTabs(): getFourTabs(),
                       ),
-                      HeaderButton(
-                        icon: Icon(Icons.arrow_forward,color: Colors.white,),
-                        onPress:() {
-                          setState(() {
-                            fieldText.text = '';
-                            filterValue = '';
-                            isSearching = !isSearching;
-                          });
-                        }
-                    )
-                      ]: normalActions,
-                    bottom: TabBar(
-                    isScrollable: true,
-                    indicatorColor: Colors.yellow,
-                    indicatorWeight: 2.5,
-                    tabs: SharedData.isBookmarksEmpty.value ? threeTabs : fourTabs,
                     ),
-                    title: isSearching ? Container() :
-                    HeaderButton(
-                        icon:Icon(Icons.search,color: Colors.white,),
-                        onPress: (){
-                          setState(() {
-                            DefaultTabController.of(context)!.animateTo(2);
-                            isSearching = !isSearching;
-                          });
-                        }
-                    ),
-                    backgroundColor: Color(0xff607d8d),
-                  ),
-                  body: TabBarView(
-                  children: SharedData.isBookmarksEmpty.value ? getThreeTabs(): getFourTabs(),
-                  ),
                   );
                 },
               )

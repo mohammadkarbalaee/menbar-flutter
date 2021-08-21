@@ -17,36 +17,35 @@ class NewSpeeches extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-          body: FutureBuilder(
-            future: _getData(),
-            builder: (BuildContext context,AsyncSnapshot snapshot){
-              if(snapshot.data == null){
-                return Center(
-                  child: Text(
-                    '',
-                    style: TextStyle(
-                      fontSize: 27,
-                      fontWeight: FontWeight.bold,
-                    ),
+    return Scaffold(
+        body: FutureBuilder(
+          future: _getData(),
+          builder: (BuildContext context,AsyncSnapshot snapshot){
+            if(snapshot.data == null){
+              return Center(
+                child: Text(
+                  '',
+                  style: TextStyle(
+                    fontSize: 27,
+                    fontWeight: FontWeight.bold,
                   ),
-                );
-              }
-              else {
-                return ListView.builder(
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context,index) {
-                    return GestureDetector(
-                      child: Container(
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.zero,
-                          ),
-                          elevation: 10,
-                          child: Stack(
-                            children: [
-                              Column(
+                ),
+              );
+            }
+            else {
+              return ListView.builder(
+                itemCount: snapshot.data.length,
+                itemBuilder: (context,index) {
+                  return GestureDetector(
+                    child: Container(
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero,
+                        ),
+                        elevation: 10,
+                        child: Stack(
+                          children: [
+                            Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SizedBox(height: 100,),
@@ -60,73 +59,72 @@ class NewSpeeches extends StatelessWidget {
                                 ),
                               ],
                             ),
-                              Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Flexible(
-                                flex: 4,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      snapshot.data[index]['title'],
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.end,
-                                      style: TextStyle(
-                                        fontSize: 17,
-                                        fontFamily: 'sans',
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Flexible(
+                                  flex: 4,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        snapshot.data[index]['title'],
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                          fontSize: 17,
+                                          fontFamily: 'sans',
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      getName(snapshot.data[index]['sokhanran']),
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.end,
-                                      style: TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'sans',
+                                      Text(
+                                        getName(snapshot.data[index]['sokhanran']),
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'sans',
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              SizedBox(width: 20),
-                              Flexible(
-                                flex: 2,
-                                  child: CachedNetworkImage(
-                                    imageUrl: getImage(snapshot.data[index]['collection']),
-                                    fadeInDuration:Duration(milliseconds: 500),
-                                    fadeInCurve:Curves.easeInExpo,
-                                    fit: BoxFit.cover,
-                                  )
-                              ),
-                            ],
-                          ),
-                            ],
-                          ),
+                                SizedBox(width: 20),
+                                Flexible(
+                                    flex: 2,
+                                    child: CachedNetworkImage(
+                                      imageUrl: getImage(snapshot.data[index]['collection']),
+                                      fadeInDuration:Duration(milliseconds: 500),
+                                      fadeInCurve:Curves.easeInExpo,
+                                      fit: BoxFit.cover,
+                                    )
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                      onTap: (){
-                        Navigator.of(context,rootNavigator: true).push(MaterialPageRoute(
-                            builder: (context) => CollectionInstance(
-                                getImage(snapshot.data[index]['collection']),
-                                getTitle(snapshot.data[index]['collection']),
-                                getID(snapshot.data[index]['collection']),
-                                getIsSequenced(snapshot.data[index]['collection']),
-                                getName(snapshot.data[index]['sokhanran']),
-                                getUrl(snapshot.data[index]['collection']),
-                                getDonwloads(snapshot.data[index]['collection']),
-                            )
-                        )
-                        );
-                      },
-                    );
-                  },
-                );
-              }
-            },
-          )
-      ),
+                    ),
+                    onTap: (){
+                      Navigator.of(context,rootNavigator: true).push(MaterialPageRoute(
+                          builder: (context) => CollectionInstance(
+                            getImage(snapshot.data[index]['collection']),
+                            getTitle(snapshot.data[index]['collection']),
+                            getID(snapshot.data[index]['collection']),
+                            getIsSequenced(snapshot.data[index]['collection']),
+                            getName(snapshot.data[index]['sokhanran']),
+                            getUrl(snapshot.data[index]['collection']),
+                            getDonwloads(snapshot.data[index]['collection']),
+                          )
+                      )
+                      );
+                    },
+                  );
+                },
+              );
+            }
+          },
+        )
     );
   }
 
