@@ -20,7 +20,6 @@ class _DownloadButtonState extends State<DownloadButton> {
   double progress = 0;
   var isDownloaded = false;
   var isInProgress = false;
-  var downloadStream;
   var isPaused = false;
 
   @override
@@ -30,7 +29,7 @@ class _DownloadButtonState extends State<DownloadButton> {
     progress = HiveManager.getProgress(widget.url);
   }
 
-  Future startDownload(String url,bool pause) async {
+  Future startDownload(String url) async {
 
     if(url == ""){
       ScaffoldMessenger.of(context).showSnackBar(
@@ -47,58 +46,49 @@ class _DownloadButtonState extends State<DownloadButton> {
       return;
     }
 
-    if(pause){
+    final request = Request('GET', Uri.parse(url));
+    final response = await Client().send(request);
+    final voiceLength = response.contentLength;
 
-    } else {
-      final request = Request('GET', Uri.parse(url));
-      final response = await Client().send(request);
-      final voiceLength = response.contentLength;
+    final file = await getFile(url);
+    final downloadedBytes = <int> [];
+    int wasteSize = 0;
+    var shouldResume = false;
 
-      final file = await getFile(url);
-      final downloadedBytes = <int> [];
-      int wasteSize = 0;
-      var shouldResume = false;
-
-      if(progress != 0){
-        downloadedBytes.addAll(file.readAsBytesSync());
-        shouldResume = downloadedBytes.length == 0 ? false : true;
-        print(shouldResume);
-      }
-      var process;
-      process = response.stream.listen(
-            (newBytes) async {
-          if(isPaused == false && shouldResume == false){
-            downloadedBytes.addAll(newBytes);
-            setState(() {
-              if (voiceLength != null) {
-                progress = downloadedBytes.length / voiceLength;
-              }
-            });
-          } else if(isPaused == false && shouldResume == true) {
-            wasteSize += newBytes.length;
-            if(wasteSize >= downloadedBytes.length){
-              shouldResume = false;
+    response.stream.listen(
+          (newBytes) async {
+        if(isPaused == false && shouldResume == false){
+          downloadedBytes.addAll(newBytes);
+          setState(() {
+            if (voiceLength != null) {
+              progress = downloadedBytes.length / voiceLength;
             }
-          } else {
-            HiveManager.putPaused(widget.url, progress);
-            await file.writeAsBytes(downloadedBytes);
-            isInProgress = !isInProgress;
+          });
+        } else if(isPaused == false && shouldResume == true) {
+          wasteSize += newBytes.length;
+          if(wasteSize >= downloadedBytes.length){
+            shouldResume = false;
           }
-        },
-        onDone: () async {
-          if(isPaused == false){
-            setState(() {
-              isDownloaded = !isDownloaded;
-            });
+        } else {
+          HiveManager.putPaused(widget.url, progress);
+          await file.writeAsBytes(downloadedBytes);
+          isInProgress = !isInProgress;
+        }
+      },
+      onDone: () async {
+        if(isPaused == false){
+          setState(() {
+            isDownloaded = !isDownloaded;
+          });
 
-            await file.writeAsBytes(downloadedBytes);
-            downloadedBytes.clear();
-            HiveManager.putDownloaded(widget.url);
-          }
-        },
-      );
-    }
+          await file.writeAsBytes(downloadedBytes);
+          downloadedBytes.clear();
+          HiveManager.putDownloaded(widget.url);
+        }
+      },
+    );
   }
+
 
   Future<File> getFile(fileName) async {
     final directory = await getApplicationDocumentsDirectory();
@@ -146,7 +136,7 @@ class _DownloadButtonState extends State<DownloadButton> {
                       isPaused = !isPaused;
                     }
                     if(isInProgress == false){
-                      startDownload(widget.url,false);
+                      startDownload(widget.url);
                       isInProgress = !isInProgress;
                     }
                   });
