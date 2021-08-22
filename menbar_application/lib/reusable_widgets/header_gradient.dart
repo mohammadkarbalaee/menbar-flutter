@@ -7,12 +7,19 @@ class HeaderGradient extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      child: PhysicalModel(
-        borderRadius: BorderRadius.circular(0),
-        color: Colors.black38,
-        elevation: 30,
+      child: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.transparent,
+                  Colors.black,
+                ]
+            )
+        ),
         child: Padding(
-          padding: EdgeInsets.all(0),
+          padding: EdgeInsets.only(bottom: 10),
           child: Container(
             height: 50,
             width: 1000,

@@ -126,73 +126,77 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                                 ),
                               )
                           ),
-                          PhysicalModel(
-                            borderRadius: BorderRadius.circular(0),
-                            color: Colors.black12,
-                            elevation: 10,
+                          Container(
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Colors.transparent,
+                                      Colors.black,
+                                    ]
+                                )
+                            ),
                             child: Padding(
-                              padding: EdgeInsets.only(right: 10),
+                              padding: EdgeInsets.only(right: 10,bottom: 10),
                               child: Container(
                                 height: 60,
-                                child: Padding(
-                                  padding: EdgeInsets.only(bottom: 5),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        children: [
-                                          Flexible(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Flexible(
+                                          child: Text(
+                                            widget.title,
+                                            textDirection: TextDirection.rtl,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontSize: 26,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                                fontFamily: 'sans'
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 5,),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Container(
+                                          width: 110,
+                                          child: InkWell(
                                             child: Text(
-                                              widget.title,
-                                              textDirection: TextDirection.rtl,
+                                              cutUrl(widget.url),
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
-                                                  fontSize: 26,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                  fontFamily: 'sans'
+                                                decoration: TextDecoration.underline,
+                                                color: Colors.yellow[500],
                                               ),
                                             ),
+                                            onTap: () => launch(widget.url),
                                           ),
-                                        ],
-                                      ),
-                                      SizedBox(height: 5,),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        children: [
-                                          Container(
-                                            width: 110,
-                                            child: InkWell(
-                                              child: Text(
-                                                cutUrl(widget.url),
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  decoration: TextDecoration.underline,
-                                                  color: Colors.yellow[500],
-                                                ),
-                                              ),
-                                              onTap: () => launch(widget.url),
+                                        ),
+                                        Flexible(
+                                          child: Text(
+                                            widget.orator,
+                                            textDirection: TextDirection.rtl,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                                fontFamily: 'sans'
                                             ),
                                           ),
-                                          Flexible(
-                                            child: Text(
-                                              widget.orator,
-                                              textDirection: TextDirection.rtl,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                  fontFamily: 'sans'
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),

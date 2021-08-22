@@ -53,12 +53,19 @@ class Bookmarks extends StatelessWidget {
                               ),
                             ),
                             Positioned(
-                              child: PhysicalModel(
-                                borderRadius: BorderRadius.circular(0),
-                                color: Colors.black26,
-                                elevation: 30,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: [
+                                          Colors.transparent,
+                                          Colors.black,
+                                        ]
+                                    )
+                                ),
                                 child: Padding(
-                                  padding: EdgeInsets.only(right: 10),
+                                  padding: EdgeInsets.only(right: 10,bottom: 10),
                                   child: Container(
                                     height: 50,
                                     width: 1000,
@@ -106,7 +113,7 @@ class Bookmarks extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                              ),
+                              )
                             ),
                           ],
                         ),
