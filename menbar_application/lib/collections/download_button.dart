@@ -18,9 +18,9 @@ class DownloadButton extends StatefulWidget {
 class _DownloadButtonState extends State<DownloadButton> {
   var buttonStatus = false;
   double progress = 0;
-  var isDownloaded = false;
   var isInProgress = false;
   var isPaused = false;
+  var isDownloaded = false;
 
   @override
   void initState() {
@@ -45,6 +45,8 @@ class _DownloadButtonState extends State<DownloadButton> {
       );
       return;
     }
+
+
 
     final request = Request('GET', Uri.parse(url));
     final response = await Client().send(request);
@@ -78,7 +80,7 @@ class _DownloadButtonState extends State<DownloadButton> {
       onDone: () async {
         if(isPaused == false){
           setState(() {
-            isDownloaded = !isDownloaded;
+            isDownloaded = true;
           });
 
           await file.writeAsBytes(downloadedBytes);
@@ -128,7 +130,14 @@ class _DownloadButtonState extends State<DownloadButton> {
               height: 100,
               child: OutlinedButton(
                 child: isDownloaded ? Icon(Icons.play_arrow, size: 25,color: Colors.white,) : buttonStatus ? Icon(Icons.close, size: 25,) : Icon(Icons.get_app, size: 25,),
-                onPressed: isDownloaded ? (){} :(){
+                onPressed: isDownloaded ? (){
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('yess'),
+                        duration: Duration(days: 500),
+                      )
+                  );
+                } :(){
                   setState(() {
                     buttonStatus = !buttonStatus;
 
