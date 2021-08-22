@@ -1,15 +1,22 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:menbar_application/collections/play_button.dart';
 import 'package:menbar_application/managers/hive_manager.dart';
 import 'package:menbar_application/reusable_widgets/shared_data.dart';
 import 'package:path_provider/path_provider.dart';
 
+
 class DownloadButton extends StatefulWidget {
   String url;
+  String imageUrl;
+  String title;
+  String orator;
 
-  DownloadButton(this.url);
+  DownloadButton(this.url,this.imageUrl,this.title,this.orator);
 
   @override
   _DownloadButtonState createState() => _DownloadButtonState();
@@ -18,10 +25,9 @@ class DownloadButton extends StatefulWidget {
 class _DownloadButtonState extends State<DownloadButton> {
   var buttonStatus = false;
   double progress = 0;
-  var isDownloaded = false;
   var isInProgress = false;
-  var downloadStream;
   var isPaused = false;
+  var isDownloaded = false;
 
   @override
   void initState() {
@@ -30,7 +36,7 @@ class _DownloadButtonState extends State<DownloadButton> {
     progress = HiveManager.getProgress(widget.url);
   }
 
-  Future startDownload(String url,bool pause) async {
+  Future startDownload(String url) async {
 
     if(url == ""){
       ScaffoldMessenger.of(context).showSnackBar(
@@ -47,58 +53,51 @@ class _DownloadButtonState extends State<DownloadButton> {
       return;
     }
 
-    if(pause){
 
-    } else {
-      final request = Request('GET', Uri.parse(url));
-      final response = await Client().send(request);
-      final voiceLength = response.contentLength;
 
-      final file = await getFile(url);
-      final downloadedBytes = <int> [];
-      int wasteSize = 0;
-      var shouldResume = false;
+    final request = Request('GET', Uri.parse(url));
+    final response = await Client().send(request);
+    final voiceLength = response.contentLength;
 
-      if(progress != 0){
-        downloadedBytes.addAll(file.readAsBytesSync());
-        shouldResume = downloadedBytes.length == 0 ? false : true;
-        print(shouldResume);
-      }
-      var process;
-      process = response.stream.listen(
-            (newBytes) async {
-          if(isPaused == false && shouldResume == false){
-            downloadedBytes.addAll(newBytes);
-            setState(() {
-              if (voiceLength != null) {
-                progress = downloadedBytes.length / voiceLength;
-              }
-            });
-          } else if(isPaused == false && shouldResume == true) {
-            wasteSize += newBytes.length;
-            if(wasteSize >= downloadedBytes.length){
-              shouldResume = false;
+    final file = await getFile(url);
+    final downloadedBytes = <int> [];
+    int wasteSize = 0;
+    var shouldResume = false;
+
+    response.stream.listen(
+          (newBytes) async {
+        if(isPaused == false && shouldResume == false){
+          downloadedBytes.addAll(newBytes);
+          setState(() {
+            if (voiceLength != null) {
+              progress = downloadedBytes.length / voiceLength;
             }
-          } else {
-            HiveManager.putPaused(widget.url, progress);
-            await file.writeAsBytes(downloadedBytes);
-            isInProgress = !isInProgress;
+          });
+        } else if(isPaused == false && shouldResume == true) {
+          wasteSize += newBytes.length;
+          if(wasteSize >= downloadedBytes.length){
+            shouldResume = false;
           }
-        },
-        onDone: () async {
-          if(isPaused == false){
-            setState(() {
-              isDownloaded = !isDownloaded;
-            });
+        } else {
+          HiveManager.putPaused(widget.url, progress);
+          await file.writeAsBytes(downloadedBytes);
+          isInProgress = !isInProgress;
+        }
+      },
+      onDone: () async {
+        if(isPaused == false){
+          setState(() {
+            isDownloaded = true;
+          });
 
-            await file.writeAsBytes(downloadedBytes);
-            downloadedBytes.clear();
-            HiveManager.putDownloaded(widget.url);
-          }
-        },
-      );
-    }
+          await file.writeAsBytes(downloadedBytes);
+          downloadedBytes.clear();
+          HiveManager.putDownloaded(widget.url);
+        }
+      },
+    );
   }
+
 
   Future<File> getFile(fileName) async {
     final directory = await getApplicationDocumentsDirectory();
@@ -138,7 +137,68 @@ class _DownloadButtonState extends State<DownloadButton> {
               height: 100,
               child: OutlinedButton(
                 child: isDownloaded ? Icon(Icons.play_arrow, size: 25,color: Colors.white,) : buttonStatus ? Icon(Icons.close, size: 25,) : Icon(Icons.get_app, size: 25,),
-                onPressed: isDownloaded ? (){} :(){
+                onPressed: isDownloaded ? (){
+                  showFlash(
+                      context: context,
+                      builder: (context,controller){
+                        return Flash.bar(
+
+                            controller: controller,
+                            child: Container(
+                              height: 90,
+                              child: Card(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          PlayButton(),
+                                          SizedBox(width: 120,),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                widget.title,
+                                                overflow: TextOverflow.ellipsis,
+                                                textAlign: TextAlign.end,
+                                                style: TextStyle(
+                                                  fontSize: 17,
+                                                  fontFamily: 'sans',
+                                                ),
+                                              ),
+                                              SizedBox(height: 10,),
+                                              Text(
+                                                widget.orator,
+                                                overflow: TextOverflow.ellipsis,
+                                                textAlign: TextAlign.end,
+                                                style: TextStyle(
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontFamily: 'sans',
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    CachedNetworkImage(
+                                      imageUrl: widget.imageUrl,
+                                      fadeInDuration:Duration(milliseconds: 500),
+                                      fadeInCurve:Curves.easeInExpo,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                        );
+                      }
+                  );
+                } :(){
                   setState(() {
                     buttonStatus = !buttonStatus;
 
@@ -146,7 +206,7 @@ class _DownloadButtonState extends State<DownloadButton> {
                       isPaused = !isPaused;
                     }
                     if(isInProgress == false){
-                      startDownload(widget.url,false);
+                      startDownload(widget.url);
                       isInProgress = !isInProgress;
                     }
                   });

@@ -329,7 +329,12 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                                 ),
                               ),
                             ),
-                            leading: DownloadButton(allSpeeches[index]['file'] == null ? "": allSpeeches[index]['file']),
+                            leading: DownloadButton(
+                                allSpeeches[index]['file'] == null ? "": allSpeeches[index]['file'],
+                              widget.image,
+                              widget.title,
+                              widget.orator
+                            ),
                           ),
                           Divider(
                             height: 10,

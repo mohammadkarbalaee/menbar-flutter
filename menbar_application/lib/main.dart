@@ -38,5 +38,10 @@ main() async {
   allOratorsList: await HiveManager.getAllOrators(),
   );
 
-  runApp(HomePage());
+  runApp(
+      MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: HomePage(),
+      )
+  );
 }
