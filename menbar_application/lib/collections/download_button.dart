@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:menbar_application/collections/play_button.dart';
@@ -137,65 +138,65 @@ class _DownloadButtonState extends State<DownloadButton> {
               child: OutlinedButton(
                 child: isDownloaded ? Icon(Icons.play_arrow, size: 25,color: Colors.white,) : buttonStatus ? Icon(Icons.close, size: 25,) : Icon(Icons.get_app, size: 25,),
                 onPressed: isDownloaded ? (){
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        padding: EdgeInsets.zero,
-                        elevation: 500,
-                        backgroundColor: Colors.white,
-                        content: Container(
-                          height: 120,
-                          child: Card(
-                            elevation: 0,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Flexible(
-                                    child: PlayButton(),
-                                  flex: 3,
-                                ),
-                                Flexible(
-                                  flex: 5,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        widget.title,
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.end,
-                                        style: TextStyle(
-                                          fontSize: 17,
-                                          fontFamily: 'sans',
-                                        ),
+                  showFlash(
+                      context: context,
+                      builder: (context,controller){
+                        return Flash.bar(
+
+                            controller: controller,
+                            child: Container(
+                              height: 90,
+                              child: Card(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          PlayButton(),
+                                          SizedBox(width: 120,),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                widget.title,
+                                                overflow: TextOverflow.ellipsis,
+                                                textAlign: TextAlign.end,
+                                                style: TextStyle(
+                                                  fontSize: 17,
+                                                  fontFamily: 'sans',
+                                                ),
+                                              ),
+                                              SizedBox(height: 10,),
+                                              Text(
+                                                widget.orator,
+                                                overflow: TextOverflow.ellipsis,
+                                                textAlign: TextAlign.end,
+                                                style: TextStyle(
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontFamily: 'sans',
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
                                       ),
-                                      Text(
-                                        widget.orator,
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.end,
-                                        style: TextStyle(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: 'sans',
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(width: 20),
-                                Flexible(
-                                    flex: 3,
-                                    child: CachedNetworkImage(
+                                    ),
+                                    CachedNetworkImage(
                                       imageUrl: widget.imageUrl,
                                       fadeInDuration:Duration(milliseconds: 500),
                                       fadeInCurve:Curves.easeInExpo,
-                                      fit: BoxFit.fitHeight,
-                                    )
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
-                        duration: Duration(seconds: 3),
-                      )
+                        );
+                      }
                   );
                 } :(){
                   setState(() {

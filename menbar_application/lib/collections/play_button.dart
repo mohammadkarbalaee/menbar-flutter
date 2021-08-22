@@ -12,12 +12,11 @@ class PlayButton extends StatelessWidget {
         },
         style: OutlinedButton.styleFrom(
           shape: CircleBorder(),
-          backgroundColor: Colors.black12,
+          backgroundColor: Colors.white38,
         ),
         child: IconButton(
-          icon: Icon(Icons.play_arrow,size:30,color: Colors.black54,),
+          icon: Icon(Icons.play_arrow,size:25,color: Colors.black54,),
           onPressed: () {
-
           },
           alignment: Alignment.center,
         ),
