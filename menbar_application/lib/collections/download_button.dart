@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:menbar_application/collections/play_button.dart';
@@ -7,12 +8,14 @@ import 'package:menbar_application/managers/hive_manager.dart';
 import 'package:menbar_application/reusable_widgets/shared_data.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'footer_player.dart';
 
 class DownloadButton extends StatefulWidget {
   String url;
+  String imageUrl;
+  String title;
+  String orator;
 
-  DownloadButton(this.url);
+  DownloadButton(this.url,this.imageUrl,this.title,this.orator);
 
   @override
   _DownloadButtonState createState() => _DownloadButtonState();
@@ -136,16 +139,59 @@ class _DownloadButtonState extends State<DownloadButton> {
                 onPressed: isDownloaded ? (){
                   ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        elevation: 50,
+                        padding: EdgeInsets.zero,
+                        elevation: 500,
                         backgroundColor: Colors.white,
                         content: Container(
-                          height: 50,
-                          width: MediaQuery.of(context).size.width,
-                          color: Colors.white,
-                          child: Row(
-                            children: [
-                              PlayButton()
-                            ],
+                          height: 120,
+                          child: Card(
+                            elevation: 0,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Flexible(
+                                    child: PlayButton(),
+                                  flex: 3,
+                                ),
+                                Flexible(
+                                  flex: 5,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        widget.title,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                          fontSize: 17,
+                                          fontFamily: 'sans',
+                                        ),
+                                      ),
+                                      Text(
+                                        widget.orator,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'sans',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(width: 20),
+                                Flexible(
+                                    flex: 3,
+                                    child: CachedNetworkImage(
+                                      imageUrl: widget.imageUrl,
+                                      fadeInDuration:Duration(milliseconds: 500),
+                                      fadeInCurve:Curves.easeInExpo,
+                                      fit: BoxFit.fitHeight,
+                                    )
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         duration: Duration(seconds: 3),

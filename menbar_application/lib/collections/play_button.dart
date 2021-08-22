@@ -17,6 +17,7 @@ class PlayButton extends StatelessWidget {
         child: IconButton(
           icon: Icon(Icons.play_arrow,size:30,color: Colors.black54,),
           onPressed: () {
+
           },
           alignment: Alignment.center,
         ),
