@@ -2,9 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:menbar_application/collections/play_button.dart';
 import 'package:menbar_application/managers/hive_manager.dart';
 import 'package:menbar_application/reusable_widgets/shared_data.dart';
 import 'package:path_provider/path_provider.dart';
+
+import 'footer_player.dart';
 
 class DownloadButton extends StatefulWidget {
   String url;
@@ -133,8 +136,19 @@ class _DownloadButtonState extends State<DownloadButton> {
                 onPressed: isDownloaded ? (){
                   ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('yess'),
-                        duration: Duration(days: 500),
+                        elevation: 50,
+                        backgroundColor: Colors.white,
+                        content: Container(
+                          height: 50,
+                          width: MediaQuery.of(context).size.width,
+                          color: Colors.white,
+                          child: Row(
+                            children: [
+                              PlayButton()
+                            ],
+                          ),
+                        ),
+                        duration: Duration(seconds: 3),
                       )
                   );
                 } :(){
