@@ -12,7 +12,7 @@ class HeaderButton extends StatelessWidget {
       child: ButtonTheme(
         height: 50,
         minWidth:30,
-        splashColor: Colors.grey,
+        splashColor: Colors.transparent,
         child: RaisedButton(
           elevation: 0,
           color: Color(0xffffff),
