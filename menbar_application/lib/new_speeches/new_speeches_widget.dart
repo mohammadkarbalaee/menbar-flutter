@@ -23,13 +23,7 @@ class NewSpeeches extends StatelessWidget {
           builder: (BuildContext context,AsyncSnapshot snapshot){
             if(snapshot.data == null){
               return Center(
-                child: Text(
-                  '',
-                  style: TextStyle(
-                    fontSize: 27,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                child: CircularProgressIndicator(),
               );
             }
             else {
@@ -63,7 +57,7 @@ class NewSpeeches extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Flexible(
-                                  flex: 4,
+                                  flex: 5,
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
@@ -91,12 +85,12 @@ class NewSpeeches extends StatelessWidget {
                                 ),
                                 SizedBox(width: 20),
                                 Flexible(
-                                    flex: 2,
+                                    flex: 3,
                                     child: CachedNetworkImage(
                                       imageUrl: getImage(snapshot.data[index]['collection']),
                                       fadeInDuration:Duration(milliseconds: 500),
                                       fadeInCurve:Curves.easeInExpo,
-                                      fit: BoxFit.cover,
+                                      fit: BoxFit.fitHeight,
                                     )
                                 ),
                               ],
