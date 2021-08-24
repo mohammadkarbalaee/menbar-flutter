@@ -35,6 +35,7 @@ class DownloadButton extends StatefulWidget {
         builder: (context,controller){
           return Flash.bar(
             useSafeArea: false,
+            enableVerticalDrag: false,
             onTap: (){
               controller.dismiss();
               Navigator.of(context,rootNavigator: false).push(MaterialPageRoute(
