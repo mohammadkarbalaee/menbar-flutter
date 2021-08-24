@@ -90,32 +90,35 @@ class _PlayerPageState extends State<PlayerPage> {
                 HeaderGradient(widget.orator,widget.speechTitle),
               ],
             ),
-            SliderTheme(
-              data: SliderThemeData(
-                trackHeight: 1.5,
-                thumbShape: RoundSliderThumbShape(enabledThumbRadius: 7),
-                trackShape: CustomTrackShape(),
-              ),
-              child: Slider(
-                activeColor: Colors.yellow[500],
-                inactiveColor: Color(SharedData.mainColor),
-                value: position.inSeconds.toDouble(),
-                min: 0.0,
-                max: duration.inSeconds.toDouble(),
-                onChanged: (value){
-                  setState(() {
-                    widget.audioPlayer.seek(
-                        new Duration(
-                            seconds: value.toInt()
-                        )
-                    );
-                    value = value;
-                  });
-                },
+            Container(
+              height: 10,
+              child: SliderTheme(
+                data: SliderThemeData(
+                  trackHeight: 1.5,
+                  thumbShape: RoundSliderThumbShape(enabledThumbRadius: 7),
+                  trackShape: CustomTrackShape(),
+                ),
+                child: Slider(
+                  activeColor: Colors.yellow[500],
+                  inactiveColor: Color(SharedData.mainColor),
+                  value: position.inSeconds.toDouble(),
+                  min: 0.0,
+                  max: duration.inSeconds.toDouble(),
+                  onChanged: (value){
+                    setState(() {
+                      widget.audioPlayer.seek(
+                          new Duration(
+                              seconds: value.toInt()
+                          )
+                      );
+                      value = value;
+                    });
+                  },
+                ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(left: 10.0,right: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -123,12 +126,14 @@ class _PlayerPageState extends State<PlayerPage> {
                     duration.toString().split('.')[0].toPersianDigit(),
                     style: TextStyle(
                       color: Colors.white,
+                      fontSize: 17
                     ),
                   ),
                   Text(
                     position.toString().split('.')[0].toPersianDigit(),
                     style: TextStyle(
                       color: Colors.white,
+                      fontSize: 17
                     ),
                   ),
                 ],
@@ -257,7 +262,7 @@ class CustomTrackShape extends RoundedRectSliderTrackShape {Rect getPreferredRec
   required SliderThemeData sliderTheme,
   bool isEnabled = false,
   bool isDiscrete = false,}) {final double? trackHeight = 1.5;
-final double trackLeft = offset.dx;
+final double trackLeft = 0;
 final double trackTop = 0;
 final double trackWidth = parentBox.size.width;
 return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight!);}}
