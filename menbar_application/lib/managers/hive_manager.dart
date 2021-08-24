@@ -19,6 +19,7 @@ class HiveManager {
     await Hive.openBox('bookmarks');
     await Hive.openBox('downloadeds');
     await Hive.openBox('pauseds');
+    await Hive.openBox('playing');
   }
 
   Future<void> saveDataInHive({oratorsList,collectionsList,newOnesList}) async {
@@ -113,4 +114,20 @@ class HiveManager {
   static Future<Iterable> getBookmarkBoxValues() async{
     return Hive.box('bookmarks').values;
   }
+
+  static bool getIsPlayingEmpty(){
+    final box = Hive.box('playing');
+    return box.isEmpty;
+  }
+
+  static dynamic getPlayingData(){
+    final box = Hive.box('playing');
+    return box.get('data');
+  }
+
+  static void putPlayer(key, value) {
+    print('i put');
+    Hive.box('playing').put(key, value);
+  }
+
 }

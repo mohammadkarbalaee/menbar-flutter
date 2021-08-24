@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart';
 import 'package:menbar_application/collections/play_button.dart';
 import 'package:menbar_application/collections/player_page.dart';
@@ -232,13 +233,33 @@ class _DownloadButtonState extends State<DownloadButton> {
                     : buttonStatus ? Icon(Icons.close, size: 25,)
                     : Icon(Icons.get_app, size: 25,),
                 onPressed: isDownloaded ? (){
-                  DownloadButton.showBottomPlayer(
-                      context,
-                      widget.title,
-                      widget.url,
-                      widget.orator,
-                      widget.imageUrl
-                  );
+
+                  var data = HiveManager.getPlayingData();
+                  bool isBottomPlayerDifferent = true;
+
+                  if(!HiveManager.getIsPlayingEmpty()){
+                    isBottomPlayerDifferent = data['title'] != widget.title;
+                  }
+
+                  if(isBottomPlayerDifferent){
+                    DownloadButton.showBottomPlayer(
+                        context,
+                        widget.title,
+                        widget.url,
+                        widget.orator,
+                        widget.imageUrl
+                    );
+
+                    HiveManager.putPlayer(
+                      'data',
+                      {
+                        'title':widget.title,
+                        'url':widget.url,
+                        'orator':widget.orator,
+                        'imageUrl':widget.imageUrl
+                      }
+                    );
+                  }
                 } :(){
                   setState(() {
                     buttonStatus = !buttonStatus;
@@ -254,7 +275,7 @@ class _DownloadButtonState extends State<DownloadButton> {
                 },
                 style: OutlinedButton.styleFrom(
                   primary: Colors.black,
-                  backgroundColor: isDownloaded ? Colors.grey :Colors.white,
+                  backgroundColor: isDownloaded ? Color(SharedData.mainColor) :Colors.white,
                   elevation: 0,
                   shape: CircleBorder(),
                 ),
@@ -270,4 +291,3 @@ String cutUrl(String url){
   List pieces = url.split('/');
   return pieces.length != 1? pieces[2] : "";
 }
-
