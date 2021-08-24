@@ -26,7 +26,8 @@ class DownloadButton extends StatefulWidget {
       url,
       orator,
       imageUrl,
-      speechTitle
+      speechTitle,
+      shouldStart
       ){
     showFlash(
         context: mainContext,
@@ -62,7 +63,8 @@ class DownloadButton extends StatefulWidget {
                         children: [
                           PlayButton(
                               url,
-                            _audioPlayerController
+                            _audioPlayerController,
+                            shouldStart
                           ),
                           SizedBox(width: 120,),
                           Container(
@@ -255,7 +257,8 @@ class _DownloadButtonState extends State<DownloadButton> {
                         widget.url,
                         widget.orator,
                         widget.imageUrl,
-                        widget.speechTitle
+                        widget.speechTitle,
+                      true
                     );
 
                     HiveManager.putPlayer(

@@ -5,14 +5,16 @@ import 'package:menbar_application/reusable_widgets/shared_data.dart';
 class PlayButton extends StatefulWidget {
   var path;
   AudioPlayer audioPlayer;
+  bool shouldStart;
 
-  PlayButton(this.path,this.audioPlayer);
+  PlayButton(this.path,this.audioPlayer,this.shouldStart);
 
   @override
   _PlayButtonState createState() => _PlayButtonState();
 }
 
 class _PlayButtonState extends State<PlayButton> {
+
 
   @override
   Widget build(BuildContext context) {
@@ -33,16 +35,24 @@ class _PlayButtonState extends State<PlayButton> {
 
               if(SharedData.isPlaying == true){
                 widget.audioPlayer.pause();
+                SharedData.isPlaying = false;
               } else {
                 widget.audioPlayer.resume();
+                SharedData.isPlaying = true;
               }
-
-              SharedData.isPlaying = !SharedData.isPlaying;
             });
           },
           alignment: Alignment.center,
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if(widget.shouldStart){
+      widget.audioPlayer.play(widget.path);
+    }
   }
 }

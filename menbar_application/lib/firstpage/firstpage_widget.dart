@@ -40,7 +40,8 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
             playerData['url'],
             playerData['orator'],
             playerData['imageUrl'],
-            playerData['speechTitle']
+            playerData['speechTitle'],
+          false
         );
       }
     }
