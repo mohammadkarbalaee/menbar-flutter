@@ -17,6 +17,94 @@ class DownloadButton extends StatefulWidget {
   String title;
   String orator;
 
+  static void showBottomPlayer(
+      mainContext,
+      title,
+      url,
+      orator,
+      imageUrl,
+      ){
+    showFlash(
+        context: mainContext,
+        persistent: true,
+        builder: (context,controller){
+          return Flash.bar(
+            useSafeArea: false,
+            onTap: (){
+              controller.dismiss();
+              Navigator.of(context,rootNavigator: false).push(MaterialPageRoute(
+                  builder: (context) => PlayerPage(
+                    title,
+                    mainContext,
+                    url,
+                    imageUrl,
+                    orator
+                  )
+              )
+              );
+            },
+            controller: controller,
+            child: Container(
+              height: 90,
+              child: Card(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          PlayButton(
+                              url
+                          ),
+                          SizedBox(width: 120,),
+                          Container(
+                            width: 100,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  title,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.end,
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    fontFamily: 'sans',
+                                  ),
+                                ),
+                                SizedBox(height: 10,),
+                                Text(
+                                  orator,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.end,
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'sans',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    CachedNetworkImage(
+                      imageUrl: imageUrl,
+                      fadeInDuration:Duration(milliseconds: 500),
+                      fadeInCurve:Curves.easeInExpo,
+                      fit: BoxFit.cover,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+    );
+  }
+
   DownloadButton(this.url,this.imageUrl,this.title,this.orator);
 
   @override
@@ -144,78 +232,12 @@ class _DownloadButtonState extends State<DownloadButton> {
                     : buttonStatus ? Icon(Icons.close, size: 25,)
                     : Icon(Icons.get_app, size: 25,),
                 onPressed: isDownloaded ? (){
-                  showFlash(
-                      context: context,
-                      persistent: true,
-                      builder: (context,controller){
-                        return Flash.bar(
-                          useSafeArea: false,
-                          onTap: (){
-                            controller.dismiss();
-                              Navigator.of(context,rootNavigator: false).push(MaterialPageRoute(
-                                  builder: (context) => PlayerPage(widget.title)
-                              )
-                            );
-                          },
-                            controller: controller,
-                            child: Container(
-                              height: 90,
-                              child: Card(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          PlayButton(
-                                            widget.url
-                                          ),
-                                          SizedBox(width: 120,),
-                                          Container(
-                                            width: 100,
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.end,
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  widget.title,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  textAlign: TextAlign.end,
-                                                  style: TextStyle(
-                                                    fontSize: 17,
-                                                    fontFamily: 'sans',
-                                                  ),
-                                                ),
-                                                SizedBox(height: 10,),
-                                                Text(
-                                                  widget.orator,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  textAlign: TextAlign.end,
-                                                  style: TextStyle(
-                                                    fontSize: 17,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontFamily: 'sans',
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    CachedNetworkImage(
-                                      imageUrl: widget.imageUrl,
-                                      fadeInDuration:Duration(milliseconds: 500),
-                                      fadeInCurve:Curves.easeInExpo,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                        );
-                      }
+                  DownloadButton.showBottomPlayer(
+                      context,
+                      widget.title,
+                      widget.url,
+                      widget.orator,
+                      widget.imageUrl
                   );
                 } :(){
                   setState(() {
@@ -248,3 +270,4 @@ String cutUrl(String url){
   List pieces = url.split('/');
   return pieces.length != 1? pieces[2] : "";
 }
+
