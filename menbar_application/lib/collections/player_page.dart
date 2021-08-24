@@ -5,6 +5,7 @@ import 'package:menbar_application/reusable_widgets/header_button.dart';
 import 'package:menbar_application/reusable_widgets/header_gradient.dart';
 import 'package:menbar_application/reusable_widgets/shared_data.dart';
 import  'package:persian_number_utility/persian_number_utility.dart';
+import 'package:back_button_interceptor/back_button_interceptor.dart';
 
 class PlayerPage extends StatefulWidget {
   var title;
@@ -42,6 +43,28 @@ class _PlayerPageState extends State<PlayerPage> {
         position = event;
       });
     });
+
+    BackButtonInterceptor.add(myInterceptor);
+  }
+
+  @override
+  void dispose() {
+    BackButtonInterceptor.remove(myInterceptor);
+    super.dispose();
+  }
+
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
+    DownloadButton.showBottomPlayer(
+        widget.context,
+        widget.title,
+        widget.url,
+        widget.orator,
+        widget.imageUrl,
+        widget.speechTitle,
+        false
+    );
+    Navigator.pop(context);
+    return true;
   }
 
   @override
