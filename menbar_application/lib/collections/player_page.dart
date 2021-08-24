@@ -73,6 +73,7 @@ class _PlayerPageState extends State<PlayerPage> {
       backgroundColor: Color(SharedData.mainColor),
       body: Container(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Stack(
               alignment: Alignment.bottomCenter,
@@ -88,6 +89,23 @@ class _PlayerPageState extends State<PlayerPage> {
                 ),
                 HeaderGradient(widget.orator,widget.speechTitle),
               ],
+            ),
+            Slider(
+              activeColor: Colors.yellow[500],
+              inactiveColor: Color(SharedData.mainColor),
+              value: position.inSeconds.toDouble(),
+              min: 0.0,
+              max: duration.inSeconds.toDouble(),
+              onChanged: (value){
+                setState(() {
+                  widget.audioPlayer.seek(
+                      new Duration(
+                          seconds: value.toInt()
+                      )
+                  );
+                  value = value;
+                });
+              },
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -117,6 +135,14 @@ class _PlayerPageState extends State<PlayerPage> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () {
+                      setState(() {
+                        var newTime = position.inSeconds - 10;
+                        widget.audioPlayer.seek(
+                            new Duration(
+                                seconds: newTime
+                            )
+                        );
+                      });
                     },
                     child: Icon(Icons.fast_rewind,color: Colors.white,size: 25,),
                     style: ElevatedButton.styleFrom(
@@ -156,6 +182,14 @@ class _PlayerPageState extends State<PlayerPage> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () {
+                      setState(() {
+                        var newTime = position.inSeconds + 10;
+                        widget.audioPlayer.seek(
+                            new Duration(
+                                seconds: newTime
+                            )
+                        );
+                      });
                     },
                     child: Icon(Icons.fast_forward,color: Colors.white,size: 25,),
                     style: ElevatedButton.styleFrom(
