@@ -5,6 +5,7 @@ import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:menbar_application/collections/play_button.dart';
+import 'package:menbar_application/collections/player_page.dart';
 import 'package:menbar_application/managers/hive_manager.dart';
 import 'package:menbar_application/reusable_widgets/shared_data.dart';
 import 'package:path_provider/path_provider.dart';
@@ -138,13 +139,23 @@ class _DownloadButtonState extends State<DownloadButton> {
             Container(
               height: 100,
               child: OutlinedButton(
-                child: isDownloaded ? Icon(Icons.play_arrow, size: 25,color: Colors.white,) : buttonStatus ? Icon(Icons.close, size: 25,) : Icon(Icons.get_app, size: 25,),
+                child: isDownloaded ?
+                    Icon(Icons.play_arrow, size: 25,color: Colors.white,)
+                    : buttonStatus ? Icon(Icons.close, size: 25,)
+                    : Icon(Icons.get_app, size: 25,),
                 onPressed: isDownloaded ? (){
                   showFlash(
                       context: context,
+                      persistent: true,
                       builder: (context,controller){
                         return Flash.bar(
-
+                          onTap: (){
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                              Navigator.of(context,rootNavigator: true).push(MaterialPageRoute(
+                                  builder: (context) => PlayerPage(widget.title)
+                              )
+                            );
+                          },
                             controller: controller,
                             child: Container(
                               height: 90,
@@ -160,31 +171,34 @@ class _DownloadButtonState extends State<DownloadButton> {
                                             widget.url
                                           ),
                                           SizedBox(width: 120,),
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.end,
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                widget.title,
-                                                overflow: TextOverflow.ellipsis,
-                                                textAlign: TextAlign.end,
-                                                style: TextStyle(
-                                                  fontSize: 17,
-                                                  fontFamily: 'sans',
+                                          Container(
+                                            width: 100,
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.end,
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  widget.title,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.end,
+                                                  style: TextStyle(
+                                                    fontSize: 17,
+                                                    fontFamily: 'sans',
+                                                  ),
                                                 ),
-                                              ),
-                                              SizedBox(height: 10,),
-                                              Text(
-                                                widget.orator,
-                                                overflow: TextOverflow.ellipsis,
-                                                textAlign: TextAlign.end,
-                                                style: TextStyle(
-                                                  fontSize: 17,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontFamily: 'sans',
+                                                SizedBox(height: 10,),
+                                                Text(
+                                                  widget.orator,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.end,
+                                                  style: TextStyle(
+                                                    fontSize: 17,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontFamily: 'sans',
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         ],
                                       ),

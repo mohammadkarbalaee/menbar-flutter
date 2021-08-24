@@ -332,7 +332,7 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                             leading: DownloadButton(
                                 allSpeeches[index]['file'] == null ? "": allSpeeches[index]['file'],
                               widget.image,
-                              widget.title,
+                              allSpeeches[index]['title'],
                               widget.orator
                             ),
                           ),
