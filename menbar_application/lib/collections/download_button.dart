@@ -254,7 +254,7 @@ class _DownloadButtonState extends State<DownloadButton> {
                     isBottomPlayerDifferent = data['title'] != widget.title;
                   }
 
-                  //if(isBottomPlayerDifferent){
+                  if(isBottomPlayerDifferent){
 
                     DownloadButton.showBottomPlayer(
                         context,
@@ -277,7 +277,7 @@ class _DownloadButtonState extends State<DownloadButton> {
                       }
                     );
                   }
-                //}
+                }
                   :(){
                   setState(() {
                     buttonStatus = !buttonStatus;
