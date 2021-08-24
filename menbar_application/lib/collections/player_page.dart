@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:menbar_application/collections/download_button.dart';
 import 'package:menbar_application/reusable_widgets/header_button.dart';
@@ -12,8 +12,9 @@ class PlayerPage extends StatefulWidget {
   var imageUrl;
   var orator;
   var speechTitle;
+  AudioPlayer audioPlayer;
 
-  PlayerPage(this.title,this.context,this.url,this.imageUrl,this.orator,this.speechTitle);
+  PlayerPage(this.title,this.context,this.url,this.imageUrl,this.orator,this.speechTitle,this.audioPlayer);
 
   @override
   _PlayerPageState createState() => _PlayerPageState();
@@ -85,8 +86,19 @@ class _PlayerPageState extends State<PlayerPage> {
                     height: 100,
                     child: ElevatedButton(
                       onPressed: () {
+                        setState(() {
+
+                          if(SharedData.isPlaying == true){
+                            widget.audioPlayer.pause();
+                          } else {
+                            widget.audioPlayer.resume();
+                          }
+
+                          SharedData.isPlaying = !SharedData.isPlaying;
+                        });
                       },
-                      child: Icon(Icons.play_arrow,color: Colors.white,size: 25,),
+                      child: SharedData.isPlaying ? Icon(Icons.play_arrow,size:25,color: Colors.white,) :
+                      Icon(Icons.pause,size:25,color: Colors.white,),
                       style: ElevatedButton.styleFrom(
                         primary: Colors.yellow[500],
                         elevation: 7,

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class DownloadButton extends StatefulWidget {
   String title;
   String orator;
   String speechTitle;
+  static AudioPlayer _audioPlayerController = AudioPlayer();
 
   static void showBottomPlayer(
       mainContext,
@@ -42,7 +44,8 @@ class DownloadButton extends StatefulWidget {
                     imageUrl,
                     orator,
                     speechTitle,
-                  )
+                    _audioPlayerController,
+                  ),
               )
               );
             },
@@ -58,7 +61,8 @@ class DownloadButton extends StatefulWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           PlayButton(
-                              url
+                              url,
+                            _audioPlayerController
                           ),
                           SizedBox(width: 120,),
                           Container(
@@ -244,6 +248,7 @@ class _DownloadButtonState extends State<DownloadButton> {
                   }
 
                   if(isBottomPlayerDifferent){
+
                     DownloadButton.showBottomPlayer(
                         context,
                         widget.title,
