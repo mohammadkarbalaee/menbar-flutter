@@ -90,22 +90,29 @@ class _PlayerPageState extends State<PlayerPage> {
                 HeaderGradient(widget.orator,widget.speechTitle),
               ],
             ),
-            Slider(
-              activeColor: Colors.yellow[500],
-              inactiveColor: Color(SharedData.mainColor),
-              value: position.inSeconds.toDouble(),
-              min: 0.0,
-              max: duration.inSeconds.toDouble(),
-              onChanged: (value){
-                setState(() {
-                  widget.audioPlayer.seek(
-                      new Duration(
-                          seconds: value.toInt()
-                      )
-                  );
-                  value = value;
-                });
-              },
+            SliderTheme(
+              data: SliderThemeData(
+                trackHeight: 1.5,
+                thumbShape: RoundSliderThumbShape(enabledThumbRadius: 7),
+                trackShape: CustomTrackShape(),
+              ),
+              child: Slider(
+                activeColor: Colors.yellow[500],
+                inactiveColor: Color(SharedData.mainColor),
+                value: position.inSeconds.toDouble(),
+                min: 0.0,
+                max: duration.inSeconds.toDouble(),
+                onChanged: (value){
+                  setState(() {
+                    widget.audioPlayer.seek(
+                        new Duration(
+                            seconds: value.toInt()
+                        )
+                    );
+                    value = value;
+                  });
+                },
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -243,3 +250,14 @@ class _PlayerPageState extends State<PlayerPage> {
     );
   }
 }
+
+class CustomTrackShape extends RoundedRectSliderTrackShape {Rect getPreferredRect({
+  required RenderBox parentBox,
+  Offset offset = Offset.zero,
+  required SliderThemeData sliderTheme,
+  bool isEnabled = false,
+  bool isDiscrete = false,}) {final double? trackHeight = 1.5;
+final double trackLeft = offset.dx;
+final double trackTop = 0;
+final double trackWidth = parentBox.size.width;
+return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight!);}}
