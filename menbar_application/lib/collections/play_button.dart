@@ -15,12 +15,6 @@ class PlayButton extends StatefulWidget {
 class _PlayButtonState extends State<PlayButton> {
 
   @override
-  void initState() {
-    super.initState();
-    widget.audioPlayer.play(widget.path);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Container(
       child: OutlinedButton(
