@@ -101,6 +101,8 @@ class _DownloadButtonState extends State<DownloadButton> {
 
   Future<File> getFile(fileName) async {
     final directory = await getApplicationDocumentsDirectory();
+    print("${directory.path}/filename");
+
     return File("${directory.path}/filename");
   }
 
@@ -154,7 +156,9 @@ class _DownloadButtonState extends State<DownloadButton> {
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                         children: [
-                                          PlayButton(),
+                                          PlayButton(
+                                            widget.url
+                                          ),
                                           SizedBox(width: 120,),
                                           Column(
                                             crossAxisAlignment: CrossAxisAlignment.end,

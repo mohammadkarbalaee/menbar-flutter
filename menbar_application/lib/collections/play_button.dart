@@ -1,13 +1,26 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
 class PlayButton extends StatefulWidget {
-  const PlayButton({Key? key}) : super(key: key);
+  var path;
+
+  PlayButton(this.path);
+
   @override
   _PlayButtonState createState() => _PlayButtonState();
 }
 
 class _PlayButtonState extends State<PlayButton> {
-  bool isPlaying = false;
+  late AudioPlayer audioPlayer;
+  bool isPlaying = true;
+
+  @override
+  void initState() {
+    super.initState();
+    audioPlayer = AudioPlayer();
+    audioPlayer.play(widget.path);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -24,6 +37,13 @@ class _PlayButtonState extends State<PlayButton> {
           splashColor: Colors.transparent,
           onPressed: () {
             setState(() {
+
+              if(isPlaying == true){
+                audioPlayer.pause();
+              } else {
+                audioPlayer.resume();
+              }
+
               isPlaying = !isPlaying;
             });
           },
