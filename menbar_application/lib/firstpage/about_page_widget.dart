@@ -17,30 +17,32 @@ class AboutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(SharedData.mainColor),
-        leading: Container(),
-        actions: [
-          Center(
-            child: Text(
-              texts[0],
-              textDirection: TextDirection.rtl,
-              style: TextStyle(
-                fontFamily: 'sans',
-                fontSize: 23,
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color(SharedData.mainColor),
+          leading: Container(),
+          actions: [
+            Center(
+              child: Text(
+                texts[0],
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontFamily: 'sans',
+                  fontSize: 23,
+                ),
               ),
             ),
-          ),
-          SizedBox(width: 5,),
-          HeaderButton(
-            icon: Icon(Icons.arrow_forward,color: Colors.white,),
-            onPress: () => Navigator.pop(context),
-          )
-        ],
+            SizedBox(width: 5,),
+            HeaderButton(
+              icon: Icon(Icons.arrow_forward,color: Colors.white,),
+              onPress: () => Navigator.pop(context),
+            )
+          ],
+        ),
+        body: AboutBody(),
+        bottomSheet:SecurityFooter(),
       ),
-      body: AboutBody(),
-      bottomSheet:SecurityFooter(),
     );
   }
 }

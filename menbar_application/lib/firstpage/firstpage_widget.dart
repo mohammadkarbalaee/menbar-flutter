@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:menbar_application/boookmarks/bookmarks_main.dart';
+import 'package:menbar_application/collections/download_button.dart';
 import 'package:menbar_application/managers/hive_manager.dart';
 import 'package:menbar_application/reusable_widgets/header_button.dart';
 import 'package:menbar_application/reusable_widgets/shared_data.dart';
@@ -15,6 +16,7 @@ var filterValue = '';
 
 // ignore: must_be_immutable
 class HomePage extends StatefulWidget {
+
   @override
   HomePageState createState() => HomePageState();
 }
@@ -23,6 +25,28 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
   List orators = HiveManager.getAllOrators();
   var showDeleteButton = false;
   List collections = HiveManager.getAllCollections();
+
+
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!
+        .addPostFrameCallback((_){
+      bool shouldShowPlayer = !HiveManager.getIsPlayingEmpty();
+      print(shouldShowPlayer);
+      if(shouldShowPlayer){
+        var playerData = HiveManager.getPlayingData();
+        print(playerData);
+        DownloadButton.showBottomPlayer(
+            context,
+            playerData['title'],
+            playerData['url'],
+            playerData['orator'],
+            playerData['imageUrl']
+        );
+      }
+    }
+    );
+  }
 
   List<Widget> threeTabs = [
     Tab(

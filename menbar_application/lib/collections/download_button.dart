@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart';
 import 'package:menbar_application/collections/play_button.dart';
+import 'package:menbar_application/collections/player_page.dart';
 import 'package:menbar_application/managers/hive_manager.dart';
 import 'package:menbar_application/reusable_widgets/shared_data.dart';
 import 'package:path_provider/path_provider.dart';
@@ -15,6 +17,94 @@ class DownloadButton extends StatefulWidget {
   String imageUrl;
   String title;
   String orator;
+
+  static void showBottomPlayer(
+      mainContext,
+      title,
+      url,
+      orator,
+      imageUrl,
+      ){
+    showFlash(
+        context: mainContext,
+        persistent: true,
+        builder: (context,controller){
+          return Flash.bar(
+            useSafeArea: false,
+            onTap: (){
+              controller.dismiss();
+              Navigator.of(context,rootNavigator: false).push(MaterialPageRoute(
+                  builder: (context) => PlayerPage(
+                    title,
+                    mainContext,
+                    url,
+                    imageUrl,
+                    orator
+                  )
+              )
+              );
+            },
+            controller: controller,
+            child: Container(
+              height: 90,
+              child: Card(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          PlayButton(
+                              url
+                          ),
+                          SizedBox(width: 120,),
+                          Container(
+                            width: 100,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  title,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.end,
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    fontFamily: 'sans',
+                                  ),
+                                ),
+                                SizedBox(height: 10,),
+                                Text(
+                                  orator,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.end,
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'sans',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    CachedNetworkImage(
+                      imageUrl: imageUrl,
+                      fadeInDuration:Duration(milliseconds: 500),
+                      fadeInCurve:Curves.easeInExpo,
+                      fit: BoxFit.cover,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+    );
+  }
 
   DownloadButton(this.url,this.imageUrl,this.title,this.orator);
 
@@ -138,70 +228,38 @@ class _DownloadButtonState extends State<DownloadButton> {
             Container(
               height: 100,
               child: OutlinedButton(
-                child: isDownloaded ? Icon(Icons.play_arrow, size: 25,color: Colors.white,) : buttonStatus ? Icon(Icons.close, size: 25,) : Icon(Icons.get_app, size: 25,),
+                child: isDownloaded ?
+                    Icon(Icons.play_arrow, size: 25,color: Colors.white,)
+                    : buttonStatus ? Icon(Icons.close, size: 25,)
+                    : Icon(Icons.get_app, size: 25,),
                 onPressed: isDownloaded ? (){
-                  showFlash(
-                      context: context,
-                      builder: (context,controller){
-                        return Flash.bar(
 
-                            controller: controller,
-                            child: Container(
-                              height: 90,
-                              child: Card(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          PlayButton(
-                                            widget.url
-                                          ),
-                                          SizedBox(width: 120,),
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.end,
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                widget.title,
-                                                overflow: TextOverflow.ellipsis,
-                                                textAlign: TextAlign.end,
-                                                style: TextStyle(
-                                                  fontSize: 17,
-                                                  fontFamily: 'sans',
-                                                ),
-                                              ),
-                                              SizedBox(height: 10,),
-                                              Text(
-                                                widget.orator,
-                                                overflow: TextOverflow.ellipsis,
-                                                textAlign: TextAlign.end,
-                                                style: TextStyle(
-                                                  fontSize: 17,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontFamily: 'sans',
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    CachedNetworkImage(
-                                      imageUrl: widget.imageUrl,
-                                      fadeInDuration:Duration(milliseconds: 500),
-                                      fadeInCurve:Curves.easeInExpo,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                        );
+                  var data = HiveManager.getPlayingData();
+                  bool isBottomPlayerDifferent = true;
+
+                  if(!HiveManager.getIsPlayingEmpty()){
+                    isBottomPlayerDifferent = data['title'] != widget.title;
+                  }
+
+                  if(isBottomPlayerDifferent){
+                    DownloadButton.showBottomPlayer(
+                        context,
+                        widget.title,
+                        widget.url,
+                        widget.orator,
+                        widget.imageUrl
+                    );
+
+                    HiveManager.putPlayer(
+                      'data',
+                      {
+                        'title':widget.title,
+                        'url':widget.url,
+                        'orator':widget.orator,
+                        'imageUrl':widget.imageUrl
                       }
-                  );
+                    );
+                  }
                 } :(){
                   setState(() {
                     buttonStatus = !buttonStatus;
@@ -217,7 +275,7 @@ class _DownloadButtonState extends State<DownloadButton> {
                 },
                 style: OutlinedButton.styleFrom(
                   primary: Colors.black,
-                  backgroundColor: isDownloaded ? Colors.grey :Colors.white,
+                  backgroundColor: isDownloaded ? Color(SharedData.mainColor) :Colors.white,
                   elevation: 0,
                   shape: CircleBorder(),
                 ),
