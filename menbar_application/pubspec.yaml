@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   flash: ^2.0.1
   audioplayers: ^0.19.1
+  back_button_interceptor: ^5.0.1
 
 dev_dependencies:
   flutter_test:

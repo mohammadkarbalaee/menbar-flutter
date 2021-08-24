@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:menbar_application/boookmarks/bookmarks_main.dart';
 import 'package:menbar_application/collections/download_button.dart';
 import 'package:menbar_application/managers/hive_manager.dart';
@@ -32,16 +31,16 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
     WidgetsBinding.instance!
         .addPostFrameCallback((_){
       bool shouldShowPlayer = !HiveManager.getIsPlayingEmpty();
-      print(shouldShowPlayer);
       if(shouldShowPlayer){
         var playerData = HiveManager.getPlayingData();
-        print(playerData);
         DownloadButton.showBottomPlayer(
             context,
             playerData['title'],
             playerData['url'],
             playerData['orator'],
-            playerData['imageUrl']
+            playerData['imageUrl'],
+            playerData['speechTitle'],
+          true
         );
       }
     }

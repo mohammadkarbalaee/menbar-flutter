@@ -1,25 +1,20 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:menbar_application/reusable_widgets/shared_data.dart';
 
 class PlayButton extends StatefulWidget {
   var path;
+  AudioPlayer audioPlayer;
+  bool shouldStart;
 
-  PlayButton(this.path);
+  PlayButton(this.path,this.audioPlayer,this.shouldStart);
 
   @override
   _PlayButtonState createState() => _PlayButtonState();
 }
 
 class _PlayButtonState extends State<PlayButton> {
-  late AudioPlayer audioPlayer;
-  bool isPlaying = true;
 
-  @override
-  void initState() {
-    super.initState();
-    audioPlayer = AudioPlayer();
-    audioPlayer.play(widget.path);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,24 +27,32 @@ class _PlayButtonState extends State<PlayButton> {
           backgroundColor: Colors.white38,
         ),
         child: IconButton(
-          icon: isPlaying ? Icon(Icons.play_arrow,size:25,color: Colors.black54,) :
+          icon: SharedData.isPlaying ? Icon(Icons.play_arrow,size:25,color: Colors.black54,) :
           Icon(Icons.pause,size:25,color: Colors.black54,),
           splashColor: Colors.transparent,
           onPressed: () {
             setState(() {
 
-              if(isPlaying == true){
-                audioPlayer.pause();
+              if(SharedData.isPlaying == true){
+                widget.audioPlayer.pause();
+                SharedData.isPlaying = false;
               } else {
-                audioPlayer.resume();
+                widget.audioPlayer.resume();
+                SharedData.isPlaying = true;
               }
-
-              isPlaying = !isPlaying;
             });
           },
           alignment: Alignment.center,
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if(widget.shouldStart){
+      widget.audioPlayer.play(widget.path);
+    }
   }
 }

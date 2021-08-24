@@ -89,7 +89,7 @@ class HeaderBox extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          HeaderGradient(''),
+          HeaderGradient('',''),
         ],
       ),
       collapseMode: CollapseMode.parallax,

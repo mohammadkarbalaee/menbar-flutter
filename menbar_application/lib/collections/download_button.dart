@@ -1,9 +1,9 @@
 import 'dart:io';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart';
 import 'package:menbar_application/collections/play_button.dart';
 import 'package:menbar_application/collections/player_page.dart';
@@ -17,6 +17,8 @@ class DownloadButton extends StatefulWidget {
   String imageUrl;
   String title;
   String orator;
+  String speechTitle;
+  static AudioPlayer _audioPlayerController = AudioPlayer();
 
   static void showBottomPlayer(
       mainContext,
@@ -24,6 +26,8 @@ class DownloadButton extends StatefulWidget {
       url,
       orator,
       imageUrl,
+      speechTitle,
+      shouldStart
       ){
     showFlash(
         context: mainContext,
@@ -39,8 +43,10 @@ class DownloadButton extends StatefulWidget {
                     mainContext,
                     url,
                     imageUrl,
-                    orator
-                  )
+                    orator,
+                    speechTitle,
+                    _audioPlayerController,
+                  ),
               )
               );
             },
@@ -56,7 +62,9 @@ class DownloadButton extends StatefulWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           PlayButton(
-                              url
+                              url,
+                            _audioPlayerController,
+                            shouldStart
                           ),
                           SizedBox(width: 120,),
                           Container(
@@ -106,7 +114,7 @@ class DownloadButton extends StatefulWidget {
     );
   }
 
-  DownloadButton(this.url,this.imageUrl,this.title,this.orator);
+  DownloadButton(this.url,this.imageUrl,this.title,this.orator,this.speechTitle);
 
   @override
   _DownloadButtonState createState() => _DownloadButtonState();
@@ -242,12 +250,15 @@ class _DownloadButtonState extends State<DownloadButton> {
                   }
 
                   if(isBottomPlayerDifferent){
+
                     DownloadButton.showBottomPlayer(
                         context,
                         widget.title,
                         widget.url,
                         widget.orator,
-                        widget.imageUrl
+                        widget.imageUrl,
+                        widget.speechTitle,
+                      true
                     );
 
                     HiveManager.putPlayer(
@@ -256,7 +267,8 @@ class _DownloadButtonState extends State<DownloadButton> {
                         'title':widget.title,
                         'url':widget.url,
                         'orator':widget.orator,
-                        'imageUrl':widget.imageUrl
+                        'imageUrl':widget.imageUrl,
+                        'speechTitle': widget.speechTitle
                       }
                     );
                   }
