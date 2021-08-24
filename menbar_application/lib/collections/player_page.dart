@@ -42,6 +42,73 @@ class _PlayerPageState extends State<PlayerPage> {
                   ),
                   HeaderGradient(widget.orator,widget.speechTitle),
                 ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                        'time1',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                        'time2',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 70,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {
+                      },
+                      child: Icon(Icons.fast_rewind,color: Colors.white,size: 25,),
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(SharedData.mainColor),
+                        elevation: 0,
+                        shape: CircleBorder(),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 30,),
+                  Container(
+                    height: 100,
+                    child: ElevatedButton(
+                      onPressed: () {
+                      },
+                      child: Icon(Icons.play_arrow,color: Colors.white,size: 25,),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.yellow[500],
+                        elevation: 7,
+                        shape: CircleBorder(),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 30,),
+                  Container(
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {
+                      },
+                      child: Icon(Icons.fast_forward,color: Colors.white,size: 25,),
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(SharedData.mainColor),
+                        elevation: 0,
+                        shape: CircleBorder(),
+                      ),
+                    ),
+                  ),
+                ],
               )
             ],
           ),
@@ -50,13 +117,17 @@ class _PlayerPageState extends State<PlayerPage> {
           backgroundColor: Color(SharedData.mainColor),
           leading: Container(),
           actions: [
-            Center(
-              child: Text(
-                widget.title,
-                textDirection: TextDirection.rtl,
-                style: TextStyle(
-                  fontFamily: 'sans',
-                  fontSize: 23,
+            Container(
+              width: 4 * (MediaQuery.of(context).size.width / 5),
+              child: Center(
+                child: Text(
+                  widget.title,
+                  textDirection: TextDirection.rtl,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontFamily: 'sans',
+                    fontSize: 23,
+                  ),
                 ),
               ),
             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:menbar_application/collections/bookmark_buttons.dart';
 
 class HeaderGradient extends StatelessWidget {
   var oratorName;
@@ -37,7 +38,7 @@ class HeaderGradient extends StatelessWidget {
                       Text(
                         oratorName,
                         style: TextStyle(
-                          fontSize: 22,
+                          fontSize: 23,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'sans',
                           color: Colors.white,
@@ -52,7 +53,7 @@ class HeaderGradient extends StatelessWidget {
                       Text(
                         speechName,
                         style: TextStyle(
-                          fontSize: 22,
+                          fontSize: 20,
                           fontFamily: 'sans',
                           color: Colors.white,
                         ),
@@ -60,6 +61,15 @@ class HeaderGradient extends StatelessWidget {
                       SizedBox(width: 15,),
                     ],
                   ),
+                  Center(
+                    child: Container(
+                      child: Row(
+                        children: [
+
+                        ],
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
