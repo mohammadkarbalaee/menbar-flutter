@@ -15,7 +15,6 @@ class PlayButton extends StatefulWidget {
 
 class _PlayButtonState extends State<PlayButton> {
 
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -27,20 +26,21 @@ class _PlayButtonState extends State<PlayButton> {
           backgroundColor: Colors.white38,
         ),
         child: IconButton(
-          icon: SharedData.isPlaying ? Icon(Icons.play_arrow,size:25,color: Colors.black54,) :
+          icon: !SharedData.isPlaying ? Icon(Icons.play_arrow,size:25,color: Colors.black54,) :
           Icon(Icons.pause,size:25,color: Colors.black54,),
           splashColor: Colors.transparent,
           onPressed: () {
-            setState(() {
-
-              if(SharedData.isPlaying == true){
-                widget.audioPlayer.pause();
+            if(SharedData.isPlaying == true){
+              widget.audioPlayer.pause();
+              setState(() {
                 SharedData.isPlaying = false;
-              } else {
-                widget.audioPlayer.resume();
+              });
+            } else {
+              widget.audioPlayer.resume();
+              setState(() {
                 SharedData.isPlaying = true;
-              }
-            });
+              });
+            }
           },
           alignment: Alignment.center,
         ),

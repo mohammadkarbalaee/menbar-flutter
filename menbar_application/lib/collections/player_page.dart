@@ -169,18 +169,19 @@ class _PlayerPageState extends State<PlayerPage> {
                   height: 100,
                   child: ElevatedButton(
                     onPressed: () {
-                      setState(() {
-
-                        if(SharedData.isPlaying == true){
-                          widget.audioPlayer.pause();
+                      if(SharedData.isPlaying == true){
+                        widget.audioPlayer.pause();
+                        setState(() {
                           SharedData.isPlaying = false;
-                        } else {
-                          widget.audioPlayer.resume();
+                        });
+                      } else {
+                        widget.audioPlayer.resume();
+                        setState(() {
                           SharedData.isPlaying = true;
-                        }
-                      });
+                        });
+                      }
                     },
-                    child: SharedData.isPlaying ? Icon(Icons.play_arrow,size:25,color: Colors.white,) :
+                    child: !SharedData.isPlaying ? Icon(Icons.play_arrow,size:25,color: Colors.white,) :
                     Icon(Icons.pause,size:25,color: Colors.white,),
                     style: ElevatedButton.styleFrom(
                       primary: Colors.yellow[500],
