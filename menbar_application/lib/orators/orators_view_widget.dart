@@ -75,7 +75,7 @@ class OratorCardWidget extends StatelessWidget {
           alignment: AlignmentDirectional.bottomEnd,
           children: [
             BackgroundImage(imageUlr),
-            HeaderGradient(oratorName),
+            HeaderGradient(oratorName,''),
           ],
         ),
       ),

@@ -17,6 +17,7 @@ class DownloadButton extends StatefulWidget {
   String imageUrl;
   String title;
   String orator;
+  String speechTitle;
 
   static void showBottomPlayer(
       mainContext,
@@ -24,6 +25,7 @@ class DownloadButton extends StatefulWidget {
       url,
       orator,
       imageUrl,
+      speechTitle
       ){
     showFlash(
         context: mainContext,
@@ -39,7 +41,8 @@ class DownloadButton extends StatefulWidget {
                     mainContext,
                     url,
                     imageUrl,
-                    orator
+                    orator,
+                    speechTitle,
                   )
               )
               );
@@ -106,7 +109,7 @@ class DownloadButton extends StatefulWidget {
     );
   }
 
-  DownloadButton(this.url,this.imageUrl,this.title,this.orator);
+  DownloadButton(this.url,this.imageUrl,this.title,this.orator,this.speechTitle);
 
   @override
   _DownloadButtonState createState() => _DownloadButtonState();
@@ -247,7 +250,8 @@ class _DownloadButtonState extends State<DownloadButton> {
                         widget.title,
                         widget.url,
                         widget.orator,
-                        widget.imageUrl
+                        widget.imageUrl,
+                        widget.speechTitle
                     );
 
                     HiveManager.putPlayer(
@@ -256,7 +260,8 @@ class _DownloadButtonState extends State<DownloadButton> {
                         'title':widget.title,
                         'url':widget.url,
                         'orator':widget.orator,
-                        'imageUrl':widget.imageUrl
+                        'imageUrl':widget.imageUrl,
+                        'speechTitle': widget.speechTitle
                       }
                     );
                   }

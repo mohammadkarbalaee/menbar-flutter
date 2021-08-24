@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:menbar_application/collections/download_button.dart';
 import 'package:menbar_application/reusable_widgets/header_button.dart';
+import 'package:menbar_application/reusable_widgets/header_gradient.dart';
 import 'package:menbar_application/reusable_widgets/shared_data.dart';
 
 class PlayerPage extends StatefulWidget {
@@ -9,8 +11,9 @@ class PlayerPage extends StatefulWidget {
   var url;
   var imageUrl;
   var orator;
+  var speechTitle;
 
-  PlayerPage(this.title,this.context,this.url,this.imageUrl,this.orator);
+  PlayerPage(this.title,this.context,this.url,this.imageUrl,this.orator,this.speechTitle);
 
   @override
   _PlayerPageState createState() => _PlayerPageState();
@@ -21,8 +24,27 @@ class _PlayerPageState extends State<PlayerPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        backgroundColor: Color(SharedData.mainColor),
         body: Container(
-
+          child: Column(
+            children: [
+              Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height / 2,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(widget.imageUrl),
+                        ),
+                      )
+                  ),
+                  HeaderGradient(widget.orator,widget.speechTitle),
+                ],
+              )
+            ],
+          ),
         ),
         appBar: AppBar(
           backgroundColor: Color(SharedData.mainColor),
@@ -48,6 +70,7 @@ class _PlayerPageState extends State<PlayerPage> {
                   widget.url,
                   widget.orator,
                   widget.imageUrl,
+                  widget.speechTitle
                 );
                 Navigator.pop(context);
               }

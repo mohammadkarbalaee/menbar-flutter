@@ -333,7 +333,8 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
                                 allSpeeches[index]['file'] == null ? "": allSpeeches[index]['file'],
                               widget.image,
                               allSpeeches[index]['title'],
-                              widget.orator
+                              widget.orator,
+                              widget.title
                             ),
                           ),
                           Divider(
