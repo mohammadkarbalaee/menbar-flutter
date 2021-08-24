@@ -56,20 +56,20 @@ class DownloadButton extends StatefulWidget {
               height: 90,
               child: Card(
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Container(
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           PlayButton(
                               url,
                             _audioPlayerController,
                             shouldStart
                           ),
-                          SizedBox(width: 120,),
+                          SizedBox(width: (MediaQuery.of(context).size.width) / 8),
                           Container(
-                            width: 100,
+                            width: MediaQuery.of(context).size.width / 3,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -100,11 +100,15 @@ class DownloadButton extends StatefulWidget {
                         ],
                       ),
                     ),
-                    CachedNetworkImage(
-                      imageUrl: imageUrl,
-                      fadeInDuration:Duration(milliseconds: 500),
-                      fadeInCurve:Curves.easeInExpo,
-                      fit: BoxFit.cover,
+                    SizedBox(width: 10,),
+                    Container(
+                      width: MediaQuery.of(context).size.width / 4,
+                      child: CachedNetworkImage(
+                        imageUrl: imageUrl,
+                        fadeInDuration:Duration(milliseconds: 500),
+                        fadeInCurve:Curves.easeInExpo,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ],
                 ),
@@ -250,7 +254,7 @@ class _DownloadButtonState extends State<DownloadButton> {
                     isBottomPlayerDifferent = data['title'] != widget.title;
                   }
 
-                  if(isBottomPlayerDifferent){
+                  //if(isBottomPlayerDifferent){
 
                     DownloadButton.showBottomPlayer(
                         context,
@@ -273,7 +277,8 @@ class _DownloadButtonState extends State<DownloadButton> {
                       }
                     );
                   }
-                } :(){
+                //}
+                  :(){
                   setState(() {
                     buttonStatus = !buttonStatus;
 
