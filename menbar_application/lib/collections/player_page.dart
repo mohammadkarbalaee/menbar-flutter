@@ -14,30 +14,32 @@ class PlayerPage extends StatefulWidget {
 class _PlayerPageState extends State<PlayerPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
+    return MaterialApp(
+      home: Scaffold(
+        body: Container(
 
-      ),
-      appBar: AppBar(
-        backgroundColor: Color(SharedData.mainColor),
-        leading: Container(),
-        actions: [
-          Center(
-            child: Text(
-              widget.title,
-              textDirection: TextDirection.rtl,
-              style: TextStyle(
-                fontFamily: 'sans',
-                fontSize: 23,
+        ),
+        appBar: AppBar(
+          backgroundColor: Color(SharedData.mainColor),
+          leading: Container(),
+          actions: [
+            Center(
+              child: Text(
+                widget.title,
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontFamily: 'sans',
+                  fontSize: 23,
+                ),
               ),
             ),
-          ),
-          SizedBox(width: 5,),
-          HeaderButton(
-            icon: Icon(Icons.arrow_forward,color: Colors.white,),
-            onPress: () => Navigator.pop(context),
-          )
-        ],
+            SizedBox(width: 5,),
+            HeaderButton(
+              icon: Icon(Icons.arrow_forward,color: Colors.white,),
+              onPress: () => Navigator.pop(context),
+            )
+          ],
+        ),
       ),
     );
   }

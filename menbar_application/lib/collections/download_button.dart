@@ -149,9 +149,10 @@ class _DownloadButtonState extends State<DownloadButton> {
                       persistent: true,
                       builder: (context,controller){
                         return Flash.bar(
+                          useSafeArea: false,
                           onTap: (){
-                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                              Navigator.of(context,rootNavigator: true).push(MaterialPageRoute(
+                            controller.dismiss();
+                              Navigator.of(context,rootNavigator: false).push(MaterialPageRoute(
                                   builder: (context) => PlayerPage(widget.title)
                               )
                             );
