@@ -26,6 +26,7 @@ class _PlayerPageState extends State<PlayerPage> {
 
   Duration duration = Duration();
   Duration position = Duration();
+  bool is2k = false;
 
 
   @override
@@ -69,6 +70,7 @@ class _PlayerPageState extends State<PlayerPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Color(SharedData.mainColor),
       body: Container(
@@ -213,6 +215,31 @@ class _PlayerPageState extends State<PlayerPage> {
                   ),
                 ),
               ],
+            ),
+            Container(
+              height: 50,
+              child: ElevatedButton(
+                onPressed: () {
+                  if(is2k){
+                    widget.audioPlayer.setPlaybackRate(playbackRate: 1);
+                  } else {
+                    widget.audioPlayer.setPlaybackRate(playbackRate: 2);
+                  }
+                  setState(() {
+                    is2k = !is2k;
+                  });
+                },
+                child: Icon(
+                  Icons.two_k_outlined,
+                  color: is2k ? Colors.yellow[500] : Colors.white,
+                  size: 30,
+                ),
+                style: ElevatedButton.styleFrom(
+                  primary: Color(SharedData.mainColor),
+                  elevation: 0,
+                  shape: CircleBorder(),
+                ),
+              ),
             ),
           ],
         ),
