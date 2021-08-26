@@ -44,7 +44,14 @@ dev_dependencies:
   hive_generator: ^1.1.0
   build_runner: ^2.0.6
   url_launcher: ^6.0.9
+  flutter_native_splash: ^1.2.1
 
+
+flutter_native_splash:
+  color: "#607d8d"
+  image: images/menbar_logo.png
+  android: true
+  ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -69,7 +76,9 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  #   - images/a_dot_ham.jpe
+
+
 
   assets:
     - images/menbar_logo.png
