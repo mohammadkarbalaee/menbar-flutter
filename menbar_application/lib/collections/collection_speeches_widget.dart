@@ -63,7 +63,7 @@ class _CollectionInstanceState extends State<CollectionInstance> with SingleTick
   void initState() {
     super.initState();
 
-    List speeches = HiveManager.getSpeechesById(widget.id);
+    List speeches = HiveManager.getSpeechesById(int.parse(widget.id));
 
      allSpeeches = widget.isSequenced ? new List.from(speeches.reversed) : speeches;
 
